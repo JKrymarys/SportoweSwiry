@@ -1,9 +1,12 @@
 #include <iostream>
 #include <cstdlib>
 #include<string>
+#include "CImg.h"
 using namespace std;
 
 int main( int argc, char * argv[] ){
+
+CImg obraz(argv[1]);
 
 if (argc < 2 || argc > 3)
 {

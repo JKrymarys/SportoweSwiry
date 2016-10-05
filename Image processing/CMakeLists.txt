@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 2.6)
+project(Image_processing)
+find_package(ImageMagick)
+include_directories(include)
+add_executable (hello src/test.cpp)
+target_link_libraries(hello lib)
