@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include <iostream>
 #include <string>
 #include "CImg.h"
@@ -22,12 +22,12 @@ int * lookuptable(float level, float(*operation)(float, float))
 			lut[i] = operation(i, level);
 		}
 
-		cout << endl << "LOOKUPTABLE TEST" << endl;
+		//cout << endl << "LOOKUPTABLE TEST" << endl;
 
-		for (int i = 0; i < ArrSize; i++)
-		{
-			cout << lut[i] << endl;
-		}
+		//for (int i = 0; i < ArrSize; i++)
+		//{
+		//	cout << lut[i] << endl;
+		//}
 
 	}
 	return lut;
@@ -52,6 +52,13 @@ float contrastlut(float value, float level)
 	{
 		return value + level > 255 ? 255 : value + level;
 	}
+
+	//if (value < 127) {
+	//	return value*level < 0 ? 0 : value*level;
+	//}
+	//if (value > 127) {
+	//	return value*level > 255 ? 255 : value*level;
+	//}
 }
 
 float negativelut(float value, float level = 0)
@@ -60,8 +67,10 @@ float negativelut(float value, float level = 0)
 	else return value - 127;
 }
 
+
 // ARRAY OF POINTERS TO FUNCTIONS
 float(*operations[3])(float, float) = { brightlut, contrastlut, negativelut };
+
 
 
 // PRZECHODZI PRZEZ WSZYSTKIE PIXELE WCZESNIEJ TWORZAC LUT ODPOWIEDNIE DO OPERACJI
@@ -81,6 +90,68 @@ void basicoperations(float level, CImg <float> & image, float(*operation)(float,
 	}
 }
 
+
+//FLIPY
+
+void verticalFlip(CImg<float> & image) {
+
+	for (int x = 0; x < image.width(); x++)
+	{
+		for (int y = 0; y < image.height()/2; y++)
+		{
+			for (int c = 0; c < 3; c++) {
+				swap(image(x, y, 0, c),image(x,image.height() - y - 1,0,c));
+			}
+		}
+	}
+
+}
+
+void horizontalFlip(CImg<float> & image) {
+
+	for (int y = 0; y < image.height(); y++)
+	{
+		for (int x = 0; x < image.width()/2; x++)
+		{
+			for (int c = 0; c < 3; c++) {
+				swap(image(x, y, 0, c), image(image.width()-x-1 , y , 0, c));
+			}
+		}
+	}
+
+}
+
+void diagonalFlip(CImg<float>& image) {
+	
+	for (int x = 0; x < image.width(); x++)
+	{
+		for (int y = 0; y < image.height()/2; y++)
+		{
+			for (int c = 0; c < 3; c++)
+			{
+				swap(image(x, y, 0, c), image(image.width()-1-x,image.height()-1-y,0,c));
+			}
+		}
+	}
+}
+
+void shrink(CImg<float> & image, CImg<float> & shrinked_image) {
+	
+	for (int x = 0; x < shrinked_image.width(); x++)
+	{
+		for (int y = 0; y < shrinked_image.height(); y++)
+		{
+			for (int c = 0; c < 3; c++)
+			{
+
+				shrinked_image(x, y, 0, c) = image(2*x,2*y,0,c);
+
+			}
+		}
+	}
+
+	shrinked_image.save("shrinked.bmp");
+}
 
 
 
@@ -107,6 +178,7 @@ int main(int argc, char * argv[]) {
 		//load image 
 		image.load(argv[1]);
 
+
 		//operation
 		operation_to_do = argv[2];
 	}
@@ -124,22 +196,50 @@ int main(int argc, char * argv[]) {
 		cout << "Give level of brighting " << endl;
 		cin >> modificator;
 		basicoperations(modificator, image, operations[0]);
-		image.save("output.bmp");
+		
+		
 	}
-
-	if ((string)argv[2] == "--contrast")
+	else if ((string)argv[2] == "--contrast")
 	{
 		cout << "Give level of contrast " << endl;
 		cin >> modificator;
 		basicoperations(modificator, image, operations[1]);
-		image.save("output.bmp");
+		
 	}
-
-	if ((string)argv[2] == "--negative")
+	else if ((string)argv[2] == "--negative")
 	{
 		basicoperations(0, image, operations[2]);
-		image.save("output.bmp");
+		
 	}
+	else if ((string)argv[2] == "--vflip") {
+		
+		verticalFlip(image);
+		
+		
+	}
+	else if ((string)argv[2] == "--hflip")
+	{
+		horizontalFlip(image);
+	}
+	else if ((string)argv[2] == "--dflip") {
+		diagonalFlip(image);
+	}
+
+	//nie działa xd
+	else if ((string)argv[2] == "--shrink")
+	{
+		CImg<float> shrinked_image(image.width() / 2, image.height() / 2, 0, 3);
+		shrink(image,shrinked_image);
+	}
+	else
+	{
+		cout << "Invalid operation\n If you need help, run program with --help parameter" << endl;
+	}
+
+	//TODO funkcja z podaniem nazwy pliku(?) 
+	
+	image.save("output.bmp");
+
 
 
 	return 0;
