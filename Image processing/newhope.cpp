@@ -11,6 +11,10 @@ const int ArrSize = 255;
 //declarations
 
 
+#pragma region Funkcje
+
+
+
 
 // FUNCKJA TWORZACA LUT W ZALEZNOSCI OD PRZEKAZANEJ OPERACJI
 int * lookuptable(float level, float(*operation)(float, float))
@@ -22,12 +26,6 @@ int * lookuptable(float level, float(*operation)(float, float))
 			lut[i] = operation(i, level);
 		}
 
-		//cout << endl << "LOOKUPTABLE TEST" << endl;
-
-		//for (int i = 0; i < ArrSize; i++)
-		//{
-		//	cout << lut[i] << endl;
-		//}
 
 	}
 	return lut;
@@ -135,16 +133,18 @@ void diagonalFlip(CImg<float>& image) {
 	}
 }
 
-void shrink(CImg<float> & image, CImg<float> & shrinked_image) {
+void shrink(CImg<float> & image) {
 	
-	for (int x = 0; x < shrinked_image.width(); x++)
+	CImg<float> shrinked_image((image.width() / 2), (image.height() / 2),1,3);
+
+	for (int x = 0; x < shrinked_image.width(); x++)  //zeby nie wjsc za tablice
 	{
 		for (int y = 0; y < shrinked_image.height(); y++)
 		{
 			for (int c = 0; c < 3; c++)
 			{
 
-				shrinked_image(x, y, 0, c) = image(2*x,2*y,0,c);
+				shrinked_image(x, y, 0, c) = image(2*x,2*y,0,c); //co drugi pixel (0,0)(2,2)(4,4) itp
 
 			}
 		}
@@ -153,9 +153,36 @@ void shrink(CImg<float> & image, CImg<float> & shrinked_image) {
 	shrinked_image.save("shrinked.bmp");
 }
 
+CImg<float> enlarge(CImg<float> & image) {
+
+	CImg<float> enlarged_image((image.width() * 2), (image.height() * 2), 1, 3);
+
+	for (int x = 0; x < enlarged_image.width() - 1; x += 2)
+	{
+		for (int y = 0; y < enlarged_image.height() - 1; y += 2)
+		{
+			for (int c = 0; c < 3; c++)
+			{
+
+				enlarged_image(x, y, 0, c) = image(x / 2, y / 2, 0, c);
+				enlarged_image(x + 1, y + 1, 0, c) = image(x / 2, y / 2, 0, c);
+
+			}
+		}
+	}
+	return enlarged_image;
+}
 
 
+void SaveImage(CImg<float> & image) {
+	string name;
+	cout << "Give name of output file" << endl;
+	cin >> name;
+	name += ".bmp";
+	image.save(name.c_str());
+}
 
+#pragma endregion
 
 int main(int argc, char * argv[]) {
 
@@ -165,9 +192,10 @@ int main(int argc, char * argv[]) {
 	float modificator;
 	CImg <float> image;
 
+	
+	
+	
 	//CHECK THE ARGUMENTS
-
-
 	if (argc == 2 && (string)argv[1] == "--help")
 	{
 		cout << "Help......." << endl;
@@ -191,12 +219,13 @@ int main(int argc, char * argv[]) {
 
 	// CHOISE OF THE OPERATION
 
+	//OPERATIONS PERFORMED ON THE ORIGINAL IMAGE
 	if ((string)argv[2] == "--brightness")
 	{
 		cout << "Give level of brighting " << endl;
 		cin >> modificator;
 		basicoperations(modificator, image, operations[0]);
-		
+		SaveImage(image);
 		
 	}
 	else if ((string)argv[2] == "--contrast")
@@ -204,41 +233,46 @@ int main(int argc, char * argv[]) {
 		cout << "Give level of contrast " << endl;
 		cin >> modificator;
 		basicoperations(modificator, image, operations[1]);
-		
+		SaveImage(image);
 	}
 	else if ((string)argv[2] == "--negative")
 	{
 		basicoperations(0, image, operations[2]);
-		
+		SaveImage(image);
 	}
 	else if ((string)argv[2] == "--vflip") {
 		
 		verticalFlip(image);
-		
-		
+		SaveImage(image);
 	}
 	else if ((string)argv[2] == "--hflip")
 	{
 		horizontalFlip(image);
+		SaveImage(image);
 	}
 	else if ((string)argv[2] == "--dflip") {
 		diagonalFlip(image);
+		SaveImage(image);
 	}
 
-	//nie działa xd
+	//OPERATIONS PERFORMED ON THE COPY 
 	else if ((string)argv[2] == "--shrink")
 	{
-		CImg<float> shrinked_image(image.width() / 2, image.height() / 2, 0, 3);
-		shrink(image,shrinked_image);
+		
+		shrink(image);
 	}
+	else if ((string)argv[2] == "--enlarge")
+	{
+	   SaveImage( enlarge(image));
+	}
+
+
+	//IN CASE OF INPROPIATE PARAMETER
 	else
 	{
 		cout << "Invalid operation\n If you need help, run program with --help parameter" << endl;
 	}
 
-	//TODO funkcja z podaniem nazwy pliku(?) 
-	
-	image.save("output.bmp");
 
 
 
