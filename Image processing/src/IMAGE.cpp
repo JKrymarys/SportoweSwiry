@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 #include<cstdlib>
-
+#include<cmath>
 
 using namespace cimg_library;
 
@@ -189,6 +189,20 @@ float mediana(CImg<float> & image, int x, int y, int c)
 	return mediana;
 }
 
+
+float geometricmean(CImg<float> & image, int x, int y, int c)
+{
+	int sum = 0;
+	for (int i = -1; i < 2; i++)
+	{
+		for (int j = -1; j < 2; j++)
+		{
+			sum+=image(x + i, y + j, 0, c);
+		}
+	}
+	return (int)std::power(sum, 1/9);
+}
+
 CImg<float> medianfilter(CImg<float> & image) {
 	CImg<float> filterimage = image;
 	for (int x = 1; x < image.width() - 1; x++)
@@ -203,6 +217,23 @@ CImg<float> medianfilter(CImg<float> & image) {
 	}
 	return filterimage;
 }
+
+CImg<float> geometricfilter(CImg<float> & image) {
+	CImg<float> filterimage = image;
+	for (int x = 1; x < image.width() - 1; x++)
+	{
+		for (int y = 1; y < image.height() - 1; y++)
+		{
+			for (int c = 0; c < 3; c++)
+			{
+				filterimage(x, y, 0, c) = geometricmean(image, x, y, c);
+			}
+		}
+	}
+	return filterimage;
+}
+
+	
 
 
 
