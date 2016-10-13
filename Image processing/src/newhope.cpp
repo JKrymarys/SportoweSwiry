@@ -14,7 +14,6 @@ int main(int argc, char * argv[]) {
 
 	float(*operations[3])(float, float) = { brightlut, contrastlut, negativelut };
 
-	cout << "Hello in our program \n <if you need help, plese use --help >" << endl;
 	string operation_to_do;
 	string path_to_file;
 	float modificator;
@@ -97,7 +96,10 @@ int main(int argc, char * argv[]) {
 	{
 		SaveImage(medianfilter(image));
 	}
-
+	else if((string)argv[2] == "--gmean")
+	{
+		SaveImage(geometricfilter(image));
+	}
 
 	//IN CASE OF INPROPIATE PARAMETER
 	else

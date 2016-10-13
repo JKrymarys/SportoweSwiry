@@ -2,11 +2,11 @@
 #include "IMAGE.h"
 #include <iostream>
 #include <string>
-#include<cstdlib>
-#include<cmath>
+#include <cstdlib>
+#include <math.h>
 
 using namespace cimg_library;
-
+using namespace std;
 
 const int ArrSize = 255;
 
@@ -192,15 +192,17 @@ float mediana(CImg<float> & image, int x, int y, int c)
 
 float geometricmean(CImg<float> & image, int x, int y, int c)
 {
-	int sum = 0;
+	double sum = 1;
+
 	for (int i = -1; i < 2; i++)
 	{
 		for (int j = -1; j < 2; j++)
 		{
-			sum+=image(x + i, y + j, 0, c);
+			sum*=image(x + i, y + j, 0, c);
 		}
 	}
-	return (int)std::power(sum, 1/9);
+	double root = 1.0f / 9.0f;
+	return pow(sum, root);
 }
 
 CImg<float> medianfilter(CImg<float> & image) {

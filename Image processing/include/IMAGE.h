@@ -28,7 +28,7 @@ CImg<float> medianfilter(CImg<float> & image);
 float mediana(CImg<float> & image, int x, int y, int c);
 //GEOMETRICMEAN FILTER AND GEOMETRICMEAN
 float geometricmean(CImg<float> & image, int x, int y, int c);
-CImg<float> medianfilter(CImg<float> & image);
+CImg<float> geometricfilter(CImg<float> & image);
 // SAVING IMAGE FUNCTION
 void SaveImage(CImg<float> & image);
 
