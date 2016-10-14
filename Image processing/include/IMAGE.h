@@ -21,7 +21,7 @@ void verticalFlip(CImg<float> & image);
 void horizontalFlip(CImg<float> & image);
 void diagonalFlip(CImg<float>& image);
 // SHRINK AND ENLARGE
-void shrink(CImg<float> & image);
+CImg<float> shrink(CImg<float> & image);
 CImg<float> enlarge(CImg<float> & image);
 // MEDIANFILTER AND MEDIANA
 CImg<float> medianfilter(CImg<float> & image);
@@ -31,6 +31,9 @@ float geometricmean(CImg<float> & image, int x, int y, int c);
 CImg<float> geometricfilter(CImg<float> & image);
 // SAVING IMAGE FUNCTION
 void SaveImage(CImg<float> & image);
+// ERRORS CALCULATIONS
+void Mean_square_error(CImg<float> image_without_noise, CImg<float> image_with_noise);
+
 
 #endif // !IMAGE_H_
 

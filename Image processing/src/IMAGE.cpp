@@ -2,7 +2,7 @@
 #include "IMAGE.h"
 #include <iostream>
 #include <string>
-#include <cstdlib>
+#include <fstream>
 #include <math.h>
 
 using namespace cimg_library;
@@ -36,21 +36,13 @@ float brightlut(float value, float level)
 
 float contrastlut(float value, float level)
 {
-	if (value < 127)
-	{
-		return value - level < 0 ? 0 : value - level;
-	}
-	if (value >= 127)
-	{
-		return value + level > 255 ? 255 : value + level;
-	}
 
-	//if (value < 127) {
-	//	return value*level < 0 ? 0 : value*level;
-	//}
-	//if (value > 127) {
-	//	return value*level > 255 ? 255 : value*level;
-	//}
+	if (value < 127) {
+		return value*level < 0 ? 0 : value*level;
+	}
+	if (value > 127) {
+		return value*level > 255 ? 255 : value*level;
+	}
 }
 
 float negativelut(float value, float level )
@@ -58,10 +50,6 @@ float negativelut(float value, float level )
 	if (value < 127) return value + 127;
 	else return value - 127;
 }
-
-
-// ARRAY OF POINTERS TO FUNCTIONS
-
 
 
 
@@ -107,7 +95,7 @@ void horizontalFlip(CImg<float> & image) {
 		for (int x = 0; x < image.width() / 2; x++)
 		{
 			for (int c = 0; c < 3; c++) {
-				std::swap(image(x, y, 0, c), image(image.width() - x - 1, y, 0, c));
+				swap(image(x, y, 0, c), image(image.width() - x - 1, y, 0, c));
 			}
 		}
 	}
@@ -122,13 +110,14 @@ void diagonalFlip(CImg<float>& image) {
 		{
 			for (int c = 0; c < 3; c++)
 			{
-				std::swap(image(x, y, 0, c), image(image.width() - 1 - x, image.height() - 1 - y, 0, c));
+				swap(image(x, y, 0, c), image(image.width() - 1 - x, image.height() - 1 - y, 0, c));
 			}
 		}
 	}
 }
 
-void shrink(CImg<float> & image) {
+
+CImg<float> shrink(CImg<float> & image) {
 
 	CImg<float> shrinked_image((image.width() / 2), (image.height() / 2), 1, 3);
 
@@ -145,7 +134,7 @@ void shrink(CImg<float> & image) {
 		}
 	}
 
-	shrinked_image.save("shrinked.bmp");
+	return shrinked_image;
 }
 
 CImg<float> enlarge(CImg<float> & image) {
@@ -245,4 +234,60 @@ void SaveImage(CImg<float> & image) {
 	std::cin >> name;
 	name += ".bmp";
 	image.save(name.c_str());
+}
+
+
+void Mean_square_error(CImg<float> image_without_noise, CImg<float> image_with_noise)
+{
+	CImg<float> image_median = medianfilter(image_with_noise);
+	CImg<float> image_geometric = geometricfilter(image_with_noise);
+	double mean_error = 0;
+	double mean_error_median = 0;
+	double mean_error_geometric = 0;
+	for (int c = 0; c < 3; c++)
+	{
+		for (int x = 0; x < image_without_noise.width(); x++)
+		{
+			for (int y = 0; y < image_without_noise.height(); y++)
+			{
+				mean_error += pow((image_without_noise(x, y, 0, c) - image_with_noise(x, y, 0, c)), 2);
+			}
+		}
+	}
+	mean_error = (1 / (image_without_noise.width()*image_without_noise.height()*3))*mean_error;
+	
+	
+	// CALCULATING GEOMETRIC MEAN
+	
+	for (int c = 0; c < 3; c++)
+	{
+		for (int x = 0; x < image_without_noise.width(); x++)
+		{
+			for (int y = 0; y < image_without_noise.height(); y++)
+			{
+				mean_error_geometric += pow((image_without_noise(x, y, 0, c) - image_geometric(x, y, 0, c)), 2);
+			}
+		}
+	}
+	mean_error_geometric = (1 / (image_without_noise.width()*image_without_noise.height()*3))*mean_error_geometric;
+	
+	
+	
+	// CALCULATING MEDIAN MEAN SQUARE ERROR
+	
+	for (int c = 0; c < 3; c++)
+	{
+		for (int x = 0; x < image_without_noise.width(); x++)
+		{
+			for (int y = 0; y < image_without_noise.height(); y++)
+			{
+				mean_error_median += pow((image_without_noise(x, y, 0, c) - image_median(x, y, 0, c)), 2);
+			}
+		}
+	}
+	mean_error_median = (1 / (image_without_noise.width()*image_without_noise.height() * 3))*mean_error_median;
+	cout << "\nBefore processing " << mean_error <<endl ;
+	cout << "After median filter " << mean_error_median<<endl;
+	cout << "After geometric filter " << mean_error_geometric<< endl;
+
 }
