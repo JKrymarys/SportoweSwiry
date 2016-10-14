@@ -1,0 +1,33 @@
+
+Image processing task1 0.9 beta 1
+
+authors: Jakub Krymarys 203210, Maciej Wyrzuc 203223
+
+List of functons:
+
+one paramter:
+--help
+
+two paramters:
+--brightness
+--contrast
+--negative
+--hflip			horizontal flip
+--vflip			vertical flip
+--dflip			
+--shrink 		by 50%
+--enlarge		by 100%
+
+filters:
+--median
+--gmean
+
+Comes in next update:
+
+--mse
+--pmse
+--snr
+--psnr
+--md
+
+After procces please give output name of file. Extension will be added automaticly
