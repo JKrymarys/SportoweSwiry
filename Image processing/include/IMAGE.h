@@ -34,6 +34,7 @@ void SaveImage(CImg<float> & image);
 // ERRORS CALCULATIONS
 void Mean_square_error(CImg<float> image_without_noise, CImg<float> image_with_noise);
 
-
+void One_parameter_functions();
+void Two_parameters_functions();
 #endif // !IMAGE_H_
 

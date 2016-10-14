@@ -81,7 +81,7 @@ void verticalFlip(CImg<float> & image) {
 		for (int y = 0; y < image.height() / 2; y++)
 		{
 			for (int c = 0; c < 3; c++) {
-				std::swap(image(x, y, 0, c), image(x, image.height() - y - 1, 0, c));
+				swap(image(x, y, 0, c), image(x, image.height() - y - 1, 0, c));
 			}
 		}
 	}
@@ -244,6 +244,7 @@ void Mean_square_error(CImg<float> image_without_noise, CImg<float> image_with_n
 	double mean_error = 0;
 	double mean_error_median = 0;
 	double mean_error_geometric = 0;
+	
 	for (int c = 0; c < 3; c++)
 	{
 		for (int x = 0; x < image_without_noise.width(); x++)
@@ -251,43 +252,22 @@ void Mean_square_error(CImg<float> image_without_noise, CImg<float> image_with_n
 			for (int y = 0; y < image_without_noise.height(); y++)
 			{
 				mean_error += pow((image_without_noise(x, y, 0, c) - image_with_noise(x, y, 0, c)), 2);
-			}
-		}
-	}
-	mean_error = (1 / (image_without_noise.width()*image_without_noise.height()*3))*mean_error;
-	
-	
-	// CALCULATING GEOMETRIC MEAN
-	
-	for (int c = 0; c < 3; c++)
-	{
-		for (int x = 0; x < image_without_noise.width(); x++)
-		{
-			for (int y = 0; y < image_without_noise.height(); y++)
-			{
 				mean_error_geometric += pow((image_without_noise(x, y, 0, c) - image_geometric(x, y, 0, c)), 2);
-			}
-		}
-	}
-	mean_error_geometric = (1 / (image_without_noise.width()*image_without_noise.height()*3))*mean_error_geometric;
-	
-	
-	
-	// CALCULATING MEDIAN MEAN SQUARE ERROR
-	
-	for (int c = 0; c < 3; c++)
-	{
-		for (int x = 0; x < image_without_noise.width(); x++)
-		{
-			for (int y = 0; y < image_without_noise.height(); y++)
-			{
 				mean_error_median += pow((image_without_noise(x, y, 0, c) - image_median(x, y, 0, c)), 2);
 			}
 		}
+		
 	}
-	mean_error_median = (1 / (image_without_noise.width()*image_without_noise.height() * 3))*mean_error_median;
+
+	mean_error = (1.0 / (image_without_noise.width()*image_without_noise.height()*3))*mean_error;
+	mean_error_geometric = (1.0 / (image_without_noise.width()*image_without_noise.height()*3))*mean_error_geometric;
+	mean_error_median = (1.0 / (image_without_noise.width()*image_without_noise.height() * 3))*mean_error_median;
+	
+	
 	cout << "\nBefore processing " << mean_error <<endl ;
 	cout << "After median filter " << mean_error_median<<endl;
 	cout << "After geometric filter " << mean_error_geometric<< endl;
 
 }
+
+
