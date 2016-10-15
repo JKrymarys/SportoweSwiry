@@ -3,6 +3,7 @@
 #include <string>
 #include <cstdlib>
 #include <fstream>
+#include "CImg.h"
 #include "IMAGE.h"
 
 using namespace cimg_library;
@@ -41,25 +42,54 @@ int main(int argc, char * argv[]) {
 			help_file.close();
 			return 0;
 		}
-		else if ((string)argv[1] == "--mse")
+		else
 		{
 
-			CImg <float> lena;
-			CImg <float> lena_noise;
-			string name1, name2;
-			
-			cout << "Give names of the files to compare" << endl;
-			
-			cin >> name1;
-			cin >> name2;
+			string name_without_noise;
+			string name_with_noise;
+			CImg<float> image_with_noise;
+			CImg<float> image_without_noise;
 
-			lena.load(name1.c_str());
-			lena_noise.load(name2.c_str());
+			cout << "\n Give picture with and without noise" << endl;
+			cin >> name_without_noise;
+			cin >> name_with_noise;
 
-			Mean_square_error(lena, lena_noise);
+			image_without_noise.load(name_without_noise.c_str());
+			image_with_noise.load(name_with_noise.c_str());
 
-			return 0;
+
+			if ((string)argv[1] == "--mse")
+			{
+				Mean_square_error(image_without_noise, image_with_noise);
+
+				return 0;
+			}
+			else if ((string)argv[1] == "--pmse") {
+				Peak_mean_square_error(image_without_noise, image_with_noise);
+				return 0;
+
+			}
+			else if ((string)argv[1] == "--snr")
+			{
+				Signal_to_noise_error(image_without_noise, image_with_noise);
+					return 0;
+			}
+			else if((string)argv[1]=="--psnr")
+			{
+				Peak_signal_to_noise_error(image_without_noise,image_with_noise);
+				return 0;
+			}
+			else if ((string)argv[1] == "--md")
+			{
+				Maximum_difference(image_without_noise,image_with_noise);
+				return 0; 
+			}
+			else
+			{
+				cout << "Invalid operation\n If you need help, run program with --help parameter" << endl;
+			}
 		}
+		
 	}
 	else if (argc == 3)
 	{

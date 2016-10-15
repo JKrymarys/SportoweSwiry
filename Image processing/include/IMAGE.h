@@ -16,6 +16,7 @@ float contrastlut(float value, float level);
 float negativelut(float value, float level = 0);
 // FUNCTION USING LOOKUPTABLE
 void basicoperations(float level, CImg<float> & image, float(*operation)(float, float));
+void Comparisions();
 // FLIPS
 void verticalFlip(CImg<float> & image);
 void horizontalFlip(CImg<float> & image);
@@ -33,8 +34,16 @@ CImg<float> geometricfilter(CImg<float> & image);
 void SaveImage(CImg<float> & image);
 // ERRORS CALCULATIONS
 void Mean_square_error(CImg<float> image_without_noise, CImg<float> image_with_noise);
+void Peak_mean_square_error(CImg<float> image_without_noise, CImg<float> image_with_noise);
+void Signal_to_noise_error(CImg<float> image_without_noise, CImg<float> image_with_noise);
+void Peak_signal_to_noise_error(CImg<float> image_without_noise, CImg<float> image_with_noise);
+void Maximum_difference(CImg<float> image_without_noise,CImg<float> image_with_noise);
 
-void One_parameter_functions();
-void Two_parameters_functions();
+double Find_maximum_value(CImg<float> image_without_noise);
+
+void Show_error_data(double clean_picture_data, double median_filter_data, double gmean_filter_data);
+
+
+
 #endif // !IMAGE_H_
 

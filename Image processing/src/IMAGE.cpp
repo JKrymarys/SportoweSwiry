@@ -3,7 +3,8 @@
 #include <iostream>
 #include <string>
 #include <fstream>
-#include <math.h>
+#include "CImg.h"
+#include <cmath>
 
 using namespace cimg_library;
 using namespace std;
@@ -51,8 +52,6 @@ float negativelut(float value, float level )
 	else return value - 127;
 }
 
-
-
 // PRZECHODZI PRZEZ WSZYSTKIE PIXELE WCZESNIEJ TWORZAC LUT ODPOWIEDNIE DO OPERACJI
 void basicoperations(float level, CImg<float> & image, float(*operation)(float, float)) {
 
@@ -70,7 +69,6 @@ void basicoperations(float level, CImg<float> & image, float(*operation)(float, 
 	}
 	delete[] lut;
 }
-
 
 //FLIPY
 
@@ -116,7 +114,6 @@ void diagonalFlip(CImg<float>& image) {
 	}
 }
 
-
 CImg<float> shrink(CImg<float> & image) {
 
 	CImg<float> shrinked_image((image.width() / 2), (image.height() / 2), 1, 3);
@@ -157,9 +154,6 @@ CImg<float> enlarge(CImg<float> & image) {
 	return enlarged_image;
 }
 
-
-
-
 float mediana(CImg<float> & image, int x, int y, int c)
 {
 	int * arr = new int[9];
@@ -177,7 +171,6 @@ float mediana(CImg<float> & image, int x, int y, int c)
 	delete[] arr;
 	return mediana;
 }
-
 
 float geometricmean(CImg<float> & image, int x, int y, int c)
 {
@@ -224,18 +217,13 @@ CImg<float> geometricfilter(CImg<float> & image) {
 	return filterimage;
 }
 
-	
-
-
-
 void SaveImage(CImg<float> & image) {
-	std::string name;
-	std::cout << "Give name of output file" << std::endl;
-	std::cin >> name;
+	string name;
+	cout << "Give name of output file" << std::endl;
+	cin >> name;
 	name += ".bmp";
 	image.save(name.c_str());
 }
-
 
 void Mean_square_error(CImg<float> image_without_noise, CImg<float> image_with_noise)
 {
@@ -263,11 +251,164 @@ void Mean_square_error(CImg<float> image_without_noise, CImg<float> image_with_n
 	mean_error_geometric = (1.0 / (image_without_noise.width()*image_without_noise.height()*3))*mean_error_geometric;
 	mean_error_median = (1.0 / (image_without_noise.width()*image_without_noise.height() * 3))*mean_error_median;
 	
+	cout << "\nMean square error" << endl;
+	Show_error_data(mean_error, mean_error_median, mean_error_geometric);
+
+}
+
+void Peak_mean_square_error(CImg<float> image_without_noise, CImg<float> image_with_noise)
+{
+	CImg<float> image_median = medianfilter(image_with_noise);
+	CImg<float> image_geometric = geometricfilter(image_with_noise);
+	double mean_error = 0;
+	double mean_error_median = 0;
+	double mean_error_geometric = 0;
 	
-	cout << "\nBefore processing " << mean_error <<endl ;
-	cout << "After median filter " << mean_error_median<<endl;
-	cout << "After geometric filter " << mean_error_geometric<< endl;
+	for (int c = 0; c < 3; c++)
+	{
+		for (int x = 0; x < image_without_noise.width(); x++)
+		{
+			for (int y = 0; y < image_without_noise.height(); y++)
+			{
+				mean_error += pow((image_without_noise(x, y, 0, c) - image_with_noise(x, y, 0, c)), 2);
+				mean_error_geometric += pow((image_without_noise(x, y, 0, c) - image_geometric(x, y, 0, c)), 2);
+				mean_error_median += pow((image_without_noise(x, y, 0, c) - image_median(x, y, 0, c)), 2);
+			}
+		}
+
+	}
+
+	mean_error = ((1.0 / (image_without_noise.width()*image_without_noise.height() * 3.0))*mean_error) / Find_maximum_value(image_without_noise);;
+	mean_error_geometric = ((1.0 / (image_without_noise.width()*image_without_noise.height() * 3.0))*mean_error_geometric)/Find_maximum_value(image_without_noise);
+	mean_error_median = ((1.0 / (image_without_noise.width()*image_without_noise.height() * 3.0))*mean_error_median) / Find_maximum_value(image_without_noise);
+
+	cout << "\nPeak mean square error" << endl;
+	Show_error_data(mean_error,mean_error_median,mean_error_geometric);
+
+}
+
+void Signal_to_noise_error(CImg<float> image_without_noise, CImg<float> image_with_noise)
+{
+	CImg<float> image_median = medianfilter(image_with_noise);
+	CImg<float> image_geometric = geometricfilter(image_with_noise);
+	double error = 0;
+	double error_median = 0;
+	double error_geometric = 0;
+	double sum = 0;
+
+	for (int c = 0; c < 3; c++)
+	{
+		for (int x = 0; x < image_without_noise.width(); x++)
+		{
+			for (int y = 0; y < image_without_noise.height(); y++)
+			{
+				sum += pow(image_without_noise(x, y, 0, c), 2);
+				error += pow((image_without_noise(x, y, 0, c) - image_with_noise(x, y, 0, c)), 2);
+				error_geometric += pow((image_without_noise(x, y, 0, c) - image_geometric(x, y, 0, c)), 2);
+				error_median += pow((image_without_noise(x, y, 0, c) - image_median(x, y, 0, c)), 2);
+			}
+		}
+
+	}
+
+	error = 10*log10(sum/(error));
+	error_geometric = 10*log10(sum/  error_geometric);
+	error_median = 10*log10(sum / error_median);
+
+	cout << "Signal to noise error" << endl;
+	Show_error_data(error,error_median,error_geometric);
 
 }
 
 
+void Peak_signal_to_noise_error(CImg<float> image_without_noise, CImg<float> image_with_noise)
+{
+	CImg<float> image_median = medianfilter(image_with_noise);
+	CImg<float> image_geometric = geometricfilter(image_with_noise);
+	double error = 0;
+	double error_median = 0;
+	double error_geometric = 0;
+	double sum = 0;
+
+	for (int c = 0; c < 3; c++)
+	{
+		for (int x = 0; x < image_without_noise.width(); x++)
+		{
+			for (int y = 0; y < image_without_noise.height(); y++)
+			{
+				sum += pow(image_without_noise(x, y, 0, c), 2);
+				error += pow((image_without_noise(x, y, 0, c) - image_with_noise(x, y, 0, c)), 2);
+				error_geometric += pow((image_without_noise(x, y, 0, c) - image_geometric(x, y, 0, c)), 2);
+				error_median += pow((image_without_noise(x, y, 0, c) - image_median(x, y, 0, c)), 2);
+			}
+		}
+
+	}
+
+	error = 10 * log10(Find_maximum_value(image_without_noise) / (error));
+	error_geometric = 10 * log10(Find_maximum_value(image_without_noise) / error_geometric);
+	error_median = 10 * log10(Find_maximum_value(image_without_noise) / error_median);
+
+	cout << "Peak signal to noise error" << endl;
+	Show_error_data(error, error_median, error_geometric);
+}
+
+void Maximum_difference(CImg<float> image_without_noise, CImg<float> image_with_noise)
+{
+	CImg<float> image_median = medianfilter(image_with_noise);
+	CImg<float> image_geometric = geometricfilter(image_with_noise);
+	double max_diff_clean = 0;
+	double max_diff_median = 0;
+	double max_diff_geometric = 0;
+	
+
+	for (int c = 0; c < 3; c++)
+	{
+		for (int x = 0; x < image_without_noise.width(); x++)
+		{
+			for (int y = 0; y < image_without_noise.height(); y++)
+			{
+				if (max_diff_clean < (image_with_noise(x, y, 0, c) - image_without_noise(x, y, 0, c)))
+					max_diff_clean = (image_with_noise(x, y, 0, c) - image_without_noise(x, y, 0, c));
+
+				if (max_diff_median < (image_with_noise(x, y, 0, c) - image_median(x, y, 0, c)))
+					max_diff_median = (image_with_noise(x, y, 0, c) - image_median(x, y, 0, c));
+
+				if (max_diff_geometric < (image_with_noise(x, y, 0, c) - image_geometric(x, y, 0, c)))
+					max_diff_geometric = (image_with_noise(x, y, 0, c) - image_geometric(x, y, 0, c));
+			}
+		}
+
+	}
+
+	
+
+	cout << "Maximum difference" << endl;
+	Show_error_data(max_diff_clean, max_diff_median, max_diff_geometric);
+}
+double Find_maximum_value(CImg<float> image) {
+
+	double maximum_value = 0;
+	
+	for (int x = 0; x  < image.width(); x++)
+	{
+		for (int y = 0; y < image.height(); y++)
+		{
+			for (int c = 0; c < 3; c++)
+			{
+				if (maximum_value < image(x, y, 0, c))
+				{
+					maximum_value = image(x, y, 0, c);
+				}
+			}
+		}
+	}
+	return maximum_value;
+}
+
+void Show_error_data(double clean_picture_data, double median_filter_data, double gmean_filter_data) {
+
+	cout << "\nBefore processing " << clean_picture_data << endl;
+	cout << "After median filter " << median_filter_data << endl;
+	cout << "After geometric filter " << gmean_filter_data << endl;
+}
