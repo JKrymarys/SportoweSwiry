@@ -1,4 +1,4 @@
-#include "stdafx.h"
+
 #include "IMAGE.h"
 #include <iostream>
 #include <string>
@@ -20,7 +20,6 @@ int * lookuptable(float level, float(*operation)(float, float))
 		{
 			lut[i] = operation(i, level);
 		}
-
 
 	}
 	return lut;
@@ -342,7 +341,6 @@ void Peak_signal_to_noise_error(CImg<float> image_without_noise, CImg<float> ima
 				error_median += pow((image_without_noise(x, y, 0, c) - image_median(x, y, 0, c)), 2);
 			}
 		}
-
 	}
 
 	error = 10 * log10(Find_maximum_value(image_without_noise) / (error));

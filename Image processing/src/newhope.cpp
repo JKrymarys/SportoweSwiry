@@ -1,4 +1,4 @@
-#include "stdafx.h"
+
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -9,7 +9,6 @@
 using namespace cimg_library;
 using namespace std;
 
-const int ArrSize = 255;
 
 
 
