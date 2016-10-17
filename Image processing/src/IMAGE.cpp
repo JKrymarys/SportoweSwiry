@@ -1,13 +1,14 @@
-
 #include "IMAGE.h"
 #include <iostream>
 #include <string>
 #include <fstream>
-#include "CImg.h"
 #include <cmath>
+#include "CImg.h"
+
 
 using namespace cimg_library;
 using namespace std;
+
 
 const int ArrSize = 255;
 
@@ -335,7 +336,7 @@ void Peak_signal_to_noise_error(CImg<float> image_without_noise, CImg<float> ima
 		{
 			for (int y = 0; y < image_without_noise.height(); y++)
 			{
-				sum += pow(image_without_noise(x, y, 0, c), 2);
+				//sum += pow(image_without_noise(x, y, 0, c), 2);
 				error += pow((image_without_noise(x, y, 0, c) - image_with_noise(x, y, 0, c)), 2);
 				error_geometric += pow((image_without_noise(x, y, 0, c) - image_geometric(x, y, 0, c)), 2);
 				error_median += pow((image_without_noise(x, y, 0, c) - image_median(x, y, 0, c)), 2);
@@ -366,14 +367,14 @@ void Maximum_difference(CImg<float> image_without_noise, CImg<float> image_with_
 		{
 			for (int y = 0; y < image_without_noise.height(); y++)
 			{
-				if (max_diff_clean < (image_with_noise(x, y, 0, c) - image_without_noise(x, y, 0, c)))
-					max_diff_clean = (image_with_noise(x, y, 0, c) - image_without_noise(x, y, 0, c));
+				if (abs(max_diff_clean > (image_without_noise(x, y, 0, c) - image_with_noise(x, y, 0, c))))
+					max_diff_clean = abs((image_without_noise(x, y, 0, c) - image_with_noise(x, y, 0, c)));
 
-				if (max_diff_median < (image_with_noise(x, y, 0, c) - image_median(x, y, 0, c)))
-					max_diff_median = (image_with_noise(x, y, 0, c) - image_median(x, y, 0, c));
+				if (abs(max_diff_median > (image_without_noise(x, y, 0, c) - image_median(x, y, 0, c))))
+					max_diff_median = abs((image_without_noise(x, y, 0, c) - image_median(x, y, 0, c)));
 
-				if (max_diff_geometric < (image_with_noise(x, y, 0, c) - image_geometric(x, y, 0, c)))
-					max_diff_geometric = (image_with_noise(x, y, 0, c) - image_geometric(x, y, 0, c));
+				if (abs(max_diff_geometric > (image_without_noise(x, y, 0, c) - image_geometric(x, y, 0, c))))
+					max_diff_geometric = abs((image_without_noise(x, y, 0, c) - image_geometric(x, y, 0, c)));
 			}
 		}
 
