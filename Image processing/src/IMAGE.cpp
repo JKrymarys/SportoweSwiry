@@ -40,7 +40,7 @@ float contrastlut(float value, float level)
 {
 
 	if (value < 127) {
-		return value*level < 0 ? 0 : value*level;
+		return value/level < 0 ? 0 : value/level;
 	}
 	if (value > 127) {
 		return value*level > 255 ? 255 : value*level;
@@ -170,7 +170,7 @@ float mediana(CImg<float> & image, int x, int y, int c)
 		}
 	}
 	std::sort(arr, arr + 9);
-	int mediana = (arr[4] + arr[5]) / 2;
+	int mediana = arr[4];
 	delete[] arr;
 	return mediana;
 }
