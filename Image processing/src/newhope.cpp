@@ -21,9 +21,8 @@ int main(int argc, char * argv[]) {
 	float modificator;
 	CImg <float> image;
 
-	
 
-	
+
 	
 	//CHECK THE ARGUMENTS
 	if (argc == 2)

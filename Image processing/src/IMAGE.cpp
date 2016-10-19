@@ -49,8 +49,10 @@ float contrastlut(float value, float level)
 
 float negativelut(float value, float level )
 {
-	if (value < 127) return value + 127;
-	else return value - 127;
+	float newvalue = 255 - value;
+	if (newvalue < 0) return 0;
+	else
+		return newvalue;
 }
 
 // PRZECHODZI PRZEZ WSZYSTKIE PIXELE WCZESNIEJ TWORZAC LUT ODPOWIEDNIE DO OPERACJI
@@ -314,9 +316,9 @@ void Signal_to_noise_error(CImg<float> & image_without_noise, CImg<float> & imag
 		}
 
 	}
-
-	error = 10*log10(sum/(error));
-	error_geometric = 10*log10(sum/  error_geometric);
+	
+	error = 10*log10(sum/error);
+	error_geometric = 10*log10(sum/ error_geometric);
 	error_median = 10*log10(sum / error_median);
 
 	cout << "Signal to noise error" << endl;
@@ -347,10 +349,11 @@ void Peak_signal_to_noise_error(CImg<float> & image_without_noise, CImg<float> &
 			}
 		}
 	}
+	double coefficient = (1.0 / (image_without_noise.width()*image_without_noise.height() * num_of_layers));
 	int pow_max_value = pow(Find_maximum_value(image_without_noise), 2);
-	error = 10 * log10(pow_max_value / (error));
-	error_geometric = 10 * log10(pow_max_value / error_geometric);
-	error_median = 10 * log10(pow_max_value / error_median);
+	error = 10 * log10(pow_max_value / (error*coefficient));
+	error_geometric = 10 * log10(pow_max_value / (error_geometric*coefficient));
+	error_median = 10 * log10(pow_max_value / (error_median*coefficient));
 
 	cout << "Peak signal to noise error" << endl;
 	Show_error_data(error, error_median, error_geometric);
@@ -371,13 +374,13 @@ void Maximum_difference(CImg<float> & image_without_noise, CImg<float> & image_w
 		{
 			for (int y = 0; y < image_without_noise.height(); y++)
 			{
-				if (abs(max_diff_clean > (image_without_noise(x, y, 0, c) - image_with_noise(x, y, 0, c))))
+				if (max_diff_clean < abs ( (image_without_noise(x, y, 0, c) - image_with_noise(x, y, 0, c))))
 					max_diff_clean = abs((image_without_noise(x, y, 0, c) - image_with_noise(x, y, 0, c)));
 
-				if (abs(max_diff_median > (image_without_noise(x, y, 0, c) - image_median(x, y, 0, c))))
+				if (max_diff_median < abs ( (image_without_noise(x, y, 0, c) - image_median(x, y, 0, c))))
 					max_diff_median = abs((image_without_noise(x, y, 0, c) - image_median(x, y, 0, c)));
 
-				if (abs(max_diff_geometric > (image_without_noise(x, y, 0, c) - image_geometric(x, y, 0, c))))
+				if (max_diff_geometric < abs ((image_without_noise(x, y, 0, c) - image_geometric(x, y, 0, c))))
 					max_diff_geometric = abs((image_without_noise(x, y, 0, c) - image_geometric(x, y, 0, c)));
 			}
 		}
