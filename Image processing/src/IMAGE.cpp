@@ -196,30 +196,32 @@ float geometricmean(CImg<float> & image, int x, int y, int c)
 	return pow(sum, root);
 }
 
-CImg<float> medianfilter(CImg<float> & image) {
-	CImg<float> filterimage = image;
+CImg<float> * medianfilter(CImg<float> & image) {
+	CImg<float> * filterimage = new CImg<float>;
+	*filterimage = image;
 	for (int x = 1; x < image.width() - 1; x++)
 	{
 		for (int y = 1; y < image.height() - 1; y++)
 		{
 			for (int c = 0; c < num_of_layers; c++)
 			{
-				filterimage(x, y, 0, c) = mediana(image, x, y, c);
+				(*filterimage)(x, y, 0, c) = mediana(image, x, y, c);
 			}
 		}
 	}
 	return filterimage;
 }
 
-CImg<float> geometricfilter(CImg<float> & image) {
-	CImg<float> filterimage = image;
+CImg<float> * geometricfilter(CImg<float> & image) {
+	CImg<float> * filterimage = new CImg<float>;
+	*filterimage = image;
 	for (int x = 1; x < image.width() - 1; x++)
 	{
 		for (int y = 1; y < image.height() - 1; y++)
 		{
 			for (int c = 0; c < num_of_layers; c++)
 			{
-				filterimage(x, y, 0, c) = geometricmean(image, x, y, c);
+				(*filterimage)(x, y, 0, c) = geometricmean(image, x, y, c);
 			}
 		}
 	}
@@ -236,8 +238,8 @@ void SaveImage(CImg<float> & image) {
 
 void Mean_square_error(CImg<float> & image_without_noise, CImg<float> & image_with_noise)
 {
-	CImg<float> image_median = medianfilter(image_with_noise);
-	CImg<float> image_geometric = geometricfilter(image_with_noise);
+	CImg<float> image_median = *medianfilter(image_with_noise);
+	CImg<float> image_geometric = *geometricfilter(image_with_noise);
 	double mean_error = 0;
 	double mean_error_median = 0;
 	double mean_error_geometric = 0;
@@ -269,8 +271,8 @@ void Mean_square_error(CImg<float> & image_without_noise, CImg<float> & image_wi
 
 void Peak_mean_square_error(CImg<float> & image_without_noise, CImg<float> & image_with_noise)
 {
-	CImg<float> image_median = medianfilter(image_with_noise);
-	CImg<float> image_geometric = geometricfilter(image_with_noise);
+	CImg<float> image_median = *medianfilter(image_with_noise);
+	CImg<float> image_geometric = *geometricfilter(image_with_noise);
 	double mean_error = 0;
 	double mean_error_median = 0;
 	double mean_error_geometric = 0;
@@ -301,8 +303,8 @@ void Peak_mean_square_error(CImg<float> & image_without_noise, CImg<float> & ima
 
 void Signal_to_noise_error(CImg<float> & image_without_noise, CImg<float> & image_with_noise)
 {
-	CImg<float> image_median = medianfilter(image_with_noise);
-	CImg<float> image_geometric = geometricfilter(image_with_noise);
+	CImg<float> image_median = *medianfilter(image_with_noise);
+	CImg<float> image_geometric = *geometricfilter(image_with_noise);
 	double error = 0;
 	double error_median = 0;
 	double error_geometric = 0;
@@ -335,8 +337,8 @@ void Signal_to_noise_error(CImg<float> & image_without_noise, CImg<float> & imag
 
 void Peak_signal_to_noise_error(CImg<float> & image_without_noise, CImg<float> & image_with_noise)
 {
-	CImg<float> image_median = medianfilter(image_with_noise);
-	CImg<float> image_geometric = geometricfilter(image_with_noise);
+	CImg<float> image_median = *medianfilter(image_with_noise);
+	CImg<float> image_geometric = *geometricfilter(image_with_noise);
 	double error = 0;
 	double error_median = 0;
 	double error_geometric = 0;
@@ -367,8 +369,8 @@ void Peak_signal_to_noise_error(CImg<float> & image_without_noise, CImg<float> &
 
 void Maximum_difference(CImg<float> & image_without_noise, CImg<float> & image_with_noise)
 {
-	CImg<float> image_median = medianfilter(image_with_noise);
-	CImg<float> image_geometric = geometricfilter(image_with_noise);
+	CImg<float> image_median = *medianfilter(image_with_noise);
+	CImg<float> image_geometric = *geometricfilter(image_with_noise);
 	double max_diff_clean = 0;
 	double max_diff_median = 0;
 	double max_diff_geometric = 0;
