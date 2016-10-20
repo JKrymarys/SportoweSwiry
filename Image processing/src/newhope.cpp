@@ -155,11 +155,15 @@ int main(int argc, char * argv[]) {
 	}
 	else if ((string)argv[2] == "--median")
 	{
-		SaveImage(medianfilter(image));
+		CImg<float> * filterimage = medianfilter(image);
+		SaveImage(*filterimage);
+		delete filterimage;
 	}
 	else if((string)argv[2] == "--gmean")
 	{
-		SaveImage(geometricfilter(image));
+		CImg<float> * filterimage = geometricfilter(image);
+		SaveImage(*filterimage);
+		delete filterimage;
 	}
 
 
