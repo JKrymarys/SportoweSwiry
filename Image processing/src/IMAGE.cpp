@@ -38,13 +38,19 @@ float brightlut(float value, float level)
 
 float contrastlut(float value, float level)
 {
+	
 
-	if (value < 127) {
-		return value/level < 0 ? 0 : value/level;
+	if (((value - 128)*level) + 128 > 255)
+	{
+		return 255;
 	}
-	if (value > 127) {
-		return value*level > 255 ? 255 : value*level;
+	else if (((value - 128)*level) + 128 < 0) {
+		return 0;
 	}
+	else {
+		return ((value - 128)*level) + 128;
+	}
+
 }
 
 float negativelut(float value, float level )
@@ -342,7 +348,7 @@ void Peak_signal_to_noise_error(CImg<float> & image_without_noise, CImg<float> &
 		{
 			for (int y = 0; y < image_without_noise.height(); y++)
 			{
-				//sum += pow(image_without_noise(x, y, 0, c), 2);
+				
 				error += pow((image_without_noise(x, y, 0, c) - image_with_noise(x, y, 0, c)), 2);
 				error_geometric += pow((image_without_noise(x, y, 0, c) - image_geometric(x, y, 0, c)), 2);
 				error_median += pow((image_without_noise(x, y, 0, c) - image_median(x, y, 0, c)), 2);
