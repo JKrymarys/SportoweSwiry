@@ -11,35 +11,37 @@ using namespace std;
 
 const int HistogramSize = 256;
 
-// NA RAZIE TYLKO CZERWONY TRZEBA SIE ZASTANOWIC JAK ROZPOZNAC CZARNO BIALY I KOLOROWY
-void histogram(CImg<float> & image)
+int * createhistogramtable(CImg<float> & image, int channel)
 {
-	int histogram[HistogramSize] = {};
-	int histogramred[HistogramSize] = {};
-	int histogramblue[HistogramSize] = {};
-	int histogramgreen[HistogramSize] = {};
+	int * histogram = new int[HistogramSize]();
 	for (int x = 0; x < image.width(); x++)
 	{
 		for (int y = 0; y < image.height(); y++)
 		{
-			histogramred[(int)image(x, y, 0, 0)]++;
+			histogram[(int)image(x, y, 0, channel)]++;
 		}
 	}
+	return histogram;
+}
+
+
+void createhistogramimage(CImg<float> & image, int channel)
+{
+	int * histogram = createhistogramtable(image, channel);
 	int histogramheight = 0;
 	for (int i = 0; i < HistogramSize; i++)
 	{
-		if (histogramred[i] > histogramheight)
-			histogramheight = histogramred[i];
+		if (histogram[i] > histogramheight)
+			histogramheight = histogram[i];
 	}
-	CImg<float> histogramredpicture(HistogramSize, histogramheight/10, 1, 3);
+	CImg<float> histogrampicture(HistogramSize, histogramheight/10 + 1, 1, 3);
 	for (int x = 0; x < HistogramSize; x+=2)
 	{
-		for (int y = 0; y < histogramred[x]/10; y++)
+		for (float y = (histogramheight)/10 ; y > histogramheight/10-histogram[x]/10 ; y--)
 		{
-			histogramredpicture(x, y, 0, 0) = 255;
-			histogramredpicture(x+1, y, 0, 0) = 255;
+			histogrampicture(x, y, 0, 0) = 255;
+			histogrampicture(x+1, y, 0, 0) = 255;
 		}
 	}
-	verticalFlip(histogramredpicture);;
-	histogramredpicture.save("test.bmp");
+	histogrampicture.save("test.bmp");
 }
