@@ -22,7 +22,7 @@ one paramter:
 
 
 
-two paramters( picture_name --option):
+two paramters( picture_name.extension --option):
 ----------------------------------------
 
 --brightness  	unlimited but only reasonable values are from range -255,255 
