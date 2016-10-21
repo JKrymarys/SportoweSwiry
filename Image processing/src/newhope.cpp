@@ -14,12 +14,23 @@ using namespace std;
 
 int main(int argc, char * argv[]) {
 
+	// ONLY FOR TESTING PURPOSES
+	CImg<float> image;
+	image.load("girlc.bmp");
+	histogram(image);
+	
+
+	return 0;
+	
+
+
+
 	float(*operations[3])(float, float) = { brightlut, contrastlut, negativelut };
 
 	string operation_to_do;
 	string path_to_file;
 	float modificator;
-	CImg <float> image;
+	//CImg <float> image;
 
 
 	if (argc < 2 || argc > 3)

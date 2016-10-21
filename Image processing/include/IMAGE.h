@@ -48,5 +48,11 @@ void Show_error_data(double clean_picture_data, double median_filter_data, doubl
 
 
 
+// TASK 2 FUNCTIONS
+
+void histogram(CImg<float> & image);
+
+
+
 #endif // !IMAGE_H_
 
