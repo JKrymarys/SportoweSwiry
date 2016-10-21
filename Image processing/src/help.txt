@@ -1,33 +1,39 @@
 
-Image processing task1 0.9 beta 1
+Image processing: task1 
 
 authors: Jakub Krymarys 203210, Maciej Wyrzuc 203223
 
 List of functons:
 
 one paramter:
+---------------------------------------
+
 --help
 
-two paramters:
+--median  		median filter
+--gmean			geometric mean filter
+
+
+--mse			mean square error
+--pmse			peak mean square error
+--snr			signal to noise error
+--psnr			peak signal to noise error
+--md			maximum difference
+
+
+
+two paramters( picture_name --option):
+----------------------------------------
+
 --brightness
 --contrast
 --negative
 --hflip			horizontal flip
 --vflip			vertical flip
---dflip			
---shrink 		by 50%
---enlarge		by 100%
+--dflip			diagonal flip
+--shrink 		
+--enlarge		
 
-filters:
---median
---gmean
 
-Comes in next update:
 
---mse
---pmse
---snr
---psnr
---md
-
-After procces please give output name of file. Extension will be added automaticly
+After procces please give name of output. Extension will be added automaticly
