@@ -13,7 +13,7 @@ using namespace std;
 const int ArrSize = 255;
 
 
-// FUNCKJA TWORZACA LUT W ZALEZNOSCI OD PRZEKAZANEJ OPERACJI
+// FUNCTION CREATING LUT DEPENDIND ON THE OPERATION
 int * lookuptable(float level, float(*operation)(float, float))
 {
 	int * lut = new int[ArrSize];
@@ -27,7 +27,7 @@ int * lookuptable(float level, float(*operation)(float, float))
 	return lut;
 }
 
-// MOZLIWE OPERACJE ZWIAZANE Z LUTEM
+// POSSIBLE OPERATIONS FOR LUT
 
 float brightlut(float value, float level)
 {
@@ -61,7 +61,7 @@ float negativelut(float value, float level )
 		return newvalue;
 }
 
-// PRZECHODZI PRZEZ WSZYSTKIE PIXELE WCZESNIEJ TWORZAC LUT ODPOWIEDNIE DO OPERACJI
+// ITERATES THROUGH EVERY PIXEL AND CREATES SUTIABLE LUT
 void basicoperations(float level, CImg<float> & image, float(*operation)(float, float)) {
 
 	int * lut = lookuptable(level, operation);
@@ -79,7 +79,7 @@ void basicoperations(float level, CImg<float> & image, float(*operation)(float, 
 	delete[] lut;
 }
 
-//FLIPY
+//FLIPS
 
 void verticalFlip(CImg<float> & image) {
 
@@ -127,14 +127,14 @@ CImg<float> shrink(CImg<float> & image) {
 
 	CImg<float> shrinked_image((image.width() / 2), (image.height() / 2), 1, 3);
 
-	for (int x = 0; x < shrinked_image.width(); x++)  //zeby nie wjsc za tablice
+	for (int x = 0; x < shrinked_image.width(); x++)  //to not run out of table
 	{
 		for (int y = 0; y < shrinked_image.height(); y++)
 		{
 			for (int c = 0; c < num_of_layers; c++)
 			{
 
-				shrinked_image(x, y, 0, c) = image(2 * x, 2 * y, 0, c); //co drugi pixel (0,0)(2,2)(4,4) itp
+				shrinked_image(x, y, 0, c) = image(2 * x, 2 * y, 0, c); //every second pixel (0,0)(2,2)(4,4) etc
 
 			}
 		}
