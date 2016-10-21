@@ -23,7 +23,6 @@ int main(int argc, char * argv[]) {
 
 
 
-	
 	//CHECK THE ARGUMENTS
 	if (argc == 2)
 	{
