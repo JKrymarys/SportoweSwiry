@@ -25,8 +25,8 @@ one paramter:
 two paramters( picture_name --option):
 ----------------------------------------
 
---brightness
---contrast
+--brightness  	unlimited but only reasonable values are from range -255,255 
+--contrast		level>1: increase contrast, level<1 degrease  contrast
 --negative
 --hflip			horizontal flip
 --vflip			vertical flip
