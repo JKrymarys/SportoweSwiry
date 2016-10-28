@@ -230,7 +230,7 @@ CImg<float> * geometricfilter(CImg<float> & image) {
 
 void SaveImage(CImg<float> & image) {
 	string name;
-	name += "_modified";
+	name += "output.bmp";
 	image.save(name.c_str());
 }
 
