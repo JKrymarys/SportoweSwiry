@@ -230,9 +230,7 @@ CImg<float> * geometricfilter(CImg<float> & image) {
 
 void SaveImage(CImg<float> & image) {
 	string name;
-	cout << "Give name of output file" << std::endl;
-	cin >> name;
-	name += ".bmp";
+	name += "_modified";
 	image.save(name.c_str());
 }
 
