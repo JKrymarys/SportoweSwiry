@@ -15,13 +15,12 @@ using namespace std;
 
 int main(int argc, char * argv[]) {
 
-	// // ONLY FOR TESTING PURPOSES
-	// CImg<float> image;
-	// image.load("girlc.bmp");
-	// histogram(image);
-	
-
-	// return 0;
+	 // ONLY FOR TESTING PURPOSES
+	 //CImg<float> image;
+	 //image.load("lena.bmp");
+	 //createhistogramimage(image, 0);
+	 //UniformFinalProbabilityDensityFunction(image, 0);
+	 //return 0;
 	
 
 

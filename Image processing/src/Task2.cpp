@@ -43,5 +43,37 @@ void createhistogramimage(CImg<float> & image, int channel)
 			histogrampicture(x+1, y, 0, 0) = 255;
 		}
 	}
-	histogrampicture.save("test.bmp");
+	SaveImage(histogrampicture);
+	delete[] histogram;
+}
+
+
+void UniformFinalProbabilityDensityFunction(CImg<float> & image, int channel)
+{
+	int gmax, gmin, numofpixels, sum;
+	gmax = 255;
+	gmin = 0;
+	numofpixels = image.width()*image.height();
+	int * histogram = createhistogramtable(image, channel);
+	float * lut = new float[HistogramSize];
+	for (int i = 0; i < HistogramSize; i++)
+	{
+		sum = 0;
+		for (int m = 0; m <= i; m++)
+		{
+			sum += histogram[m];
+		}
+		lut[i] = gmin + (gmax - gmin) * (1 / numofpixels) * sum;
+	}
+	for (int x = 0; x < image.width(); x++)
+	{
+		for (int y = 0; y < image.height(); y++)
+		{
+
+				image(x, y, 0, channel) = lut[(int)image(x, y, 0, channel)];
+		}
+	}
+	createhistogramimage(image, channel);
+	delete[] lut;
+	delete[] histogram;
 }

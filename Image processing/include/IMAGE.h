@@ -35,6 +35,7 @@ float geometricmean(CImg<float> & image, int x, int y, int c);
 CImg<float> * geometricfilter(CImg<float> & image);
 // SAVING IMAGE FUNCTION
 void SaveImage(CImg<float> & image);
+void SaveImage2(CImg<float> & image);
 // ERRORS CALCULATIONS
 void Mean_square_error(CImg<float> & image_without_noise, CImg<float> & image_with_noise);
 void Peak_mean_square_error(CImg<float> & image_without_noise, CImg<float> & image_with_noise);
@@ -50,9 +51,9 @@ void Show_error_data(double clean_picture_data, double median_filter_data, doubl
 
 // TASK 2 FUNCTIONS
 
-void histogram(CImg<float> & image);
-
-
+int * createhistogramtable(CImg<float> & image, int channel);
+void createhistogramimage(CImg<float> & image, int channel);
+void UniformFinalProbabilityDensityFunction(CImg<float> & image, int channel);
 
 #endif // !IMAGE_H_
 
