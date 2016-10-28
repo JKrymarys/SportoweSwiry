@@ -18,9 +18,13 @@ int * createhistogramtable(CImg<float> & image, int channel)
 	{
 		for (int y = 0; y < image.height(); y++)
 		{
-			histogram[(int)image(x, y, 0, channel)]++;
+			histogram[(int)image(x, y)]++;
 		}
 	}
+	for (int i = 0; i < HistogramSize; i++) {
+		cout << histogram[i] << "\t";
+	}
+	cout << endl << endl;
 	return histogram;
 }
 
@@ -39,18 +43,19 @@ void createhistogramimage(CImg<float> & image, int channel)
 	{
 		for (float y = (histogramheight)/10 ; y > histogramheight/10-histogram[x]/10 ; y--)
 		{
-			histogrampicture(x, y, 0, 0) = 255;
-			histogrampicture(x+1, y, 0, 0) = 255;
+			histogrampicture(x, y) = 127;
+			histogrampicture(x+1, y) = 127;
 		}
 	}
-	SaveImage(histogrampicture);
+	SaveImage2(histogrampicture);
 	delete[] histogram;
 }
 
 
 void UniformFinalProbabilityDensityFunction(CImg<float> & image, int channel)
 {
-	int gmax, gmin, numofpixels, sum;
+	double numofpixels;
+	int gmax, gmin, sum;
 	gmax = 255;
 	gmin = 0;
 	numofpixels = image.width()*image.height();
@@ -63,16 +68,22 @@ void UniformFinalProbabilityDensityFunction(CImg<float> & image, int channel)
 		{
 			sum += histogram[m];
 		}
-		lut[i] = gmin + (gmax - gmin) * (1 / numofpixels) * sum;
+		lut[i] = gmin + (gmax - gmin) * (1.0 / numofpixels) * sum;
 	}
+	cout << "LOOOOOOK UP TABLE" << endl;
+	for (int i = 0; i < HistogramSize; i++) {
+		cout << lut[i] << "\t";
+	}
+	cout << endl << endl << endl;
 	for (int x = 0; x < image.width(); x++)
 	{
 		for (int y = 0; y < image.height(); y++)
 		{
 
-				image(x, y, 0, channel) = lut[(int)image(x, y, 0, channel)];
+				image(x, y) = lut[(int)image(x, y)];
 		}
 	}
+	image.save("dupa.bmp");
 	createhistogramimage(image, channel);
 	delete[] lut;
 	delete[] histogram;

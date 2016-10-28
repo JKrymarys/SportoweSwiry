@@ -16,15 +16,14 @@ using namespace std;
 
 int main(int argc, char * argv[]) {
 
-<<<<<<< HEAD
-	 // ONLY FOR TESTING PURPOSES
-	 //CImg<float> image;
-	 //image.load("lena.bmp");
-	 //createhistogramimage(image, 0);
-	 //UniformFinalProbabilityDensityFunction(image, 0);
-	 //return 0;
-=======
->>>>>>> 63c85b9220307c3c6744072b0d6e43badadde2fc
+
+	 //ONLY FOR TESTING PURPOSES
+	 CImg<float> image;
+	 image.load("lena.bmp");
+	 createhistogramimage(image, 0);
+	 UniformFinalProbabilityDensityFunction(image, 0);
+	 return 0;
+
 	
 
 
@@ -37,7 +36,7 @@ int main(int argc, char * argv[]) {
 	regex pattern_comparisionts("(?:--)(mse|pmse|snr|psnr|md)");
 	regex pattern_basic_operations("(?:--)(brightness|contrast|negative|vflip|hflip|dflip|shrink|enlarge)");
 	regex pattern_histograms("(?:--)(--histogram)");
-	CImg <float> image;
+//	CImg <float> image;
 
 //nazwa.exe lena.bmp --contrast 30
 //nazwa.exe --md lena.bmp lena_noise.bmp
