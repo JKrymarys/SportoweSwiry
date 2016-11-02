@@ -316,3 +316,4 @@ float Centropy(CImg<float> & image, int channel) {
 }
 
 //trud skonczony
+//amen
