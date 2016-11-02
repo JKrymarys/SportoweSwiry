@@ -234,14 +234,6 @@ void SaveImage(CImg<float> & image) {
 	image.save(name.c_str());
 }
 
-void SaveImage2(CImg<float> & image)
-{
-	string name;
-	cout << "Give name of output file" << endl;
-	cin >> name;
-	image.save(name.c_str());
-}
-
 void Mean_square_error(CImg<float> & image_without_noise, CImg<float> & image_with_noise)
 {
 	CImg<float> image_median = *medianfilter(image_with_noise);

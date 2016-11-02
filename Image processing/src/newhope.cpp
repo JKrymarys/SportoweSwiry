@@ -16,18 +16,6 @@ using namespace std;
 
 int main(int argc, char * argv[]) {
 
-
-	 //ONLY FOR TESTING PURPOSES
-	 CImg<float> image;
-	 image.load("lena.bmp");
-	 createhistogramimage(image, 0);
-	 UniformFinalProbabilityDensityFunction(image, 0);
-	 return 0;
-
-	
-
-
-
 	float(*operations[3])(float, float) = { brightlut, contrastlut, negativelut };
 
 	string operation_to_do;
@@ -35,8 +23,8 @@ int main(int argc, char * argv[]) {
 	float modificator;
 	regex pattern_comparisionts("(?:--)(mse|pmse|snr|psnr|md)");
 	regex pattern_basic_operations("(?:--)(brightness|contrast|negative|vflip|hflip|dflip|shrink|enlarge)");
-	regex pattern_histograms("(?:--)(--histogram)");
-//	CImg <float> image;
+	regex pattern_histograms("(?:--)(histogram|slowpass|huniform|cmean|cvariance|cstdev|cvarcoi|casyco|cvarcoii|centropy)");
+	CImg <float> image;
 
 //nazwa.exe lena.bmp --contrast 30
 //nazwa.exe --md lena.bmp lena_noise.bmp
@@ -75,7 +63,9 @@ int main(int argc, char * argv[]) {
 		}
 
 #pragma endregion
-#pragma region TASK_1
+
+
+	//comparisions 
 
 	else if (regex_search(argv[1], pattern_comparisionts)) //inf regex match go into coparisions part of main 
 	{
@@ -138,8 +128,10 @@ int main(int argc, char * argv[]) {
 		}
 
 
-		cout << "(test regex2) " << regex_search(argv[1], pattern_basic_operations) << endl;
 	}
+
+	//basic operations
+
 	else if (regex_search(argv[1], pattern_basic_operations))
 	{
 
@@ -147,7 +139,7 @@ int main(int argc, char * argv[]) {
 		image.load(argv[2]);
 		//operation
 		operation_to_do = argv[1];
-	
+
 		// CHOISE OF THE OPERATION
 
 		//OPERATIONS PERFORMED ON THE ORIGINAL IMAGE
@@ -206,28 +198,38 @@ int main(int argc, char * argv[]) {
 			SaveImage(*filterimage);
 			delete filterimage;
 		}
+	}
 
-		else if (regex_search(argv[1],pattern_histograms)) {
-			
-	/*		CImg<float> image;
+	else if (regex_search(argv[1],pattern_histograms)) {
+		
+			CImg<float> image;
 			image.load(argv[2]);
+			int third_argument;
+			
+			if (argc == 4)
+				third_argument = stod(argv[3]); //channel or mask
 
 			if ((string)argv[1] == "--histogram")
 			{
-				
-				histogram(image);
-
-
-				return 0;
+				Createhistogramimage(image,third_argument);
 			}
-*/
-	}
+			else if ((string)argv[1] == "--huniform")
+			{
+				UniformFinalProbabilityDensityFunction( image, 0);
+			}
+			else if ((string)argv[1] == "--slowpass")
+			{
+				CImg<float> *filtredimage = Low_pass_filter(image, third_argument);
+				SaveImage(*filtredimage);
+			}
+			else if ((string)argv[1] == "--cmean")
+			{
+				cout << Cmean(image) << endl;
+			}
+		return 0;
 	}
 
-	else { cout << "Error" << endl;  return 0; }
-	
-
-#pragma endregion
+	else { cout << "Error couldnt match to any known function :C " << endl;  return 0; }
 
 	return 0;
 }

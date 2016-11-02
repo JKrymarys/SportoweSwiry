@@ -51,9 +51,12 @@ void Show_error_data(double clean_picture_data, double median_filter_data, doubl
 
 // TASK 2 FUNCTIONS
 
-int * createhistogramtable(CImg<float> & image, int channel);
-void createhistogramimage(CImg<float> & image, int channel);
+int * createhistogramtable(CImg<float> & image, int channel = 0 );
+void Createhistogramimage(CImg<float> & image, int channel = 0);
+CImg<float> * Low_pass_filter(CImg<float> & image, int mask_chosen);
 void UniformFinalProbabilityDensityFunction(CImg<float> & image, int channel);
-
+float lpFilter(CImg<float> &image, int x, int y, int c, int mask_chosen);
+float Cmean(CImg<float> & image, int channel = 0 );
+float Cvariance(CImg<float> & image, int channel = 0);
 #endif // !IMAGE_H_
 
