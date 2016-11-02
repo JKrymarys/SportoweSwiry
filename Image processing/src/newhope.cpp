@@ -23,7 +23,7 @@ int main(int argc, char * argv[]) {
 	float modificator;
 	regex pattern_comparisionts("(?:--)(mse|pmse|snr|psnr|md)");
 	regex pattern_basic_operations("(?:--)(brightness|contrast|negative|vflip|hflip|dflip|shrink|enlarge)");
-	regex pattern_histograms("(?:--)(histogram|slowpass|huniform|cmean|cvariance|cstdev|cvarcoi|casyco|cvarcoii|centropy)");
+	regex pattern_histograms("(?:--)(histogram|slowpass|huniform|cmean|cvariance|cstdev|cvarcoi|casyco|cfasyco|cvarcoii|centropy)");
 	CImg <float> image;
 
 //nazwa.exe lena.bmp --contrast 30
@@ -200,32 +200,61 @@ int main(int argc, char * argv[]) {
 		}
 	}
 
-	else if (regex_search(argv[1],pattern_histograms)) {
-		
-			CImg<float> image;
-			image.load(argv[2]);
-			int third_argument;
-			
-			if (argc == 4)
-				third_argument = stod(argv[3]); //channel or mask
+	else if (regex_search(argv[1], pattern_histograms)) {
 
-			if ((string)argv[1] == "--histogram")
-			{
-				Createhistogramimage(image,third_argument);
-			}
-			else if ((string)argv[1] == "--huniform")
-			{
-				UniformFinalProbabilityDensityFunction( image, 0);
-			}
-			else if ((string)argv[1] == "--slowpass")
-			{
-				CImg<float> *filtredimage = Low_pass_filter(image, third_argument);
-				SaveImage(*filtredimage);
-			}
-			else if ((string)argv[1] == "--cmean")
-			{
-				cout << Cmean(image) << endl;
-			}
+		CImg<float> image;
+		image.load(argv[2]);
+		int third_argument = 0;
+
+		if (argc == 4)
+			third_argument = stod(argv[3]); //channel or mask
+
+		if ((string)argv[1] == "--histogram")
+		{
+			Createhistogramimage(image, third_argument);
+		}
+		else if ((string)argv[1] == "--huniform")
+		{
+			UniformFinalProbabilityDensityFunction(image, 0);
+		}
+		else if ((string)argv[1] == "--slowpass")
+		{
+			CImg<float> *filtredimage = Low_pass_filter(image, third_argument);
+			SaveImage(*filtredimage);
+		}
+		else if ((string)argv[1] == "--cmean")
+		{
+			cout << Cmean(image, third_argument) << endl;
+		}
+		
+		else if ((string)argv[1] == "--cvariance")
+		{
+			cout << Cvariance(image, third_argument) << endl;
+		}
+		else if ((string)argv[1] == "--cstdev")
+		{
+			cout << Cstdev(image, third_argument) << endl;
+		}
+		else if ((string)argv[1] == "--cvarcoi")
+		{
+			cout << Cvarcoi(image, third_argument) << endl;
+		}
+		else if ((string)argv[1] == "--casyco")
+		{
+			cout << Casyco(image, third_argument) << endl;
+		}
+		else if ((string)argv[1] == "--cfasyco")
+		{
+			cout << Cfasyco(image, third_argument) << endl;
+		}
+		else if ((string)argv[1] == "--cvarcoii")
+		{
+			cout << Cvarcoii(image, third_argument) << endl;
+		}
+		else if ((string)argv[1] == "--centropy")
+		{
+			cout << Centropy(image, third_argument) << endl;
+		}
 		return 0;
 	}
 

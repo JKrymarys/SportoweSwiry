@@ -232,7 +232,7 @@ float Cstdev(CImg<float> & image, int channel) {
 	return pow(Cvariance(image, channel), 0.5);
 }
 
-float Cvarcoi(CImg<float> & image, int channel) {
+\
 	return Cstdev(image, channel) / Cmean(image, channel);
 }
 
@@ -256,7 +256,7 @@ float Casyco(CImg<float>& image, int channel)
 	return ((1 / pow(sigma, 3))*(1/number_of_pixels)*sum);
 }
 
-float Casyco(CImg<float> & image, int channel) {
+float Cfasyco(CImg<float> & image, int channel) {
 
 	float number_of_pixels = image.height()*image.width();
 	float sigma = 1;
