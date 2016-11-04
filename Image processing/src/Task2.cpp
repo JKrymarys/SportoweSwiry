@@ -233,7 +233,8 @@ float Cstdev(CImg<float> & image, int channel) {
 	return pow(Cvariance(image, channel), 0.5);
 }
 
-\
+float Cvarcoi(CImg<float> &image, int channel)
+{
 	return Cstdev(image, channel) / Cmean(image, channel);
 }
 
