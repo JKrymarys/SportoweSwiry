@@ -337,3 +337,5 @@ float roFilter(CImg<float> & image, int x, int y, int c)
 
 //trud skonczony
 //amen
+
+// DUPA TESTY VISUAL STUDIO YOLO
