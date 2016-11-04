@@ -15,7 +15,7 @@ const int HISTOGRAM_SIZE = 256; //max possible level of intensity
 class Mask {
 private:
 	float dividor;
-	int * mask_values =  new int[9];
+	int * mask_values = new int[9];
 	string mask_1 = "1 1 1 1 1 1 1 1 1";
 	string mask_2 = "1 1 1 1 2 1 1 1 1";
 	string mask_3 = "1 2 1 2 4 2 1 2 1";
@@ -25,7 +25,6 @@ public:
 
 	Mask(int i) {
 		stringstream ss;
-
 
 		if (i == 1)
 		{
@@ -62,9 +61,6 @@ int * createhistogramtable(CImg<float> & image, int channel)
 		{
 			histogram[(int)image(x, y,0, channel)]++;
 		}
-	}
-	for (int i = 0; i < HISTOGRAM_SIZE; i++) {
-		cout << histogram[i] << "\t";
 	}
 	cout << endl << endl;
 	return histogram;
@@ -112,11 +108,7 @@ void UniformFinalProbabilityDensityFunction(CImg<float> & image, int channel)
 		}
 		lut[i] = gmin + (gmax - gmin) * (1.0 / numofpixels) * sum;
 	}
-	cout << "LOOOOOOK UP TABLE" << endl;
-	for (int i = 0; i < HISTOGRAM_SIZE; i++) {
-		cout << lut[i] << "\t";
-	}
-	cout << endl << endl << endl;
+
 	for (int x = 0; x < image.width(); x++)
 	{
 		for (int y = 0; y < image.height(); y++)
@@ -193,12 +185,12 @@ float lpFilter(CImg<float> &image, int x, int y, int c, int mask_chosen   ) {
 	// PS KARASIE JEDZA GOWNO
 }
 
-float Cmean(CImg<float> & image ) {
+float Cmean(CImg<float> & image,int  channel ) {
 	float number_of_pixels = image.height()*image.width();
 	int* histogram;
 	float sum = 0;
 
-		histogram = createhistogramtable(image);
+		histogram = createhistogramtable(image, channel);
 		for (int i = 0; i < HISTOGRAM_SIZE - 1; i++)
 		{
 			sum += i*histogram[i];
@@ -241,7 +233,7 @@ float Cvarcoi(CImg<float> &image, int channel)
 float Casyco(CImg<float>& image, int channel)
 {
 	float number_of_pixels = image.height()*image.width();
-	float sigma = 1;
+	float sigma = Cstdev(image, channel);
 	int* histogram;
 	float sum = 0;
 	float mean = Cmean(image,channel);
@@ -303,18 +295,44 @@ float Centropy(CImg<float> & image, int channel) {
 	int* histogram;
 	float sum = 0;
 	float mean = Cmean(image, channel);
+	double log;
 
 	histogram = createhistogramtable(image, channel);
 
 	for (int i = 0; i < HISTOGRAM_SIZE - 1; i++)
 	{
-		sum += pow(histogram[i], 2)*log2(histogram[i]/number_of_pixels) ;
+		if (histogram[i] == 0)
+			log = 0;
+		else log = log2(histogram[i] / number_of_pixels);
+		sum += histogram[i]*log;
 	}
 	delete[] histogram;
-
-
 	return (-1/number_of_pixels)*sum;
 
+}
+
+CImg<float> * Roberts_operator(CImg<float> & image)
+{
+	CImg<float> * filtredimage = new CImg<float>(image);
+	for (int x = 1; x < image.width() - 2; x++)			//in such case we avoid the border pixels
+	{
+		for (int y = 1; y < image.height() - 2; y++)
+		{
+			for (int c = 0; c < image.spectrum(); c++)
+			{
+
+				(*filtredimage)(x, y, 0, c) = roFilter(image, x, y, c);
+			}
+		}
+	}
+	return filtredimage;
+}
+
+float roFilter(CImg<float> & image, int x, int y, int c)
+{
+	float pow1 = pow((image(x, y, 0, c) - image(x + 1, y + 1)), 2);
+	float pow2 = pow((image(x, y + 1, 0, c) - image(x + 1, y, 0, c)), 2);
+	return pow((pow1 + pow2), 0.5);
 }
 
 //trud skonczony

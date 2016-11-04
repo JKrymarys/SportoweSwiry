@@ -22,7 +22,7 @@ int main(int argc, char * argv[]) {
 	string path_to_file;
 	float modificator;
 	regex pattern_comparisionts("(?:--)(mse|pmse|snr|psnr|md)");
-	regex pattern_basic_operations("(?:--)(brightness|contrast|negative|vflip|hflip|dflip|shrink|enlarge)");
+	regex pattern_basic_operations("(?:--)(brightness|contrast|negative|vflip|hflip|dflip|shrink|enlarge|median|gmean|orobertsi)");
 	regex pattern_histograms("(?:--)(histogram|slowpass|huniform|cmean|cvariance|cstdev|cvarcoi|casyco|cfasyco|cvarcoii|centropy)");
 	CImg <float> image;
 
@@ -198,6 +198,12 @@ int main(int argc, char * argv[]) {
 			SaveImage(*filterimage);
 			delete filterimage;
 		}
+		else if ((string)operation_to_do == "--orobertsi")
+		{
+			CImg<float> *filtredimage = Low_pass_filter(image);
+			SaveImage(*filtredimage);
+			delete filtredimage;
+		}
 	}
 
 	else if (regex_search(argv[1], pattern_histograms)) {
@@ -215,12 +221,13 @@ int main(int argc, char * argv[]) {
 		}
 		else if ((string)argv[1] == "--huniform")
 		{
-			UniformFinalProbabilityDensityFunction(image, 0);
+			UniformFinalProbabilityDensityFunction(image, third_argument);
 		}
 		else if ((string)argv[1] == "--slowpass")
 		{
 			CImg<float> *filtredimage = Low_pass_filter(image, third_argument);
 			SaveImage(*filtredimage);
+			delete filtredimage;
 		}
 		else if ((string)argv[1] == "--cmean")
 		{
