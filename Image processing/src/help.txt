@@ -3,16 +3,32 @@ Image processing: task1
 
 authors: Jakub Krymarys 203210, Maciej Wyrzuc 203223
 
-List of functons:
+*********
+HOW TO INVOKE PROGRAM:
 
-one paramter:
----------------------------------------
+image_newhope.exe --FUNCTION_NAME OPTIONAL_PARAMTER
+
+where OPTIONAL_PARAMTER can be:
+	For task1
+	- value of change
+	- multple of contrast change
+	
+	For task2
+	- channel 
+	- low pass filters mask 
+
+	
+--------------------------------------------------------------------------------
+********************************************************************************
+--------------------------------------------------------------------------------
+	
+
+Functions TASK 1:
 
 --help
 
 --median  		median filter
 --gmean			geometric mean filter
-
 
 --mse			mean square error
 --pmse			peak mean square error
@@ -34,6 +50,23 @@ two paramters( picture_name.extension --option):
 --shrink 		
 --enlarge		
 
+--------------------------------------------------------------------------------
+
+TASK 2
 
 
-After procces please give name of output. Extension will be added automaticly
+--histogram  
+--huniform  // H1
+--slowpass  // S1
+--orobertsi // O1
+
+--cmean
+--cvariance
+--cstdev
+--cvarcoi
+--casyco
+--cfasyco
+--cvarcoii
+--centropy
+
+Output file have name "output.bmp.
