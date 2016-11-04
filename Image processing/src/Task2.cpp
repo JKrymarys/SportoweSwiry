@@ -190,6 +190,7 @@ float lpFilter(CImg<float> &image, int x, int y, int c, int mask_chosen   ) {
 	//chyba xd
 
 	//rigz?
+	// PS KARASIE JEDZA GOWNO
 }
 
 float Cmean(CImg<float> & image ) {
