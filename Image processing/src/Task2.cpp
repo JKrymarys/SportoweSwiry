@@ -330,9 +330,17 @@ CImg<float> * Roberts_operator(CImg<float> & image)
 
 float roFilter(CImg<float> & image, int x, int y, int c)
 {
-	float pow1 = pow((image(x, y, 0, c) - image(x + 1, y + 1)), 2);
+	float pow1 = pow((image(x, y, 0, c) - image(x + 1, y + 1, 0 , c)), 2);
 	float pow2 = pow((image(x, y + 1, 0, c) - image(x + 1, y, 0, c)), 2);
 	return pow((pow1 + pow2), 0.5);
+}
+
+
+float roFilter2(CImg<float> & image, int x, int y, int c)
+{
+	float abs1 = abs(image(x, y, 0, c) - image(x + 1, y + 1, 0, c));
+	float abs2 = abs(image(x, y + 1, 0, c) - image(x + 1, y, 0, c));
+	return abs1 + abs2;
 }
 
 //trud skonczony

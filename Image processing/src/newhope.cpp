@@ -200,7 +200,7 @@ int main(int argc, char * argv[]) {
 		}
 		else if ((string)operation_to_do == "--orobertsi")
 		{
-			CImg<float> *filtredimage = Low_pass_filter(image);
+			CImg<float> *filtredimage = Roberts_operator(image);
 			SaveImage(*filtredimage);
 			delete filtredimage;
 		}

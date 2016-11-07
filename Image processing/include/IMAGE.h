@@ -83,5 +83,7 @@ float Cvarcoii(CImg<float> & image, int channel = 0);
 // 01
 CImg<float> * Roberts_operator(CImg<float> & image);
 float roFilter(CImg<float> & image, int x, int y, int c);
+float roFilter2(CImg<float> & image, int x, int y, int c);
+
 #endif // !IMAGE_H_
 
