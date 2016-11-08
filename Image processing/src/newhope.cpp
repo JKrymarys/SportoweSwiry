@@ -67,7 +67,7 @@ int main(int argc, char * argv[]) {
 
 	//comparisions 
 
-	else if (regex_search(argv[1], pattern_comparisionts)) //inf regex match go into coparisions part of main 
+	if (regex_search(argv[1], pattern_comparisionts)) //inf regex match go into coparisions part of main 
 	{
 
 		string name_without_noise;
@@ -217,50 +217,77 @@ int main(int argc, char * argv[]) {
 
 		if ((string)argv[1] == "--histogram")
 		{
-			Createhistogramimage(image, third_argument);
+			if (third_argument < 0 || third_argument > 2)
+				cout << "You can create histogram only for 0, 1, 2 channel";
+			else
+				Createhistogramimage(image, third_argument);
+			return 0;
 		}
 		else if ((string)argv[1] == "--huniform")
 		{
-			UniformFinalProbabilityDensityFunction(image, third_argument);
+			UniformFinalProbabilityDensityFunction(image);
+			return 0;
 		}
 		else if ((string)argv[1] == "--slowpass")
 		{
-			CImg<float> *filtredimage = Low_pass_filter(image, third_argument);
-			SaveImage(*filtredimage);
-			delete filtredimage;
+			if (third_argument < 1 || third_argument > 3)
+			{
+				cout << endl << "Masks can be choosen form 1 to 3";
+				return 0;
+			}
+			else if (third_argument == 1)
+			{
+				CImg<float> *filtredimage = ameanfilter(image);
+				SaveImage(*filtredimage);
+				return 0;
+			}
+			else
+			{
+				CImg<float> *filtredimage = Low_pass_filter(image, third_argument);
+				SaveImage(*filtredimage);
+				delete filtredimage;
+				return 0;
+			}
 		}
 		else if ((string)argv[1] == "--cmean")
 		{
 			cout << Cmean(image, third_argument) << endl;
+			return 0;
 		}
-		
 		else if ((string)argv[1] == "--cvariance")
 		{
 			cout << Cvariance(image, third_argument) << endl;
+			return 0;
 		}
 		else if ((string)argv[1] == "--cstdev")
 		{
 			cout << Cstdev(image, third_argument) << endl;
+			return 0;
 		}
 		else if ((string)argv[1] == "--cvarcoi")
 		{
 			cout << Cvarcoi(image, third_argument) << endl;
+			return 0;
 		}
 		else if ((string)argv[1] == "--casyco")
 		{
 			cout << Casyco(image, third_argument) << endl;
+			return 0;
 		}
 		else if ((string)argv[1] == "--cfasyco")
 		{
 			cout << Cfasyco(image, third_argument) << endl;
+			return 0;
 		}
 		else if ((string)argv[1] == "--cvarcoii")
 		{
 			cout << Cvarcoii(image, third_argument) << endl;
+			return 0;
 		}
 		else if ((string)argv[1] == "--centropy")
 		{
 			cout << Centropy(image, third_argument) << endl;
+			return 0;
 		}
 		return 0;
 	}

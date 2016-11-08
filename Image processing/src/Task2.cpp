@@ -15,7 +15,7 @@ const int HISTOGRAM_SIZE = 256; //max possible level of intensity
 class Mask {
 private:
 	float dividor;
-	int * mask_values = new int[9];
+	int * mask_values;
 	string mask_1 = "1 1 1 1 1 1 1 1 1";
 	string mask_2 = "1 1 1 1 2 1 1 1 1";
 	string mask_3 = "1 2 1 2 4 2 1 2 1";
@@ -25,7 +25,7 @@ public:
 
 	Mask(int i) {
 		stringstream ss;
-
+		mask_values = new int[9];
 		if (i == 1)
 		{
 			 dividor = 9.0;
@@ -52,6 +52,9 @@ public:
 }
 };
 
+
+
+
 int * createhistogramtable(CImg<float> & image, int channel)
 {
 	int * histogram = new int[HISTOGRAM_SIZE]();
@@ -69,7 +72,7 @@ int * createhistogramtable(CImg<float> & image, int channel)
 
 void Createhistogramimage(CImg<float> & image,int channel)
 {
-	int * histogram = createhistogramtable(image);
+	int * histogram = createhistogramtable(image, channel);
 	int histogramheight = 0;
 	for (int i = 0; i < HISTOGRAM_SIZE; i++)
 	{
@@ -81,8 +84,8 @@ void Createhistogramimage(CImg<float> & image,int channel)
 	{
 		for (float y = (histogramheight)/10 ; y > histogramheight/10-histogram[x]/10 ; y--)
 		{
-			histogrampicture(x, y) = 127;
-			histogrampicture(x+1, y) = 127;
+			histogrampicture(x, y, 0, channel) = 255;
+			histogrampicture(x+1, y, 0, channel) = 255;
 		}
 	}
 	SaveImage(histogrampicture);
@@ -90,41 +93,40 @@ void Createhistogramimage(CImg<float> & image,int channel)
 }
 
 
-void UniformFinalProbabilityDensityFunction(CImg<float> & image, int channel)
+void UniformFinalProbabilityDensityFunction(CImg<float> & image)
 {
 	double numofpixels;
 	int gmax, gmin, sum;
 	gmax = 255;
 	gmin = 0;
 	numofpixels = image.width()*image.height();
-	int * histogram = createhistogramtable(image);
+	int * histogram;
 	float * lut = new float[HISTOGRAM_SIZE];
-	for (int i = 0; i < HISTOGRAM_SIZE; i++)
+	for (int c = 0; c < image.spectrum(); c++)
 	{
-		sum = 0;
-		for (int m = 0; m <= i; m++)
+		histogram = createhistogramtable(image, c);
+		for (int i = 0; i < HISTOGRAM_SIZE; i++)
 		{
-			sum += histogram[m];
+			sum = 0;
+			for (int m = 0; m <= i; m++)
+			{
+				sum += histogram[m];
+			}
+			lut[i] = gmin + (gmax - gmin) * (1.0 / numofpixels) * sum;
 		}
-		lut[i] = gmin + (gmax - gmin) * (1.0 / numofpixels) * sum;
-	}
 
-	for (int x = 0; x < image.width(); x++)
-	{
-		for (int y = 0; y < image.height(); y++)
+		for (int x = 0; x < image.width(); x++)
 		{
-
-				image(x, y) = lut[(int)image(x, y)];
+			for (int y = 0; y < image.height(); y++)
+			{
+					image(x, y, 0 , c) = lut[(int)image(x, y, 0 , c)];
+			}
 		}
+		delete[] histogram;
 	}
-	image.save("dupa.bmp"); //JUST 4 DEBILLING 
-	//oh debugging ofc 
-	//lol
-	//xd
-	//beczka smiechu
-	Createhistogramimage(image);
+	SaveImage(image); 
 	delete[] lut;
-	delete[] histogram;
+
 }
 
 
@@ -133,15 +135,19 @@ void UniformFinalProbabilityDensityFunction(CImg<float> & image, int channel)
 CImg<float> * Low_pass_filter(CImg<float> & image, int mask_chosen) {
 	CImg <float> * filtredimage = new CImg<float>(image);
 
-	
-	for (int x = 1; x < image.width() - 2; x++)			//in such case we avoid the border pixels
+	Mask mask(mask_chosen);
+	int * values_mask = mask.Get_mask();
+
+	double dividor = mask.Get_dividor();
+
+	for (int x = 1; x < image.width() - 1; x++)			//in such case we avoid the border pixels
 	{
-		for (int y = 1; y < image.height() - 2; y++)
+		for (int y = 1; y < image.height() - 1; y++)
 		{
 			for (int c = 0; c < image.spectrum(); c++) 
 			{
 				
-				(*filtredimage)(x, y, 0, c) = lpFilter(image, x, y, c, mask_chosen);
+				(*filtredimage)(x, y, 0, c) = lpFilter(image, x, y, c, values_mask, dividor);
 			}
 		}
 	}
@@ -150,39 +156,57 @@ CImg<float> * Low_pass_filter(CImg<float> & image, int mask_chosen) {
 
 
 //mask_chose is argv[3]!  btw fajny bajer, ten komentarz pojawia siê przy funkcji :)
-float lpFilter(CImg<float> &image, int x, int y, int c, int mask_chosen   ) {
+float lpFilter(CImg<float> &image, int x, int y, int c, int values_mask[], double dividor ) {
 
 	int iterator = 0;
 	double sum = 1.0;
-	Mask mask(mask_chosen);
-	int * values_mask = mask.Get_mask();
-	double dividor = mask.Get_dividor();
-
+	
 	for (int _y = y - 1; _y < y + 2; _y++)
 	{
 
 		for (int _x = x - 1; _x < x + 2; _x++)
 		{
-			
 			sum += (values_mask[iterator] * image(_x, _y, 0, c));
-				iterator++;
+			iterator++;
 		}
 	}
 
 
-	return (sum/mask.Get_dividor());  
-	// sum jest królem wód jak lew jest krolem dzungli :>>>>>>> 
-	//kolego zak³adam ¿e pierdolniesz na zawa³ jak bedziesz czyta³ ten plik
-	//ale spoko
-	//zanim bedziemy napierdalac kodz w ericpolu to dorosnê
+	return (sum/dividor);  
+	
+}
 
 
+CImg<float> * ameanfilter(CImg<float> & image) {
+	CImg <float> * filtredimage = new CImg<float>(image);
 
+	for (int x = 1; x < image.width() - 1; x++)			//in such case we avoid the border pixels
+	{
+		for (int y = 1; y < image.height() - 1; y++)
+		{
+			for (int c = 0; c < image.spectrum(); c++)
+			{
 
-	//chyba xd
+				(*filtredimage)(x, y, 0, c) = amean(image, x, y, c);
+			}
+		}
+	}
+	return filtredimage;
+}
 
-	//rigz?
-	// PS KARASIE JEDZA GOWNO
+int amean(CImg<float> & image, int x, int y, int c)
+{
+	int sum = 0;
+	for (int _y = y - 1; _y < y + 2; _y++)
+	{
+
+		for (int _x = x - 1; _x < x + 2; _x++)
+		{
+
+			sum += image(_x, _y, 0, c);
+		}
+	}
+	return sum / 9;
 }
 
 float Cmean(CImg<float> & image,int  channel ) {
@@ -314,14 +338,16 @@ float Centropy(CImg<float> & image, int channel) {
 CImg<float> * Roberts_operator(CImg<float> & image)
 {
 	CImg<float> * filtredimage = new CImg<float>(image);
-	for (int x = 1; x < image.width() - 2; x++)			//in such case we avoid the border pixels
+	for (int x = 1; x < image.width() - 1; x++)			//in such case we avoid the border pixels
 	{
-		for (int y = 1; y < image.height() - 2; y++)
+		for (int y = 1; y < image.height() - 1; y++)
 		{
 			for (int c = 0; c < image.spectrum(); c++)
 			{
-
+				
 				(*filtredimage)(x, y, 0, c) = roFilter(image, x, y, c);
+				if ((*filtredimage)(x, y, 0, c)>255)
+					(*filtredimage)(x, y, 0, c) = 255;
 			}
 		}
 	}
@@ -343,7 +369,3 @@ float roFilter2(CImg<float> & image, int x, int y, int c)
 	return abs1 + abs2;
 }
 
-//trud skonczony
-//amen
-
-// DUPA TESTY VISUAL STUDIO YOLO

@@ -63,11 +63,16 @@ int * createhistogramtable(CImg<float> & image, int channel = 0 );
 void Createhistogramimage(CImg<float> & image, int channel = 0);
 
 //H1
-void UniformFinalProbabilityDensityFunction(CImg<float> & image, int channel = 0);
+void UniformFinalProbabilityDensityFunction(CImg<float> & image);
 
 //S1
 CImg<float> * Low_pass_filter(CImg<float> & image, int mask_chosen = 1);
-float lpFilter(CImg<float> &image, int x, int y, int c, int mask_chosen = 1);
+float lpFilter(CImg<float> &image, int x, int y, int c, int * values_mask, double dividor);
+
+// AMEAN AS OPTIMALIZATION FOR MASK 1
+CImg<float> * ameanfilter(CImg<float> & image);
+int amean(CImg<float> & image, int x, int y, int c);
+
 
 
 //C1 - C6
