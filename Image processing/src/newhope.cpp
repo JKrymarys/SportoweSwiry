@@ -24,11 +24,8 @@ int main(int argc, char * argv[]) {
 	regex pattern_comparisionts("(?:--)(mse|pmse|snr|psnr|md)");
 	regex pattern_basic_operations("(?:--)(brightness|contrast|negative|vflip|hflip|dflip|shrink|enlarge|median|gmean|orobertsi)");
 	regex pattern_histograms("(?:--)(histogram|slowpass|huniform|cmean|cvariance|cstdev|cvarcoi|casyco|cfasyco|cvarcoii|centropy)");
-	CImg <float> image;
-
-//nazwa.exe lena.bmp --contrast 30
-//nazwa.exe --md lena.bmp lena_noise.bmp
 	
+
 	if (argc < 2 || argc > 5)
 	{
 		cout << "Invalid number of arguments, if you need help use --help argument";
@@ -70,29 +67,19 @@ int main(int argc, char * argv[]) {
 	if (regex_search(argv[1], pattern_comparisionts)) //inf regex match go into coparisions part of main 
 	{
 
-		string name_without_noise;
-		string name_with_noise;
-		CImg<float> image_with_noise;
-		CImg<float> image_without_noise;
+		CImg<float> image_with_noise = Load_Image(argv[2]);
+		CImg<float> image_without_noise = Load_Image(argv[3]);
 
-
-		name_with_noise = argv[2];
-		name_without_noise = argv[3];
 
 		if ((string)argv[1] == "--mse")
 		{
 
-			image_without_noise.load(name_without_noise.c_str());
-			image_with_noise.load(name_with_noise.c_str());
 			Mean_square_error(image_without_noise, image_with_noise);
 
 			return 0;
 		}
 		else if ((string)argv[1] == "--pmse") {
 
-
-			image_without_noise.load(name_without_noise.c_str());
-			image_with_noise.load(name_with_noise.c_str());
 			Peak_mean_square_error(image_without_noise, image_with_noise);
 			return 0;
 
@@ -100,24 +87,18 @@ int main(int argc, char * argv[]) {
 		else if ((string)argv[1] == "--snr")
 		{
 
-			image_without_noise.load(name_without_noise.c_str());
-			image_with_noise.load(name_with_noise.c_str());
 			Signal_to_noise_error(image_without_noise, image_with_noise);
 			return 0;
 		}
 		else if ((string)argv[1] == "--psnr")
 		{
 
-			image_without_noise.load(name_without_noise.c_str());
-			image_with_noise.load(name_with_noise.c_str());
 			Peak_signal_to_noise_error(image_without_noise, image_with_noise);
 			return 0;
 		}
 		else if ((string)argv[1] == "--md")
 		{
 
-			image_without_noise.load(name_without_noise.c_str());
-			image_with_noise.load(name_with_noise.c_str());
 			Maximum_difference(image_without_noise, image_with_noise);
 			return 0;
 		}
@@ -126,17 +107,13 @@ int main(int argc, char * argv[]) {
 			cout << "(comparisions)Invalid operation\n If you need help, run program with --help parameter" << endl;
 			return 0;
 		}
-
-
 	}
 
 	//basic operations
 
 	else if (regex_search(argv[1], pattern_basic_operations))
 	{
-
-		//load image 
-		image.load(argv[2]);
+		CImg <float> image = Load_Image(argv[2]);
 		//operation
 		operation_to_do = argv[1];
 
@@ -208,8 +185,7 @@ int main(int argc, char * argv[]) {
 
 	else if (regex_search(argv[1], pattern_histograms)) {
 
-		CImg<float> image;
-		image.load(argv[2]);
+		CImg<float> image = Load_Image(argv[2]);
 		int third_argument = 0;
 
 		if (argc == 4)

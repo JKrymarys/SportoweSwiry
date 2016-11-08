@@ -53,6 +53,22 @@ public:
 };
 
 
+CImg<float>  Load_Image(const char* name) {
+
+	ifstream file(name);
+
+	if(file.good())
+	{
+		CImg<float> image;
+		image.load(name);
+		return image;
+	}
+	else
+	{
+		cout << " Couldn't find file: " << name << endl;
+		exit(0);
+	}
+}
 
 
 int * createhistogramtable(CImg<float> & image, int channel)
@@ -277,7 +293,7 @@ float Casyco(CImg<float>& image, int channel)
 float Cfasyco(CImg<float> & image, int channel) {
 
 	float number_of_pixels = image.height()*image.width();
-	float sigma = 1;
+	float sigma = Cstdev(image,channel);
 	int* histogram;
 	float sum = 0;
 	float mean = Cmean(image, channel);

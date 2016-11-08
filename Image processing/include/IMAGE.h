@@ -4,6 +4,8 @@
 #define IMAGE_H_
 
 #include "CImg.h"
+#include <string>
+
 
 using namespace cimg_library;
 
@@ -42,6 +44,8 @@ CImg<float> * geometricfilter(CImg<float> & image);
 // SAVING IMAGE FUNCTION
 void SaveImage(CImg<float> & image);
 void SaveImage2(CImg<float> & image);
+
+CImg<float> Load_Image(const char* name);
 
 // ERRORS CALCULATIONS
 void Mean_square_error(CImg<float> & image_without_noise, CImg<float> & image_with_noise);
