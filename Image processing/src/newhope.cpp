@@ -16,6 +16,15 @@ using namespace std;
 
 int main(int argc, char * argv[]) {
 
+	CImg<float> image;
+	image.load("lenabw.bmp");
+	image.channel(0);
+	CImg<float> * filterimage = Dilation(image, 2);
+	SaveImage(*filterimage);
+	delete filterimage;
+	cin.get();
+	return 0;
+
 	float(*operations[3])(float, float) = { brightlut, contrastlut, negativelut };
 
 	string operation_to_do;

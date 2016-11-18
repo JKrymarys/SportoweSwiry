@@ -94,5 +94,12 @@ CImg<float> * Roberts_operator(CImg<float> & image);
 float roFilter(CImg<float> & image, int x, int y, int c);
 float roFilter2(CImg<float> & image, int x, int y, int c);
 
+
+// M
+
+class StructuralElement;
+CImg<float> * Dilation(CImg<float> & image, int mask);
+void dilate(CImg<float> * image, int x, int y, StructuralElement & Element);
+
 #endif // !IMAGE_H_
 
