@@ -100,6 +100,9 @@ float roFilter2(CImg<float> & image, int x, int y, int c);
 class StructuralElement;
 CImg<float> * Dilation(CImg<float> & image, int mask);
 void dilate(CImg<float> * image, int x, int y, StructuralElement & Element);
+CImg<float> * Erosion(CImg<float> & image, int mask);
+bool erosecheck(CImg<float> * image, int x, int y, StructuralElement & Element);
+
 
 #endif // !IMAGE_H_
 

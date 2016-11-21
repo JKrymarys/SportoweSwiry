@@ -19,7 +19,7 @@ int main(int argc, char * argv[]) {
 	CImg<float> image;
 	image.load("lenabw.bmp");
 	image.channel(0);
-	CImg<float> * filterimage = Dilation(image, 2);
+	CImg<float> * filterimage = Erosion(image, 3);
 	SaveImage(*filterimage);
 	delete filterimage;
 	cin.get();
