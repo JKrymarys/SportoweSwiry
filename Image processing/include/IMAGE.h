@@ -105,6 +105,7 @@ bool erosecheck(CImg<float> & image, int x, int y, StructuralElement & Element);
 CImg<float> * HMT(CImg<float> & image, int n);
 bool HMTcheck(CImg<float> & image, int x, int y, StructuralElement & StEl);
 
+CImg<float> * Difference(CImg<float> & image1, CImg<float> & image2);
 
 
 #endif // !IMAGE_H_

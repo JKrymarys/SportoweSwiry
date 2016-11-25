@@ -26,7 +26,7 @@ int main(int argc, char * argv[]) {
 	regex pattern_comparisionts("(?:--)(mse|pmse|snr|psnr|md)");
 	regex pattern_basic_operations("(?:--)(brightness|contrast|negative|vflip|hflip|dflip|shrink|enlarge|median|gmean|orobertsi)");
 	regex pattern_histograms("(?:--)(histogram|slowpass|huniform|cmean|cvariance|cstdev|cvarcoi|casyco|cfasyco|cvarcoii|centropy)");
-	regex pattern_morphology("(?:--)(dilation|erosion|opening|closing|HMT)");
+	regex pattern_morphology("(?:--)(dilation|erosion|opening|closing|HMT|M11|M12|M13)");
 
 	if (argc < 2 || argc > 5)
 	{
@@ -319,11 +319,44 @@ int main(int argc, char * argv[]) {
 			delete aimage2;
 			return 0;
 		}
+
 		if ((string)(argv[1]) == "--HMT")
 		{
 			CImg<float> * aimage = HMT(image, stelement);
 			SaveImage(*aimage);
 			delete aimage;
+			return 0;
+		}
+
+		if ((string)(argv[1]) == "--M11")
+		{
+			CImg<float> * aimg = Dilation(image, stelement);
+			CImg<float> * finalimage = Difference((*aimg), image);
+			SaveImage(*finalimage);
+			delete aimg;
+			delete finalimage;
+			return 0;
+		}
+
+		if ((string)(argv[1]) == "--M13")
+		{
+			CImg<float> * aimg = Dilation(image, stelement);
+			CImg<float> * aimg2 = Erosion(image, stelement);
+			CImg<float> * finalimage = Difference((*aimg), (*aimg2));
+			SaveImage(*finalimage);
+			delete aimg;
+			delete aimg2;
+			delete finalimage;
+			return 0;
+		}
+
+		if ((string)(argv[1]) == "--M12")
+		{
+			CImg<float> * aimg = Erosion(image, stelement);
+			CImg<float> * finalimage = Difference(image, (*aimg));
+			SaveImage(*finalimage);
+			delete aimg;
+			delete finalimage;
 			return 0;
 		}
 	}

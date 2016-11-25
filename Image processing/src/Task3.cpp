@@ -188,3 +188,18 @@ bool HMTcheck(CImg<float> & image, int x, int y, StructuralElement & StEl)
 	}
 	return true;
 }
+
+
+CImg<float> * Difference(CImg<float> & image1, CImg<float> & image2)
+{
+	CImg<float> * newimg = new CImg<float>(image1);
+	for (int x = 0; x < image1.width(); x++)
+	{
+		for (int y = 0; y < image1.width(); y++)
+		{
+			if (image1(x, y) == image2(x, y))
+				(*newimg)(x, y) = BACKGROUND;
+		}
+	}
+	return newimg;
+}
