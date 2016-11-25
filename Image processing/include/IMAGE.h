@@ -101,7 +101,10 @@ class StructuralElement;
 CImg<float> * Dilation(CImg<float> & image, int mask);
 void dilate(CImg<float> * image, int x, int y, StructuralElement & Element);
 CImg<float> * Erosion(CImg<float> & image, int mask);
-bool erosecheck(CImg<float> * image, int x, int y, StructuralElement & Element);
+bool erosecheck(CImg<float> & image, int x, int y, StructuralElement & Element);
+CImg<float> * HMT(CImg<float> & image, int n);
+bool HMTcheck(CImg<float> & image, int x, int y, StructuralElement & StEl);
+
 
 
 #endif // !IMAGE_H_

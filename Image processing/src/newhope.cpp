@@ -16,14 +16,7 @@ using namespace std;
 
 int main(int argc, char * argv[]) {
 
-	CImg<float> image;
-	image.load("lenabw.bmp");
-	image.channel(0);
-	CImg<float> * filterimage = Erosion(image, 3);
-	SaveImage(*filterimage);
-	delete filterimage;
-	cin.get();
-	return 0;
+	
 
 	float(*operations[3])(float, float) = { brightlut, contrastlut, negativelut };
 
@@ -33,7 +26,7 @@ int main(int argc, char * argv[]) {
 	regex pattern_comparisionts("(?:--)(mse|pmse|snr|psnr|md)");
 	regex pattern_basic_operations("(?:--)(brightness|contrast|negative|vflip|hflip|dflip|shrink|enlarge|median|gmean|orobertsi)");
 	regex pattern_histograms("(?:--)(histogram|slowpass|huniform|cmean|cvariance|cstdev|cvarcoi|casyco|cfasyco|cvarcoii|centropy)");
-	
+	regex pattern_morphology("(?:--)(dilation|erosion|opening|closing|HMT)");
 
 	if (argc < 2 || argc > 5)
 	{
@@ -275,6 +268,64 @@ int main(int argc, char * argv[]) {
 			return 0;
 		}
 		return 0;
+	}
+
+	else if (regex_search(argv[1], pattern_morphology))
+	{
+		if (argc != 4)
+		{
+			cout << "You need to specify mask \n";
+			return 0;
+		}
+
+		CImg<float> image;
+		image.load(argv[2]);
+		image.channel(0);
+		int stelement = 0;
+		stelement = stoi(argv[3]); 
+
+		if ((string)(argv[1]) == "--erosion")
+		{
+			CImg<float> * aimage = Erosion(image, stelement);
+			SaveImage(*aimage);
+			delete aimage;
+			return 0;
+		}
+
+		if ((string)(argv[1]) == "--dilation")
+		{
+			CImg<float> * aimage = Dilation(image, stelement);
+			SaveImage(*aimage);
+			delete aimage;
+			return 0;
+		}
+
+		if ((string)(argv[1]) == "-opening")
+		{
+			CImg<float> * aimage = Erosion(image, stelement);
+			CImg<float> * aimage2 = Dilation(*aimage, stelement);
+			SaveImage(*aimage2);
+			delete aimage;
+			delete aimage2;
+			return 0;
+		}
+
+		if ((string)(argv[1]) == "--closing")
+		{
+			CImg<float> * aimage = Dilation(image, stelement);
+			CImg<float> * aimage2 = Erosion(*aimage, stelement);
+			SaveImage(*aimage2);
+			delete aimage;
+			delete aimage2;
+			return 0;
+		}
+		if ((string)(argv[1]) == "--HMT")
+		{
+			CImg<float> * aimage = HMT(image, stelement);
+			SaveImage(*aimage);
+			delete aimage;
+			return 0;
+		}
 	}
 
 	else { cout << "Error couldnt match to any known function :C " << endl;  return 0; }
