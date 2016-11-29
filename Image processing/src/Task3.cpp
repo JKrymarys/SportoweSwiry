@@ -65,17 +65,17 @@ StructuralElement::StructuralElement(int n)
 		tab[7] = FOREGROUND;
 		tab[8] = FOREGROUND;
 	}
-	if (n == 122)
+	if (n == 111)
 	{
-		tab[0] = BACKGROUND;
-		tab[1] = BACKGROUND;
-		tab[2] = BACKGROUND;
+		tab[0] = FOREGROUND;
+		tab[1] = INACTIVE;
+		tab[2] = INACTIVE;
 		tab[3] = FOREGROUND;
-		tab[4] = FOREGROUND;
-		tab[5] = FOREGROUND;
-		tab[6] = BACKGROUND;
-		tab[7] = BACKGROUND;
-		tab[8] = BACKGROUND;
+		tab[4] = BACKGROUND;
+		tab[5] = INACTIVE;
+		tab[6] = FOREGROUND;
+		tab[7] = INACTIVE;
+		tab[8] = INACTIVE;
 	}
 }
 
@@ -182,7 +182,9 @@ bool HMTcheck(CImg<float> & image, int x, int y, StructuralElement & StEl)
 			if (!(StEl(_x, _y) == INACTIVE))
 			{
 				if (!(StEl(_x, _y) == image(x - 1 + _x, y - 1 + _y)))
+				{
 					return false;
+				}
 			}
 		}
 	}
