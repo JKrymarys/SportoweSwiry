@@ -16,7 +16,6 @@ using namespace std;
 
 int main(int argc, char * argv[]) {
 
-	
 
 	float(*operations[3])(float, float) = { brightlut, contrastlut, negativelut };
 
@@ -26,9 +25,9 @@ int main(int argc, char * argv[]) {
 	regex pattern_comparisionts("(?:--)(mse|pmse|snr|psnr|md)");
 	regex pattern_basic_operations("(?:--)(brightness|contrast|negative|vflip|hflip|dflip|shrink|enlarge|median|gmean|orobertsi)");
 	regex pattern_histograms("(?:--)(histogram|slowpass|huniform|cmean|cvariance|cstdev|cvarcoi|casyco|cfasyco|cvarcoii|centropy)");
-	regex pattern_morphology("(?:--)(dilation|erosion|opening|closing|HMT|M11|M12|M13)");
+	regex pattern_morphology("(?:--)(dilation|erosion|opening|closing|HMT|M11|M12|M13|rgrowing)");
 
-	if (argc < 2 || argc > 5)
+	if (argc < 2 || argc > 7)
 	{
 		cout << "Invalid number of arguments, if you need help use --help argument";
 		return 0;
@@ -272,21 +271,21 @@ int main(int argc, char * argv[]) {
 
 	else if (regex_search(argv[1], pattern_morphology))
 	{
-		if (argc != 4)
+		if (argc < 4)
 		{
-			cout << "You need to specify mask \n";
+			cout << "Lack of some arguments \n";
 			return 0;
 		}
 
 		CImg<float> image;
 		image.load(argv[2]);
 		image.channel(0);
-		int stelement = 0;
-		stelement = stoi(argv[3]); 
+		int third_arg = 0;
+		third_arg = stoi(argv[3]);
 
 		if ((string)(argv[1]) == "--erosion")
 		{
-			CImg<float> * aimage = Erosion(image, stelement);
+			CImg<float> * aimage = Erosion(image, third_arg);
 			SaveImage(*aimage);
 			delete aimage;
 			return 0;
@@ -294,7 +293,7 @@ int main(int argc, char * argv[]) {
 
 		if ((string)(argv[1]) == "--dilation")
 		{
-			CImg<float> * aimage = Dilation(image, stelement);
+			CImg<float> * aimage = Dilation(image, third_arg);
 			SaveImage(*aimage);
 			delete aimage;
 			return 0;
@@ -302,8 +301,8 @@ int main(int argc, char * argv[]) {
 
 		if ((string)(argv[1]) == "-opening")
 		{
-			CImg<float> * aimage = Erosion(image, stelement);
-			CImg<float> * aimage2 = Dilation(*aimage, stelement);
+			CImg<float> * aimage = Erosion(image, third_arg);
+			CImg<float> * aimage2 = Dilation(*aimage, third_arg);
 			SaveImage(*aimage2);
 			delete aimage;
 			delete aimage2;
@@ -312,8 +311,8 @@ int main(int argc, char * argv[]) {
 
 		if ((string)(argv[1]) == "--closing")
 		{
-			CImg<float> * aimage = Dilation(image, stelement);
-			CImg<float> * aimage2 = Erosion(*aimage, stelement);
+			CImg<float> * aimage = Dilation(image, third_arg);
+			CImg<float> * aimage2 = Erosion(*aimage, third_arg);
 			SaveImage(*aimage2);
 			delete aimage;
 			delete aimage2;
@@ -322,7 +321,7 @@ int main(int argc, char * argv[]) {
 
 		if ((string)(argv[1]) == "--HMT")
 		{
-			CImg<float> * aimage = HMT(image, stelement);
+			CImg<float> * aimage = HMT(image, third_arg);
 			SaveImage(*aimage);
 			delete aimage;
 			return 0;
@@ -330,7 +329,7 @@ int main(int argc, char * argv[]) {
 
 		if ((string)(argv[1]) == "--M11")
 		{
-			CImg<float> * aimg = Dilation(image, stelement);
+			CImg<float> * aimg = Dilation(image, third_arg);
 			CImg<float> * finalimage = Difference((*aimg), image);
 			SaveImage(*finalimage);
 			delete aimg;
@@ -340,8 +339,8 @@ int main(int argc, char * argv[]) {
 
 		if ((string)(argv[1]) == "--M13")
 		{
-			CImg<float> * aimg = Dilation(image, stelement);
-			CImg<float> * aimg2 = Erosion(image, stelement);
+			CImg<float> * aimg = Dilation(image, third_arg);
+			CImg<float> * aimg2 = Erosion(image, third_arg);
 			CImg<float> * finalimage = Difference((*aimg), (*aimg2));
 			SaveImage(*finalimage);
 			delete aimg;
@@ -352,11 +351,21 @@ int main(int argc, char * argv[]) {
 
 		if ((string)(argv[1]) == "--M12")
 		{
-			CImg<float> * aimg = Erosion(image, stelement);
+			CImg<float> * aimg = Erosion(image, third_arg);
 			CImg<float> * finalimage = Difference(image, (*aimg));
 			SaveImage(*finalimage);
 			delete aimg;
 			delete finalimage;
+			return 0;
+		}
+		if ((string)(argv[1]) == "--rgrowing")
+		{
+			float fourth_arg = atof(argv[4]);
+			int x = atoi(argv[5]);
+			int y = atoi(argv[6]);
+			CImg<float>* output_image = Region_growing(&image,fourth_arg , third_arg,x,y);
+			SaveImage(*output_image);
+			delete output_image;
 			return 0;
 		}
 	}

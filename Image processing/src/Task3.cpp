@@ -14,6 +14,8 @@ const int FOREGROUND = 255;
 const int BACKGROUND = 0;
 const int INACTIVE = 50;
 
+const int VISITED = 2;
+const int SEED = 1;
 
 class StructuralElement {
 private:
@@ -204,4 +206,66 @@ CImg<float> * Difference(CImg<float> & image1, CImg<float> & image2)
 		}
 	}
 	return newimg;
+}
+
+
+unsigned int counter = 0;
+
+CImg<float>* Region_growing(CImg<float>* source_image, float treshold_multiplier, int tolerancy, int _x, int _y) 
+{
+
+	CImg <float> *output = new CImg<float>((*source_image).width(), (*source_image).height());
+
+
+	int** seed_array = new int*[(*source_image).width()];
+
+	for (int i = 0; i < (*source_image).width(); i++)
+		seed_array[i] = new int[(*source_image).height()];
+
+
+	float treshold = (*source_image)(_x,_y);
+
+	cout << "he treshold is: "<< treshold << endl;
+
+	for (int x = 0; x < (*source_image).width(); x++)
+	{
+		for (int y = 0; y < (*source_image).height(); y++)
+		{
+			if (abs((*source_image)(x, y) - treshold)<=tolerancy)
+				seed_array[x][y] = SEED;
+			else
+				seed_array[x][y] = BACKGROUND;
+		}
+
+	}
+
+		Grow_region(seed_array, source_image, output, treshold, tolerancy, _x, _y);
+
+	delete[] seed_array;
+	return output;
+
+}
+
+void Grow_region(int** seed_array, CImg<float> *image, CImg<float>* output, float treshold, int tolerancy, int x, int y)
+{
+	cout << counter++ << endl;
+		//cout << "test2" << endl;
+			(*output)(x, y) = FOREGROUND;
+			seed_array[x][y] = VISITED;
+
+			// o kurwa jakie to brzydkie
+
+			
+
+			if ( seed_array[x+1][y-1] == SEED && x > 1 && x < (*image).width() - 1 && y > 1 && y < (*image).height() - 1)	Grow_region(seed_array, image, output, treshold, tolerancy, x + 1, y - 1);
+			if (seed_array[x-1][y-1] == SEED && x > 1 && x < (*image).width() - 1 && y > 1 && y < (*image).height() - 1) 	Grow_region(seed_array, image, output, treshold, tolerancy, x - 1, y - 1);
+			if (seed_array[x+1][y+1] == SEED && x > 1 && x < (*image).width() - 1 && y > 1 && y < (*image).height() - 1) 	Grow_region(seed_array, image, output, treshold, tolerancy, x + 1, y + 1);
+			if (seed_array[x-1][y+1] == SEED && x > 1 && x < (*image).width() - 1 && y > 1 && y < (*image).height() - 1) 	Grow_region(seed_array, image, output, treshold, tolerancy, x - 1, y + 1);
+			if (seed_array[x][y+1] == SEED && x > 1 && x < (*image).width() - 1 && y > 1 && y < (*image).height() - 1)		Grow_region(seed_array, image, output, treshold, tolerancy, x, y + 1);
+			if (seed_array[x][y-1] == SEED && x > 1 && x < (*image).width() - 1 && y > 1 && y < (*image).height() - 1)		Grow_region(seed_array, image, output, treshold, tolerancy, x, y - 1);
+			if (seed_array[x+1][y] == SEED && x > 1 && x < (*image).width() - 1 && y > 1 && y < (*image).height() - 1)		Grow_region(seed_array, image, output, treshold, tolerancy, x + 1, y);
+			if (seed_array[x-1][y] == SEED && x > 1 && x < (*image).width() - 1 && y > 1 && y < (*image).height() - 1)		Grow_region(seed_array, image, output, treshold, tolerancy, x - 1, y);
+
+	
+	
 }
