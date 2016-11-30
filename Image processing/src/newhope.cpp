@@ -282,10 +282,11 @@ int main(int argc, char * argv[]) {
 		image.channel(0);
 		int third_arg = 0;
 		third_arg = stoi(argv[3]);
+		StructuralElement Element(third_arg);
 
 		if ((string)(argv[1]) == "--erosion")
 		{
-			CImg<float> * aimage = Erosion(image, third_arg);
+			CImg<float> * aimage = Erosion(image, Element);
 			SaveImage(*aimage);
 			delete aimage;
 			return 0;
@@ -293,16 +294,16 @@ int main(int argc, char * argv[]) {
 
 		if ((string)(argv[1]) == "--dilation")
 		{
-			CImg<float> * aimage = Dilation(image, third_arg);
+			CImg<float> * aimage = Dilation(image, Element);
 			SaveImage(*aimage);
 			delete aimage;
 			return 0;
 		}
 
-		if ((string)(argv[1]) == "-opening")
+		if ((string)(argv[1]) == "--opening")
 		{
-			CImg<float> * aimage = Erosion(image, third_arg);
-			CImg<float> * aimage2 = Dilation(*aimage, third_arg);
+			CImg<float> * aimage = Erosion(image, Element);
+			CImg<float> * aimage2 = Dilation(*aimage, Element);
 			SaveImage(*aimage2);
 			delete aimage;
 			delete aimage2;
@@ -311,8 +312,8 @@ int main(int argc, char * argv[]) {
 
 		if ((string)(argv[1]) == "--closing")
 		{
-			CImg<float> * aimage = Dilation(image, third_arg);
-			CImg<float> * aimage2 = Erosion(*aimage, third_arg);
+			CImg<float> * aimage = Dilation(image, Element);
+			CImg<float> * aimage2 = Erosion(*aimage, Element);
 			SaveImage(*aimage2);
 			delete aimage;
 			delete aimage2;
@@ -321,7 +322,7 @@ int main(int argc, char * argv[]) {
 
 		if ((string)(argv[1]) == "--HMT")
 		{
-			CImg<float> * aimage = HMT(image, third_arg);
+			CImg<float> * aimage = HMT(image, Element);
 			SaveImage(*aimage);
 			delete aimage;
 			return 0;
@@ -329,33 +330,30 @@ int main(int argc, char * argv[]) {
 
 		if ((string)(argv[1]) == "--M11")
 		{
-			CImg<float> * aimg = Dilation(image, third_arg);
-			CImg<float> * finalimage = Difference((*aimg), image);
-			SaveImage(*finalimage);
+			CImg<float> * aimg = Dilation(image, Element);
+			Difference((*aimg), image);
+			SaveImage(*aimg);
 			delete aimg;
-			delete finalimage;
 			return 0;
 		}
 
 		if ((string)(argv[1]) == "--M13")
 		{
-			CImg<float> * aimg = Dilation(image, third_arg);
-			CImg<float> * aimg2 = Erosion(image, third_arg);
-			CImg<float> * finalimage = Difference((*aimg), (*aimg2));
-			SaveImage(*finalimage);
+			CImg<float> * aimg = Dilation(image, Element);
+			CImg<float> * aimg2 = Erosion(image, Element);
+			Difference((*aimg), (*aimg2));
+			SaveImage(*aimg);
 			delete aimg;
 			delete aimg2;
-			delete finalimage;
 			return 0;
 		}
 
 		if ((string)(argv[1]) == "--M12")
 		{
-			CImg<float> * aimg = Erosion(image, third_arg);
-			CImg<float> * finalimage = Difference(image, (*aimg));
-			SaveImage(*finalimage);
+			CImg<float> * aimg = Erosion(image, Element);
+			Difference(image, (*aimg));
+			SaveImage(image);
 			delete aimg;
-			delete finalimage;
 			return 0;
 		}
 		if ((string)(argv[1]) == "--rgrowing")
