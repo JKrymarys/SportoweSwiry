@@ -267,9 +267,6 @@ void Grow_region(int** seed_array, CImg<float> *image, CImg<float>* output, int 
 		//cout << "test2" << endl;
 			(*output)(x, y) = FOREGROUND;
 			seed_array[x][y] = VISITED;
-
-			// o kurwa jakie to brzydkie
-
 			
 
 			if ( seed_array[x+1][y-1] == SEED && x > 1 && x < (*image).width() - 2 && y > 1 && y < (*image).height() - 1)	Grow_region(seed_array, image, output,  tolerancy, x + 1, y - 1);
