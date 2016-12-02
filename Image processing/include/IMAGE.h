@@ -98,20 +98,28 @@ float roFilter2(CImg<float> & image, int x, int y, int c);
 // M
 
 class StructuralElement;
-CImg<float> * Dilation(CImg<float> & image, int mask);
+CImg<float> * Dilation(CImg<float> & image, StructuralElement & Elementk);
 void dilate(CImg<float> * image, int x, int y, StructuralElement & Element);
-CImg<float> * Erosion(CImg<float> & image, int mask);
+CImg<float> * Erosion(CImg<float> & image, StructuralElement & Element);
 bool erosecheck(CImg<float> & image, int x, int y, StructuralElement & Element);
-CImg<float> * HMT(CImg<float> & image, int n);
+CImg<float> * HMT(CImg<float> & image, StructuralElement & Element);
 bool HMTcheck(CImg<float> & image, int x, int y, StructuralElement & StEl);
 
-CImg<float> * Difference(CImg<float> & image1, CImg<float> & image2);
+void Difference(CImg<float> & image1, CImg<float> & image2);
 
 
 
 //region growing,  _x _y are coordinates of seed point
 CImg<float>* Region_growing(CImg<float>* source_image, int tolerancy, int _x, int _y); 
 void Grow_region(int** seed_array, CImg<float>* image,CImg<float>* output,  int tolerancy, int x, int y);
+
+class StructuralElement {
+private:
+	unsigned char tab[9];
+public:
+	StructuralElement(int n);
+	int operator()(int x, int y) { return tab[y * 3 + x]; }
+};
 
 #endif // !IMAGE_H_
 
