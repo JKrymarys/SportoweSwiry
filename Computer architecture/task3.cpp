@@ -37,7 +37,7 @@ void interrupt NewHandler08H(...)
 	if(displayflag == 1)
 	{
 		
-		outportb(0x70, 32); hours   = inportb(0x71);
+		outportb(0x70, 4); hours   = inportb(0x71);
 		outportb(0x70, 2); minutes = inportb(0x71);
 		outportb(0x70, 0); seconds = inportb(0x71);
 		

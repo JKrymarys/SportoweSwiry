@@ -17,13 +17,7 @@ const int INACTIVE = 50;
 const int VISITED = 2;
 const int SEED = 1;
 
-class StructuralElement {
-private:
-	unsigned char tab[9];
-public:
-	StructuralElement(int n);
-	int operator()(int x, int y) { return tab[y * 3 + x]; }
-};
+
 
 StructuralElement::StructuralElement(int n)
 {
@@ -55,6 +49,18 @@ StructuralElement::StructuralElement(int n)
 		tab[5] = FOREGROUND;
 		tab[7] = FOREGROUND;
 	}
+	if (n == 111)
+	{
+		tab[0] = FOREGROUND;
+		tab[1] = INACTIVE;
+		tab[2] = INACTIVE;
+		tab[3] = FOREGROUND;
+		tab[4] = BACKGROUND;
+		tab[5] = INACTIVE;
+		tab[6] = FOREGROUND;
+		tab[7] = INACTIVE;
+		tab[8] = INACTIVE;
+	}
 	if (n == 121)
 	{
 		tab[0] = BACKGROUND;
@@ -79,14 +85,24 @@ StructuralElement::StructuralElement(int n)
 		tab[7] = INACTIVE;
 		tab[8] = INACTIVE;
 	}
+	if (n == 7)
+	{
+
+		for (int i = 0; i < 9; i++)
+		{
+			tab[i] = BACKGROUND;
+		}
+		tab[3] = FOREGROUND;
+		tab[4] = FOREGROUND;
+		tab[5] = FOREGROUND;
+	}
 }
 
 
 
-CImg<float> * Dilation(CImg<float> & image, int mask) {
+CImg<float> * Dilation(CImg<float> & image, StructuralElement & Element) {
 	CImg <float> * filtredimage = new CImg<float>(image);
 
-	StructuralElement Element(mask);
 	
 	for (int x = 1; x < image.width()-1; x++)			//in such case we avoid the border pixels
 	{
@@ -121,10 +137,9 @@ void dilate(CImg<float> * image, int x, int y, StructuralElement & Element)
 	}
 }
 
-CImg<float> * Erosion(CImg<float> & image, int mask) {
+CImg<float> * Erosion(CImg<float> & image, StructuralElement & Element) {
 	CImg <float> * filtredimage = new CImg<float>(image);
 
-	StructuralElement Element(mask);
 
 	for (int x = 1; x < image.width() - 1; x++)			//in such case we avoid the border pixels
 	{
@@ -160,15 +175,14 @@ bool erosecheck(CImg<float> & image, int x, int y, StructuralElement & Element)
 }
 
 
-CImg<float> * HMT(CImg<float> & image, int n)
+CImg<float> * HMT(CImg<float> & image, StructuralElement & Element)
 {
-	StructuralElement StEl(n);
 	CImg<float> * filtredimage = new CImg<float>(image);
 	for (int x = 1; x < image.width()-1; x++)
 	{
 		for (int y = 1; y < image.height()-1; y++)
 		{
-			HMTcheck(image, x, y, StEl) ? (*filtredimage)(x, y) = FOREGROUND : (*filtredimage)(x, y) = BACKGROUND;
+			HMTcheck(image, x, y, Element) ? (*filtredimage)(x, y) = FOREGROUND : (*filtredimage)(x, y) = BACKGROUND;
 		}
 	}
 	return filtredimage;
@@ -194,24 +208,24 @@ bool HMTcheck(CImg<float> & image, int x, int y, StructuralElement & StEl)
 }
 
 
-CImg<float> * Difference(CImg<float> & image1, CImg<float> & image2)
+void Difference(CImg<float> & image1, CImg<float> & image2)
 {
-	CImg<float> * newimg = new CImg<float>(image1);
+	//CImg<float> * newimg = new CImg<float>(image1);
 	for (int x = 0; x < image1.width(); x++)
 	{
 		for (int y = 0; y < image1.width(); y++)
 		{
 			if (image1(x, y) == image2(x, y))
-				(*newimg)(x, y) = BACKGROUND;
+				image1(x, y) = BACKGROUND;
 		}
 	}
-	return newimg;
+	//return image1;
 }
 
 
 unsigned int counter = 0;
 
-CImg<float>* Region_growing(CImg<float>* source_image, float treshold_multiplier, int tolerancy, int _x, int _y) 
+CImg<float>* Region_growing(CImg<float>* source_image, int tolerancy, int _x, int _y) 
 {
 
 	CImg <float> *output = new CImg<float>((*source_image).width(), (*source_image).height());
@@ -239,32 +253,32 @@ CImg<float>* Region_growing(CImg<float>* source_image, float treshold_multiplier
 
 	}
 
-		Grow_region(seed_array, source_image, output, treshold, tolerancy, _x, _y);
+		Grow_region(seed_array, source_image, output, tolerancy, _x, _y);
+
+	for (int i = 0; i < (*source_image).width(); i++)
+			delete seed_array[i];
 
 	delete[] seed_array;
 	return output;
 
 }
 
-void Grow_region(int** seed_array, CImg<float> *image, CImg<float>* output, float treshold, int tolerancy, int x, int y)
+void Grow_region(int** seed_array, CImg<float> *image, CImg<float>* output, int tolerancy, int x, int y)
 {
 	cout << counter++ << endl;
 		//cout << "test2" << endl;
 			(*output)(x, y) = FOREGROUND;
 			seed_array[x][y] = VISITED;
-
-			// o kurwa jakie to brzydkie
-
 			
 
-			if ( seed_array[x+1][y-1] == SEED && x > 1 && x < (*image).width() - 1 && y > 1 && y < (*image).height() - 1)	Grow_region(seed_array, image, output, treshold, tolerancy, x + 1, y - 1);
-			if (seed_array[x-1][y-1] == SEED && x > 1 && x < (*image).width() - 1 && y > 1 && y < (*image).height() - 1) 	Grow_region(seed_array, image, output, treshold, tolerancy, x - 1, y - 1);
-			if (seed_array[x+1][y+1] == SEED && x > 1 && x < (*image).width() - 1 && y > 1 && y < (*image).height() - 1) 	Grow_region(seed_array, image, output, treshold, tolerancy, x + 1, y + 1);
-			if (seed_array[x-1][y+1] == SEED && x > 1 && x < (*image).width() - 1 && y > 1 && y < (*image).height() - 1) 	Grow_region(seed_array, image, output, treshold, tolerancy, x - 1, y + 1);
-			if (seed_array[x][y+1] == SEED && x > 1 && x < (*image).width() - 1 && y > 1 && y < (*image).height() - 1)		Grow_region(seed_array, image, output, treshold, tolerancy, x, y + 1);
-			if (seed_array[x][y-1] == SEED && x > 1 && x < (*image).width() - 1 && y > 1 && y < (*image).height() - 1)		Grow_region(seed_array, image, output, treshold, tolerancy, x, y - 1);
-			if (seed_array[x+1][y] == SEED && x > 1 && x < (*image).width() - 1 && y > 1 && y < (*image).height() - 1)		Grow_region(seed_array, image, output, treshold, tolerancy, x + 1, y);
-			if (seed_array[x-1][y] == SEED && x > 1 && x < (*image).width() - 1 && y > 1 && y < (*image).height() - 1)		Grow_region(seed_array, image, output, treshold, tolerancy, x - 1, y);
+			if ( seed_array[x+1][y-1] == SEED && x > 1 && x < (*image).width() - 2 && y > 1 && y < (*image).height() - 1)	Grow_region(seed_array, image, output,  tolerancy, x + 1, y - 1);
+			if (seed_array[x-1][y-1] == SEED && x > 1 && x < (*image).width() - 2 && y > 1 && y < (*image).height() - 1) 	Grow_region(seed_array, image, output,  tolerancy, x - 1, y - 1);
+			if (seed_array[x+1][y+1] == SEED && x > 1 && x < (*image).width() - 2 && y > 1 && y < (*image).height() - 1) 	Grow_region(seed_array, image, output,  tolerancy, x + 1, y + 1);
+			if (seed_array[x-1][y+1] == SEED && x > 1 && x < (*image).width() - 2 && y > 1 && y < (*image).height() - 1) 	Grow_region(seed_array, image, output,  tolerancy, x - 1, y + 1);
+			if (seed_array[x][y+1] == SEED && x > 1 && x < (*image).width() - 2 && y > 1 && y < (*image).height() - 1)		Grow_region(seed_array, image, output,  tolerancy, x, y + 1);
+			if (seed_array[x][y-1] == SEED && x > 1 && x < (*image).width() - 2 && y > 1 && y < (*image).height() - 1)		Grow_region(seed_array, image, output, tolerancy, x, y - 1);
+			if (seed_array[x+1][y] == SEED && x > 1 && x < (*image).width() - 2 && y > 1 && y < (*image).height() - 1)		Grow_region(seed_array, image, output,  tolerancy, x + 1, y);
+			if (seed_array[x-1][y] == SEED && x > 1 && x < (*image).width() - 2 && y > 1 && y < (*image).height() - 1)		Grow_region(seed_array, image, output,  tolerancy, x - 1, y);
 
 	
 	
