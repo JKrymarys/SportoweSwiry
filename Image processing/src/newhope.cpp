@@ -27,7 +27,7 @@ int main(int argc, char * argv[]) {
 	regex pattern_histograms("(?:--)(histogram|slowpass|huniform|cmean|cvariance|cstdev|cvarcoi|casyco|cfasyco|cvarcoii|centropy)");
 	regex pattern_morphology("(?:--)(dilation|erosion|opening|closing|HMT|M11|M12|M13|rgrowing)");
 
-	if (argc < 2 || argc > 7)
+	if (argc < 2 || argc > 6)
 	{
 		cout << "Invalid number of arguments, if you need help use --help argument";
 		return 0;
@@ -360,10 +360,10 @@ int main(int argc, char * argv[]) {
 		}
 		if ((string)(argv[1]) == "--rgrowing")
 		{
-			float fourth_arg = atof(argv[4]);
-			int x = atoi(argv[5]);
-			int y = atoi(argv[6]);
-			CImg<float>* output_image = Region_growing(&image,fourth_arg , third_arg,x,y);
+			float fourth_arg = atof(argv[3]);
+			int x = atoi(argv[4]);
+			int y = atoi(argv[5]);
+			CImg<float>* output_image = Region_growing(&image, third_arg,x,y);
 			SaveImage(*output_image);
 			delete output_image;
 			return 0;

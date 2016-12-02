@@ -209,7 +209,7 @@ CImg<float> * Difference(CImg<float> & image1, CImg<float> & image2)
 
 unsigned int counter = 0;
 
-CImg<float>* Region_growing(CImg<float>* source_image, float treshold_multiplier, int tolerancy, int _x, int _y) 
+CImg<float>* Region_growing(CImg<float>* source_image, int tolerancy, int _x, int _y) 
 {
 
 	CImg <float> *output = new CImg<float>((*source_image).width(), (*source_image).height());
@@ -237,14 +237,17 @@ CImg<float>* Region_growing(CImg<float>* source_image, float treshold_multiplier
 
 	}
 
-		Grow_region(seed_array, source_image, output, treshold, tolerancy, _x, _y);
+		Grow_region(seed_array, source_image, output, tolerancy, _x, _y);
+
+	for (int i = 0; i < (*source_image).width(); i++)
+			delete seed_array[i];
 
 	delete[] seed_array;
 	return output;
 
 }
 
-void Grow_region(int** seed_array, CImg<float> *image, CImg<float>* output, float treshold, int tolerancy, int x, int y)
+void Grow_region(int** seed_array, CImg<float> *image, CImg<float>* output, int tolerancy, int x, int y)
 {
 	cout << counter++ << endl;
 		//cout << "test2" << endl;
@@ -255,14 +258,14 @@ void Grow_region(int** seed_array, CImg<float> *image, CImg<float>* output, floa
 
 			
 
-			if ( seed_array[x+1][y-1] == SEED && x > 1 && x < (*image).width() - 1 && y > 1 && y < (*image).height() - 1)	Grow_region(seed_array, image, output, treshold, tolerancy, x + 1, y - 1);
-			if (seed_array[x-1][y-1] == SEED && x > 1 && x < (*image).width() - 1 && y > 1 && y < (*image).height() - 1) 	Grow_region(seed_array, image, output, treshold, tolerancy, x - 1, y - 1);
-			if (seed_array[x+1][y+1] == SEED && x > 1 && x < (*image).width() - 1 && y > 1 && y < (*image).height() - 1) 	Grow_region(seed_array, image, output, treshold, tolerancy, x + 1, y + 1);
-			if (seed_array[x-1][y+1] == SEED && x > 1 && x < (*image).width() - 1 && y > 1 && y < (*image).height() - 1) 	Grow_region(seed_array, image, output, treshold, tolerancy, x - 1, y + 1);
-			if (seed_array[x][y+1] == SEED && x > 1 && x < (*image).width() - 1 && y > 1 && y < (*image).height() - 1)		Grow_region(seed_array, image, output, treshold, tolerancy, x, y + 1);
-			if (seed_array[x][y-1] == SEED && x > 1 && x < (*image).width() - 1 && y > 1 && y < (*image).height() - 1)		Grow_region(seed_array, image, output, treshold, tolerancy, x, y - 1);
-			if (seed_array[x+1][y] == SEED && x > 1 && x < (*image).width() - 1 && y > 1 && y < (*image).height() - 1)		Grow_region(seed_array, image, output, treshold, tolerancy, x + 1, y);
-			if (seed_array[x-1][y] == SEED && x > 1 && x < (*image).width() - 1 && y > 1 && y < (*image).height() - 1)		Grow_region(seed_array, image, output, treshold, tolerancy, x - 1, y);
+			if ( seed_array[x+1][y-1] == SEED && x > 1 && x < (*image).width() - 2 && y > 1 && y < (*image).height() - 1)	Grow_region(seed_array, image, output,  tolerancy, x + 1, y - 1);
+			if (seed_array[x-1][y-1] == SEED && x > 1 && x < (*image).width() - 2 && y > 1 && y < (*image).height() - 1) 	Grow_region(seed_array, image, output,  tolerancy, x - 1, y - 1);
+			if (seed_array[x+1][y+1] == SEED && x > 1 && x < (*image).width() - 2 && y > 1 && y < (*image).height() - 1) 	Grow_region(seed_array, image, output,  tolerancy, x + 1, y + 1);
+			if (seed_array[x-1][y+1] == SEED && x > 1 && x < (*image).width() - 2 && y > 1 && y < (*image).height() - 1) 	Grow_region(seed_array, image, output,  tolerancy, x - 1, y + 1);
+			if (seed_array[x][y+1] == SEED && x > 1 && x < (*image).width() - 2 && y > 1 && y < (*image).height() - 1)		Grow_region(seed_array, image, output,  tolerancy, x, y + 1);
+			if (seed_array[x][y-1] == SEED && x > 1 && x < (*image).width() - 2 && y > 1 && y < (*image).height() - 1)		Grow_region(seed_array, image, output, tolerancy, x, y - 1);
+			if (seed_array[x+1][y] == SEED && x > 1 && x < (*image).width() - 2 && y > 1 && y < (*image).height() - 1)		Grow_region(seed_array, image, output,  tolerancy, x + 1, y);
+			if (seed_array[x-1][y] == SEED && x > 1 && x < (*image).width() - 2 && y > 1 && y < (*image).height() - 1)		Grow_region(seed_array, image, output,  tolerancy, x - 1, y);
 
 	
 	

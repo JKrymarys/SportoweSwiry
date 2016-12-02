@@ -110,8 +110,8 @@ CImg<float> * Difference(CImg<float> & image1, CImg<float> & image2);
 
 
 //region growing,  _x _y are coordinates of seed point
-CImg<float>* Region_growing(CImg<float>* source_image, float treshold, int tolerancy, int _x, int _y); 
-void Grow_region(int** seed_array, CImg<float>* image,CImg<float>* output, float treshold, int tolerancy, int x, int y);
+CImg<float>* Region_growing(CImg<float>* source_image, int tolerancy, int _x, int _y); 
+void Grow_region(int** seed_array, CImg<float>* image,CImg<float>* output,  int tolerancy, int x, int y);
 
 #endif // !IMAGE_H_
 
