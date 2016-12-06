@@ -1,6 +1,6 @@
 #include "GAME.H"
 
-class
+class Game
 {
 
 };
