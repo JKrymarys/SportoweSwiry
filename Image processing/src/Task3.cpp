@@ -37,6 +37,15 @@ StructuralElement::StructuralElement(int n)
 		tab[4] = FOREGROUND;
 		tab[5] = FOREGROUND;
 	}
+	if( n == 2)
+	{
+		for (int i = 0; i < 9; i++)
+		{
+			tab[i] = BACKGROUND;
+		}
+		tab[4] = FOREGROUND;
+		tab[7] = FOREGROUND;
+	}
 	if (n == 4)
 	{
 		for (int i = 0; i < 9; i++)
@@ -239,7 +248,7 @@ CImg<float>* Region_growing(CImg<float>* source_image, int tolerancy, int _x, in
 
 	float treshold = (*source_image)(_x,_y);
 
-	cout << "he treshold is: "<< treshold << endl;
+	//cout << "he treshold is: "<< treshold << endl;
 
 	for (int x = 0; x < (*source_image).width(); x++)
 	{
@@ -265,7 +274,7 @@ CImg<float>* Region_growing(CImg<float>* source_image, int tolerancy, int _x, in
 
 void Grow_region(int** seed_array, CImg<float> *image, CImg<float>* output, int tolerancy, int x, int y)
 {
-	cout << counter++ << endl;
+	//cout << counter++ << endl;
 		//cout << "test2" << endl;
 			(*output)(x, y) = FOREGROUND;
 			seed_array[x][y] = VISITED;
