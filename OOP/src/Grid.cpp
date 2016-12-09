@@ -1,9 +1,9 @@
 #include <iostream>
-#include "GRID.H"
+#include "..\include\grid.H"
 #include "SHIP.H"
+#include <string>
 
-using namespace std;
-
+//using namespace std;
 
 
 

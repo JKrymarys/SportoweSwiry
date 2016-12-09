@@ -6,23 +6,20 @@
 using namespace std;
 
 
-class Player
+ class Player
 {
 public:
-	Player();
-	~Player();
-	vector<Ship> Ships;
 	void SetShip();
 	bool CanMove();
 	Ship* SelectShip();
 	void SelectTarget();
 	bool hasShips();
  
-private:
-
+protected:
+	vector<Ship> Ships;
 };
 
-class HumanPlayer:Player {
+class HumanPlayer:public Player {
 public:
 	HumanPlayer();
 	void SetShip();
@@ -37,4 +34,32 @@ public:
 	void getTargetLocation();
 };
 
+class ComputerPlayer :public Player
+{
+public:
+	ComputerPlayer(Strategy * strategy);
+	void SetShip();
+	Ship* SelectShip();
+	void SelectTarget();
+private:
+	Strategy * strategy;
+
+};
+
+class Strategy {
+public:
+	virtual void getTargetLocation() = 0;
+	Ship* SelectShip();
+	void getShipLocation();
+};
+
+class Greedy_strategy:Strategy {
+public:
+	void getTargetLocation();
+};
+
+class Random_strategy:Strategy {
+public:
+	void getTargetLocation();
+};
 #endif

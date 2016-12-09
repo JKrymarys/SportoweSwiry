@@ -10,8 +10,8 @@ class Game
 {
 public:
 	Game();
-	void StartGame();
-	void AddPlayer();
+	void StartGame(int _round_limit);
+	void AddPlayer(string type);
 	void PlayRound();
 	void EndGame();
 

@@ -2,10 +2,8 @@
 
 
 
-Player::Player()
+ComputerPlayer::ComputerPlayer(Strategy * _strategy)
 {
+	this->strategy = _strategy;
 }
 
-Player::~Player()
-{
-}
