@@ -3,35 +3,43 @@
 
 #include <vector>
 #include "SHIP.H"
+#include "GRID.H"
 using namespace std;
 
 
  class Player
 {
 public:
-	void SetShip();
+	void virtual SetShip();
+	pair<int, int> virtual SelectTarget();
+	Ship*  SelectShip(); //dlaczego nie moge utwrzyc jej jako virtual ??
 	bool CanMove();
-	Ship* SelectShip();
-	void SelectTarget();
-	bool hasShips();
+	bool  hasShips();
+	
+	
  
 protected:
 	vector<Ship> Ships;
+	HumanInterface User_interface;
+	Grid player_grid;
 };
 
-class HumanPlayer:public Player {
+class HumanPlayer:protected Player {
 public:
 	HumanPlayer();
-	void SetShip();
+	void SetShip(int ship_type);
 	Ship* SelectShip();
-	void SelectTarget(); // void?? raczej kurwa nie
+	pair<int,int> SelectTarget();
 };
 
+
+//text mode interface
 class HumanInterface {
 public:
-	void getShipLocation();
-	void SelectShip();
-	void getTargetLocation();
+	void getShipLocation(int size_of_ship);
+	int SelectShip(); // returns type o ship
+	pair<int, int> getTargetLocation();
+	pair<int, int> getCoords();
 };
 
 class ComputerPlayer :public Player
@@ -40,7 +48,7 @@ public:
 	ComputerPlayer(Strategy * strategy);
 	void SetShip();
 	Ship* SelectShip();
-	void SelectTarget();
+	pair<int, int> SelectTarget();
 private:
 	Strategy * strategy;
 
@@ -53,12 +61,12 @@ public:
 	void getShipLocation();
 };
 
-class Greedy_strategy:Strategy {
+class Greedy_strategy:public Strategy {
 public:
 	void getTargetLocation();
 };
 
-class Random_strategy:Strategy {
+class Random_strategy: public Strategy {
 public:
 	void getTargetLocation();
 };

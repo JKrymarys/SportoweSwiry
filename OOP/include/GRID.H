@@ -3,6 +3,10 @@
 
 #include "SHIP.H"
 
+typedef pair<int, int>  coords;
+
+class Place;
+
 class Grid {
 private:
 	class Place;
@@ -12,8 +16,8 @@ private:
 
 public:
 	Grid();
-	bool isAvaliable();
-	void setPlace();
+	bool isAvaliable(coords(int x,int y));
+	void setPlace(Ship* ship, coords(int x, int y));
 	void HitOrMiss();
 
 };
