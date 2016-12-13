@@ -1,6 +1,10 @@
 #ifndef SHIP_H_
 #define SHIP_H_
 
+#include "GRID.H"
+
+typedef pair<int, int>  coords;
+
 enum Ship_types
 {
 	ONE_FUNNEL_SHIP = 1,
@@ -11,15 +15,15 @@ enum Ship_types
 class Ship {
 
 public:
-	Ship(int ship_type);
 	bool CanShoot();
-	bool isTargetInRange();
+	bool isTargetInRange(float lenght, coords coordinates);
 	void Shot();
 	void getHit();
 	void Sink();
 	bool isSunk();
 	virtual void Reset() = 0;
 	int getType();
+	void setCoords(coords start_coords, coords end_coords);
 
 protected:
 	int Lives;
@@ -30,21 +34,24 @@ protected:
 	int y_end;
 	int Lenght;
 	int type;
-
+	Grid* grid;
 
 };
 
 class SingleFunnelShip :public Ship
 {
 public:
-	SingleFunnelShip();
+	SingleFunnelShip( Grid* p_grid,coords coordinates);
 	void Reset();
+
 };
 
 class MultiFunnelShip :public Ship
 {
 public:
-	MultiFunnelShip();
+	MultiFunnelShip(int ship_type, Grid* p_grid, coords coordinates_start, coords coordinates_end);
 	void Reset();
+private:
+	bool ShotTwice;
 };
 #endif // !SHIP_H_

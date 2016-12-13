@@ -20,9 +20,9 @@ bool Player::hasShips()
 
 bool Player::CanMove()
 {
-	for (Ship i : Ships)
+	for (auto i : Ships)
 	{
-		if (i.CanShoot()) 
+		if (i->CanShoot()) 
 			return true;
 	}
 	//if not
@@ -38,10 +38,10 @@ pair<int, int> HumanPlayer::SelectTarget()
 Ship* HumanPlayer::SelectShip() {
 	int type = User_interface.SelectShip();
 	
-	for (Ship i : Ships)
+	for (auto i : Ships)
 	{
-		if (i.getType() == type)
-			return &i;
+		if (i->getType() == type)
+			return i;
 	}
 }
 
@@ -76,8 +76,15 @@ void HumanPlayer::SetShip(int ship_type) {
 
 	if (flag)
 	{
-		for(int i = 0; i < ship_type; i++)
-			player_grid.setPlace(new_ship,ship_location[i]);
+		this->Ships.push_back(new_ship);//add ship to the vector
+		new_ship->setCoords( ship_location[0], ship_location[ship_type-1]);
+
+		for (int i = 0; i < ship_type; i++)
+		{
+			player_grid.setPlace(new_ship, ship_location[i]);
+			
+		}
+
 	}
 		
 }

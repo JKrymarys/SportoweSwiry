@@ -4,6 +4,7 @@
 #include <vector>
 #include "SHIP.H"
 #include "GRID.H"
+
 using namespace std;
 
 
@@ -19,7 +20,7 @@ public:
 	
  
 protected:
-	vector<Ship> Ships;
+	vector<Ship*> Ships;
 	HumanInterface User_interface;
 	Grid player_grid;
 };
