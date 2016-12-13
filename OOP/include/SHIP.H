@@ -18,8 +18,8 @@ public:
 	void getHit();
 	void Sink();
 	bool isSunk();
-	 void Reset();
-	 int getType();
+	virtual void Reset() = 0;
+	int getType();
 
 protected:
 	int Lives;
@@ -32,5 +32,19 @@ protected:
 	int type;
 
 
+};
+
+class SingleFunnelShip :public Ship
+{
+public:
+	SingleFunnelShip();
+	void Reset();
+};
+
+class MultiFunnelShip :public Ship
+{
+public:
+	MultiFunnelShip();
+	void Reset();
 };
 #endif // !SHIP_H_

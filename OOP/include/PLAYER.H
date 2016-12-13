@@ -38,8 +38,8 @@ class HumanInterface {
 public:
 	void getShipLocation(int size_of_ship);
 	int SelectShip(); // returns type o ship
-	pair<int, int> getTargetLocation();
-	pair<int, int> getCoords();
+	coords getTargetLocation();
+	coords getCoords();
 };
 
 class ComputerPlayer :public Player

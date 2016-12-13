@@ -48,8 +48,13 @@ Ship* HumanPlayer::SelectShip() {
 
 // getPair to grid, and allote there adress coresponding to proper ship
 void HumanPlayer::SetShip(int ship_type) {
+	Ship* new_ship;
 
-	Ship* new_ship = new Ship(ship_type);
+	if (ship_type = ONE_FUNNEL_SHIP)
+		new_ship = new SingleFunnelShip();
+	else if (ship_type == TWO_FUNNEL_SHIP || ship_type == THREE_FUNNEL_SHIP)
+		new_ship = new MultiFunnelShip();
+	
 	bool flag = true; //check if all fields can take the ship
 	coords* ship_location = new coords[ship_type];
 	
@@ -83,10 +88,10 @@ int HumanInterface::SelectShip()
 	int ship_id = -1;
 	cout << "Choose ship:" << endl;
 	
-	while (ship_id !=1 || ship_id != 2 || ship_id != 3)
-	{
+	do{
 		cin >> ship_id;
-	}
+	} while (ship_id != 1 || ship_id != 2 || ship_id != 3);
+
 	
 	return ship_id;
 }
