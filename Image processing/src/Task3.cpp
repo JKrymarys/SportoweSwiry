@@ -10,8 +10,8 @@
 using namespace cimg_library;
 using namespace std;
 
-const int FOREGROUND = 255;
-const int BACKGROUND = 0;
+const int FOREGROUND = 0;
+const int BACKGROUND = 255;
 const int INACTIVE = 50;
 
 const int VISITED = 2;
@@ -104,6 +104,18 @@ StructuralElement::StructuralElement(int n)
 		tab[3] = FOREGROUND;
 		tab[4] = FOREGROUND;
 		tab[5] = FOREGROUND;
+	}
+	if (n == 8)
+	{
+		tab[0] = FOREGROUND;
+		tab[1] = FOREGROUND;
+		tab[2] = BACKGROUND;
+		tab[3] = BACKGROUND;
+		tab[4] = FOREGROUND;
+		tab[5] = BACKGROUND;
+		tab[6] = BACKGROUND;
+		tab[7] = FOREGROUND;
+		tab[8] = BACKGROUND;
 	}
 }
 

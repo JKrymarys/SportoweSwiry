@@ -16,9 +16,9 @@ const int ArrSize = 255;
 // FUNCTION CREATING LUT DEPENDIND ON THE OPERATION
 int * lookuptable(float level, float(*operation)(float, float))
 {
-	int * lut = new int[ArrSize];
+	int * lut = new int[ArrSize+1];
 	{
-		for (int i = 0; i < ArrSize; i++)
+		for (int i = 0; i < ArrSize +1 ; i++)
 		{
 			lut[i] = operation(i, level);
 		}
@@ -59,12 +59,16 @@ float negativelut(float value, float level )
 	if (newvalue < 0) return 0;
 	else
 		return newvalue;
+	//if (value == 255)
+	//	return 0;
+	//else return 255;
 }
 
 // ITERATES THROUGH EVERY PIXEL AND CREATES SUTIABLE LUT
 void basicoperations(float level, CImg<float> & image, float(*operation)(float, float)) {
 
 	int * lut = lookuptable(level, operation);
+
 
 	for (int x = 0; x < image.width(); x++)
 	{

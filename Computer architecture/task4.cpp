@@ -71,6 +71,8 @@ void set_video_mode(int mode)
  REGPACK regs;
  regs.r_ax = mode;
  intr(0x10, &regs);
+ // asm mov ax, 13h
+ // asm int 10h <- graphics card  interrupt handler
 }
 
 //--------------------------------------------------------------------------//
@@ -87,8 +89,6 @@ void set_video_palette()
 }
 
 //--------------------------------------------------------------------------//
-
-// v1
 
 
 void palette_up()
@@ -114,38 +114,6 @@ void palette_up()
  }
 }
 
-
-// v2
-/*
-void palette_up()
-{
-	int red, green, blue;
-	
- for (int i = 0; i < bmih.biClrUsed; i++)
- {
- outportb(0x03C8, i);
- red = inp(0x03C9);
- green = inp(0x03C9);
- blue = inp(0x03C9);
-
- outportb(0x03C8, i);
- if(!(red == 63))
-	outp(0x03C9, ++red); 
- else 
-	outp(0x03C9, red); 
- 
- if(!(green == 63))
-	outp(0x03C9, ++green); 
- else 
-	outp(0x03C9, green);
-
- if(!(blue == 63))
-	outp(0x03C9, ++blue); 
- else 
-	outp(0x03C9, blue); 
- }
-}
-*/
 
 
 //--------------------------------------------------------------------------//
@@ -205,20 +173,20 @@ void display_image_data(char *file_name)
  set_video_palette();
  for(int i = bmih.biHeight-1; i >=0; i--)
  {
-	 fread(&video_memory[i*bmih.biWidth], bmih.biWidth, 1, bitmap_file);
+	fread(&video_memory[i*bmih.biWidth], bmih.biWidth, 1, bitmap_file);
  }
  fclose(bitmap_file);
 }
 
 //--------------------------------------------------------------------------//
 
-void main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
  if (argc != 2) 
  { 
   cout << "Incorrect number of arguments." << endl;
  
-  return; 
+  return 1; 
  }
  set_video_mode(0x13);
  display_image_data(argv[1]);
@@ -235,6 +203,7 @@ void main(int argc, char *argv[])
 	BUTTON = getch();
  }
  set_video_mode(0x03);
+ return 0;
 }
 
 //--------------------------------------------------------------------------//

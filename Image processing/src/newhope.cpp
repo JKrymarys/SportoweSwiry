@@ -136,7 +136,7 @@ int main(int argc, char * argv[]) {
 		}
 		else if ((string)operation_to_do == "--negative")
 		{
-			modificator = stod(argv[3]);
+			//modificator = stod(argv[3]);
 			basicoperations(0, image, operations[2]);
 			SaveImage(image);
 		}
