@@ -11,7 +11,7 @@ ComputerPlayer::ComputerPlayer(Strategy * _strategy)
 
 bool Player::hasShips()
 {
-	if (this->Ships.size == 0)
+	if (Ships.size() == 0)
 		return false;
 	else
 		return true;
@@ -30,9 +30,9 @@ bool Player::CanMove()
 }
 
 
-pair<int, int> HumanPlayer::SelectTarget()
+coords HumanPlayer::SelectTarget()
 {
-	return User_interface.getTargetLocation;
+	return User_interface.getTargetLocation();
 }
 
 Ship* HumanPlayer::SelectShip() {
@@ -51,17 +51,13 @@ void HumanPlayer::SetShip(int ship_type) {
 	Ship* new_ship;
 
 	if (ship_type = ONE_FUNNEL_SHIP)
-		new_ship = new SingleFunnelShip();
+		new_ship = new SingleFunnelShip(&player_grid);
 	else if (ship_type == TWO_FUNNEL_SHIP || ship_type == THREE_FUNNEL_SHIP)
-		new_ship = new MultiFunnelShip();
+		new_ship = new MultiFunnelShip( &player_grid, ship_type);
 	
 	bool flag = true; //check if all fields can take the ship
 	coords* ship_location = new coords[ship_type];
 	
-	//TODO
-	//jakies lepsze info dla gracza jak bedzie blad 
-
-
 	for (int i = 0; i < ship_type; i++)
 	{
 		ship_location[i] = User_interface.getCoords();

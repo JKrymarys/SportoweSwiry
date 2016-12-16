@@ -18,6 +18,6 @@ public:
 private:
 	int RoundCount;
 	const int ROUND_LIMIT;
-	vector<Player> Players;
+	vector<Player*> Players;
 };
 #endif

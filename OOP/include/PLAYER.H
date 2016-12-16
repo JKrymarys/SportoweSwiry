@@ -8,11 +8,21 @@
 using namespace std;
 
 
+
+class HumanInterface {
+public:
+	void getShipLocation(int size_of_ship);
+	int SelectShip(); // returns type o ship
+	coords getTargetLocation();
+	coords getCoords();
+};
+
  class Player
 {
 public:
-	void virtual SetShip();
-	pair<int, int> virtual SelectTarget();
+	Player();
+	void virtual SetShip(int ship_type) ;
+	pair<int, int> virtual SelectTarget() ;
 	Ship*  SelectShip(); //dlaczego nie moge utwrzyc jej jako virtual ??
 	bool CanMove();
 	bool  hasShips();
@@ -25,7 +35,7 @@ protected:
 	Grid player_grid;
 };
 
-class HumanPlayer:protected Player {
+class HumanPlayer:public Player {
 public:
 	HumanPlayer();
 	void SetShip(int ship_type);
@@ -35,19 +45,14 @@ public:
 
 
 //text mode interface
-class HumanInterface {
-public:
-	void getShipLocation(int size_of_ship);
-	int SelectShip(); // returns type o ship
-	coords getTargetLocation();
-	coords getCoords();
-};
+
+class Strategy;
 
 class ComputerPlayer :public Player
 {
 public:
 	ComputerPlayer(Strategy * strategy);
-	void SetShip();
+	void SetShip(int ship_type);
 	Ship* SelectShip();
 	pair<int, int> SelectTarget();
 private:

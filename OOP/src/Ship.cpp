@@ -15,9 +15,9 @@ bool Ship::isTargetInRange(float _length, coords target ) {
 
 	float range = _length+1;
 
-	if (abs(target.x - this->x_begin) < range || abs(target.x - this->x_end) < range)
+	if (abs(target.first - this->x_begin) < range || abs(target.first - this->x_end) < range)
 	{
-		if (abs(target.y - this->y_begin) < range || abs(target.y - this->y_end) < range)
+		if (abs(target.second - this->y_begin) < range || abs(target.second - this->y_end) < range)
 			return true;
 	}
 	else
@@ -53,29 +53,27 @@ int Ship::getType() {
 }
 
 void Ship::setCoords(coords start, coords end) {
-	this->x_begin = start.x;
-	this->x_end = end.x;
-	this->y_begin = start.y;
-	this->y_end = end.y;
+	this->x_begin = start.first;
+	this->x_end = end.first;
+	this->y_begin = start.second;
+	this->y_end = end.second;
 }
 
-SingleFunnelShip::SingleFunnelShip( Grid* p_grid,coords coordinates) {
+SingleFunnelShip::SingleFunnelShip( Grid* p_grid) {
 	
 	this->grid = p_grid;
 	this->Lives = 1;
 	this->Lenght = 1;
-	this->setCoords(coordinates,coordinates);
 	this->RemainingShoots = 1;
 }
 void SingleFunnelShip::Reset() {
 	this->RemainingShoots = 1;
 }
 
-MultiFunnelShip::MultiFunnelShip(int ship_type, Grid* p_grid, coords coordinates_start, coords coordinates_end) {
+MultiFunnelShip::MultiFunnelShip(Grid* p_grid,int  ship_type) {
 	this->grid = p_grid;
 	this->Lives = 1;
 	this->Lenght = 1;
-	this->setCoords(coordinates_start, coordinates_end);
 	this->RemainingShoots = ship_type - 1;
 	this->ShotTwice = false;
 }

@@ -2,6 +2,7 @@
 #define SHIP_H_
 
 #include "GRID.H"
+#include <utility>
 
 typedef pair<int, int>  coords;
 
@@ -21,7 +22,7 @@ public:
 	void getHit();
 	void Sink();
 	bool isSunk();
-	virtual void Reset() = 0;
+	virtual void Reset();
 	int getType();
 	void setCoords(coords start_coords, coords end_coords);
 
@@ -41,7 +42,7 @@ protected:
 class SingleFunnelShip :public Ship
 {
 public:
-	SingleFunnelShip( Grid* p_grid,coords coordinates);
+	SingleFunnelShip( Grid* p_grid);
 	void Reset();
 
 };
@@ -49,7 +50,7 @@ public:
 class MultiFunnelShip :public Ship
 {
 public:
-	MultiFunnelShip(int ship_type, Grid* p_grid, coords coordinates_start, coords coordinates_end);
+	MultiFunnelShip(Grid* p_grid, int ship_type);
 	void Reset();
 private:
 	bool ShotTwice;

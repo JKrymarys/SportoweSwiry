@@ -13,18 +13,18 @@ void Game::AddPlayer(string type)
 {
 	if (type == "human" && this->Players.size() <= 2)
 	{
-		//Players.push_back();
+		Players.push_back(&HumanPlayer());
 
 	}
 	else if (type == "greedy" && this->Players.size() <= 2)
 	{
 		Greedy_strategy strategy;
-		Players.push_back(ComputerPlayer(&strategy));
+		Players.push_back(&ComputerPlayer(&strategy));
 	}
 	else if (type == "random" && this->Players.size() <= 2)
 	{
 		Random_strategy strategy;
-		Players.push_back(ComputerPlayer(&strategy));
+		Players.push_back(&ComputerPlayer(&strategy));
 	}
 	else
 	{

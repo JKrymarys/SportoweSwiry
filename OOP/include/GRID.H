@@ -1,32 +1,36 @@
 #ifndef GRID_H_
 #define GRID_H_
 
-#include "SHIP.H"
+//#include "SHIP.H"
+#include <utility>
 
-typedef pair<int, int>  coords;
+class Ship;
 
-class Place;
+using namespace std;
 
-class Grid {
-private:
-	class Place;
-	Place Places[10][10];
-	void Hit();
-	void Mis();
+using coords = pair<int, int> ;
 
-public:
-	Grid();
-	bool isAvaliable(coords(int x,int y));
-	void setPlace(Ship* ship, coords(int x, int y));
-	void HitOrMiss();
-
-};
 
 class Place {
 public:
 	char Flag;
-	Ship* ShipHere;
+	Ship * ShipHere;
 	Place();
-}
+};
+
+
+class Grid {
+private:
+	Place Places[10][10];
+	void Hit();
+	void Miss();
+
+public:
+	Grid();
+	bool isAvaliable(coords);
+	void setPlace(Ship* ship, coords);
+	void HitOrMiss();
+
+};
 
 #endif // !GRID_H_
