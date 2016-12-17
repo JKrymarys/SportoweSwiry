@@ -3,7 +3,6 @@
 
 #include <vector>
 #include "SHIP.H"
-#include "GRID.H"
 
 using namespace std;
 
@@ -31,7 +30,6 @@ public:
  
 protected:
 	vector<Ship*> Ships;
-	HumanInterface User_interface;
 	Grid player_grid;
 };
 
@@ -41,6 +39,8 @@ public:
 	void SetShip(int ship_type);
 	Ship* SelectShip();
 	pair<int,int> SelectTarget();
+protected:
+	HumanInterface User_interface;
 };
 
 

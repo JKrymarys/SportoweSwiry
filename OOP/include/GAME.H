@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "PLAYER.H"
+#include "GAME.H"
 
 using namespace std;
 

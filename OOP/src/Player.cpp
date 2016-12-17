@@ -9,6 +9,11 @@ ComputerPlayer::ComputerPlayer(Strategy * _strategy)
 	this->strategy = _strategy;
 }
 
+HumanPlayer::HumanPlayer() {
+
+	cout << "created" << endl;
+}
+
 bool Player::hasShips()
 {
 	if (Ships.size() == 0)
@@ -43,6 +48,8 @@ Ship* HumanPlayer::SelectShip() {
 		if (i->getType() == type)
 			return i;
 	}
+	cout << "no such a ship" << endl;
+	return 0;
 }
 
 
