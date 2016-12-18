@@ -34,6 +34,51 @@ bool Player::CanMove()
 	return false;
 }
 
+bool Player::CrossCheck(const coords & c1, const coords & c2)
+{
+	if ((c1.first == c2.first) || (c1.second == c2.second))
+		return true;
+	else
+		return false;
+}
+
+bool Player::CrossCheck(const coords & c1, const coords & c2, const coords & c3)
+{
+	if ((c1.first == c2.first == c3.first )|| (c1.second == c2.second == c3.second))
+		return true;
+	else
+		return false;
+}
+
+void Player::Move()
+{
+	Ship * usedship = nullptr;
+	while (usedship == nullptr)
+	{
+		Ship * usedship = SelectShip();
+	}
+	// select ship should return nullptr if user wanted to use ship that can't shot 
+	coords Target = SelectTarget();
+	while (!usedship->isTargetInRange(Target))
+	{
+		cout << "Given coordinates are not in range of choosen ship";
+		Target = SelectTarget();
+	}
+	usedship->Shot(Target);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 coords HumanPlayer::SelectTarget()
 {
@@ -45,11 +90,11 @@ Ship* HumanPlayer::SelectShip() {
 	
 	for (auto i : Ships)
 	{
-		if (i->getType() == type)
+		if (i->getType() == type && i->CanShoot())
 			return i;
 	}
 	cout << "no such a ship" << endl;
-	return 0;
+	return nullptr;
 }
 
 
@@ -57,7 +102,7 @@ Ship* HumanPlayer::SelectShip() {
 
 // Trzeba jeszcze dodac sprawdzanie czy nie chce stawiac po przekatnej
 
-void HumanPlayer::SetShip(int ship_type) {
+bool HumanPlayer::SetShip(int ship_type) {
 	Ship* new_ship;
 
 	if (ship_type = ONE_FUNNEL_SHIP)
@@ -65,7 +110,6 @@ void HumanPlayer::SetShip(int ship_type) {
 	else if (ship_type == TWO_FUNNEL_SHIP || ship_type == THREE_FUNNEL_SHIP)
 		new_ship = new MultiFunnelShip( &player_grid, ship_type);
 	
-	bool flag = true; //check if all fields can take the ship
 	coords* ship_location = new coords[ship_type];
 	
 	for (int i = 0; i < ship_type; i++)
@@ -73,25 +117,25 @@ void HumanPlayer::SetShip(int ship_type) {
 		ship_location[i] = User_interface.getCoords();
 		if (!player_grid.isAvaliable(ship_location[i]))
 		{
-			flag = false;
 			cout << "This place is not avaliable" << endl;
-			break;
+			return false;
 		}
-
+		if (i == 1 && (!CrossCheck(ship_location[0], ship_location[1]))) // sprawdzalem jesli nie sprawdzi sie pierwszy warunek nie bedzie probowal sprawdzic drugiego
+			return false;
+		if (i == 2 && (!CrossCheck(ship_location[0], ship_location[1], ship_location[2])))
+			return false;
 	}
 
-	if (flag)
+	this->Ships.push_back(new_ship);//add ship to the vector
+	new_ship->setCoords( ship_location[0], ship_location[ship_type-1]);
+
+	for (int i = 0; i < ship_type; i++)
 	{
-		this->Ships.push_back(new_ship);//add ship to the vector
-		new_ship->setCoords( ship_location[0], ship_location[ship_type-1]);
-
-		for (int i = 0; i < ship_type; i++)
-		{
-			player_grid.setPlace(new_ship, ship_location[i]);
-			
-		}
-
+		player_grid.setPlace(new_ship, ship_location[i]);
+		
 	}
+
+	return true;
 		
 }
 
@@ -115,6 +159,11 @@ coords HumanInterface::getTargetLocation() {
 	
 	cout << "Type coordinates x,y" << endl;
 	cin >> x >> y;
+	while (x > 10 || y > 10) // should be grid->height, grid ->length
+	{
+		cout << "Coordinates out of range, retype";
+		cin >> x >> y;
+	}
 
 	return coords(x, y);
 

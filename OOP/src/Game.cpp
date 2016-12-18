@@ -34,3 +34,12 @@ void Game::AddPlayer(string type)
 	
 	
 }
+
+void Game::PlayRound()
+{
+	while (Players.at(0)->CanMove() || Players.at(1)->CanMove())
+	{
+		if (Players.at(0)->CanMove())
+			Players.at(0)->Move();
+	}
+}

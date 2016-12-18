@@ -17,8 +17,8 @@ class Ship {
 
 public:
 	bool CanShoot();
-	bool isTargetInRange(float lenght, coords coordinates);
-	void Shot();
+	bool isTargetInRange(coords coordinates);
+	void Shot(coords coordinates);
 	void getHit();
 	void Sink();
 	bool isSunk();

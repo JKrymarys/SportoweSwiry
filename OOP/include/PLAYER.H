@@ -3,6 +3,8 @@
 
 #include <vector>
 #include "SHIP.H"
+#include "ComputerStrategies.h"
+
 
 using namespace std;
 
@@ -13,31 +15,33 @@ public:
 	void getShipLocation(int size_of_ship);
 	int SelectShip(); // returns type o ship
 	coords getTargetLocation();
-	coords getCoords();
+	coords getCoords(); // used to place ships
 };
 
  class Player
 {
 public:
-	Player();
-	void virtual SetShip(int ship_type) ;
+	Player() {}
+	bool virtual SetShip(int ship_type);
 	coords virtual SelectTarget() ;
 	virtual Ship*  SelectShip(); //dlaczego nie moge utwrzyc jej jako virtual ??
 	bool CanMove();
 	bool  hasShips();
+	void Move();
 	
 	
  
 protected:
 	vector<Ship*> Ships;
 	Grid player_grid;
-	bool CrossCheck(coords c1, coords c2);
+	bool CrossCheck(const coords & c1, const coords & c2);
+	bool CrossCheck(const coords & c1, const coords & c2, const coords & c3);
 };
 
 class HumanPlayer:public Player {
 public:
 	HumanPlayer();
-	void SetShip(int ship_type);
+	bool SetShip(int ship_type);
 	Ship* SelectShip();
 	pair<int,int> SelectTarget();
 protected:
@@ -47,13 +51,12 @@ protected:
 
 //text mode interface
 
-class Strategy;
 
 class ComputerPlayer :public Player
 {
 public:
 	ComputerPlayer(Strategy * strategy);
-	void SetShip(int ship_type);
+	bool SetShip(int ship_type);
 	Ship* SelectShip();
 	pair<int, int> SelectTarget();
 private:
@@ -61,20 +64,4 @@ private:
 
 };
 
-class Strategy {
-public:
-	virtual void getTargetLocation() = 0;
-	Ship* SelectShip();
-	void getShipLocation();
-};
-
-class Greedy_strategy:public Strategy {
-public:
-	void getTargetLocation() {} // FOR NOW
-};
-
-class Random_strategy: public Strategy {
-public:
-	void getTargetLocation() {} // FOR NOW 
-};
 #endif

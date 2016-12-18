@@ -22,7 +22,7 @@ public:
 class Grid {
 private:
 	Place Places[10][10];
-	void Hit(Ship * ship);
+	void Hit(Ship * ship, coords);
 	void Miss(coords);
 
 public:

@@ -11,22 +11,23 @@ bool Ship::CanShoot() {
 
 }
 
-bool Ship::isTargetInRange(float _length, coords target ) {
+bool Ship::isTargetInRange( coords target ) {
 
-	float range = _length+1;
+	float range = Lenght+1;
 
-	if (abs(target.first - this->x_begin) < range || abs(target.first - this->x_end) < range)
+	if (abs(target.first - this->x_begin) <= range || abs(target.first - this->x_end) <= range)
 	{
-		if (abs(target.second - this->y_begin) < range || abs(target.second - this->y_end) < range)
+		if (abs(target.second - this->y_begin) <= range || abs(target.second - this->y_end) <= range)
 			return true;
 	}
 	else
 		return false;
 
-} //EEEE to chyba tak moze byc ? xd
+} //EEEE to chyba tak moze byc ? xd 
+// CHYBA TAK ALE BEDZIE TRZEBA TO PODDAC MOCNYM TESTOM
 
-void Ship::Shot() {
-	//pozniej xd
+void Ship::Shot(coords target) {
+	this->grid->HitOrMiss(target);
 }
 
 void Ship::getHit() {
@@ -59,6 +60,10 @@ void Ship::setCoords(coords start, coords end) {
 	this->y_end = end.second;
 }
 
+
+
+
+
 SingleFunnelShip::SingleFunnelShip( Grid* p_grid) {
 	
 	this->grid = p_grid;
@@ -66,9 +71,14 @@ SingleFunnelShip::SingleFunnelShip( Grid* p_grid) {
 	this->Lenght = 1;
 	this->RemainingShoots = 1;
 }
+
 void SingleFunnelShip::Reset() {
 	this->RemainingShoots = 1;
 }
+
+
+
+
 
 MultiFunnelShip::MultiFunnelShip(Grid* p_grid,int  ship_type) {
 	this->grid = p_grid;
