@@ -54,6 +54,9 @@ Ship* HumanPlayer::SelectShip() {
 
 
 // getPair to grid, and allote there adress coresponding to proper ship
+
+// Trzeba jeszcze dodac sprawdzanie czy nie chce stawiac po przekatnej
+
 void HumanPlayer::SetShip(int ship_type) {
 	Ship* new_ship;
 
@@ -114,5 +117,15 @@ coords HumanInterface::getTargetLocation() {
 	cin >> x >> y;
 
 	return coords(x, y);
+
+}
+
+coords HumanInterface::getCoords() {
+	coords toreturn;
+
+	cout << "Type coordinates x, y " << endl;
+	cin >> toreturn.first >> toreturn.second;
+
+	return toreturn;
 
 }

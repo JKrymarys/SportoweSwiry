@@ -22,14 +22,15 @@ public:
 class Grid {
 private:
 	Place Places[10][10];
-	void Hit();
-	void Miss();
+	void Hit(Ship * ship);
+	void Miss(coords);
 
 public:
 	Grid();
 	bool isAvaliable(coords);
 	void setPlace(Ship* ship, coords);
-	void HitOrMiss();
+	void HitOrMiss(coords);
+	bool wasShot(coords);
 
 };
 

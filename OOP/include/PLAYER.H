@@ -21,8 +21,8 @@ public:
 public:
 	Player();
 	void virtual SetShip(int ship_type) ;
-	pair<int, int> virtual SelectTarget() ;
-	Ship*  SelectShip(); //dlaczego nie moge utwrzyc jej jako virtual ??
+	coords virtual SelectTarget() ;
+	virtual Ship*  SelectShip(); //dlaczego nie moge utwrzyc jej jako virtual ??
 	bool CanMove();
 	bool  hasShips();
 	
@@ -31,6 +31,7 @@ public:
 protected:
 	vector<Ship*> Ships;
 	Grid player_grid;
+	bool CrossCheck(coords c1, coords c2);
 };
 
 class HumanPlayer:public Player {
@@ -69,11 +70,11 @@ public:
 
 class Greedy_strategy:public Strategy {
 public:
-	void getTargetLocation();
+	void getTargetLocation() {} // FOR NOW
 };
 
 class Random_strategy: public Strategy {
 public:
-	void getTargetLocation();
+	void getTargetLocation() {} // FOR NOW 
 };
 #endif
