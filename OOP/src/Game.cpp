@@ -41,5 +41,7 @@ void Game::PlayRound()
 	{
 		if (Players.at(0)->CanMove())
 			Players.at(0)->Move();
+		if (Players.at(1)->CanMove())
+			Players.at(1)->Move();
 	}
 }

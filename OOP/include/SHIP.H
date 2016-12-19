@@ -25,6 +25,7 @@ public:
 	virtual void Reset() = 0;
 	int getType();
 	void setCoords(coords start_coords, coords end_coords);
+	bool hasAvailableMove();
 
 protected:
 	int Lives;

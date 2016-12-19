@@ -3,8 +3,15 @@
 
 
 
+bool Ship::hasAvailableMove()
+{
+	for(int )
+}
+
+
+
 bool Ship::CanShoot() {
-	if (Lives > 0 && RemainingShoots > 0)
+	if (!isSunk() && CanShoot() && this->hasAvailableMove())
 		return true;
 	else
 		return false;
