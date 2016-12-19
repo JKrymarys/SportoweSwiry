@@ -1,11 +1,28 @@
 #include "SHIP.H"
 #include <cmath>
+#include<algorithm>
 
 
 
 bool Ship::hasAvailableMove()
 {
-	for(int )
+	int start_x = std::min(this->x_begin, this->x_end);
+	int end_x = std::max(this->x_begin, this->x_end);
+	int start_y = std::min(this->y_begin, this->y_end);
+	int end_y = std::max(this->y_begin, this->y_end);
+
+	int i = start_x - Lenght - 1 > 0 ? start_x - Lenght - 1 : 0;
+	int j = start_y - Lenght - 1 > 0 ? start_y - Lenght - 1 : 0;
+	int end_i = start_x + Lenght + 1 < 10 ? start_x + Lenght + 1 : 10;
+	int end_j = start_y + Lenght + 1 < 10 ? start_y + Lenght + 1 : 10;
+	for(; i < end_i; i++)
+		for (; j < end_j; j++)
+		{
+			if (grid->wasShot(coords(i, j)))
+				return false;
+		}
+	return true;
+
 }
 
 
@@ -27,8 +44,8 @@ bool Ship::isTargetInRange( coords target ) {
 		if (abs(target.second - this->y_begin) <= range || abs(target.second - this->y_end) <= range)
 			return true;
 	}
-	else
-		return false;
+
+	return false;
 
 } //EEEE to chyba tak moze byc ? xd 
 // CHYBA TAK ALE BEDZIE TRZEBA TO PODDAC MOCNYM TESTOM

@@ -73,13 +73,6 @@ void Player::Move()
 
 
 
-
-
-
-
-
-
-
 coords HumanPlayer::SelectTarget()
 {
 	return User_interface.getTargetLocation();

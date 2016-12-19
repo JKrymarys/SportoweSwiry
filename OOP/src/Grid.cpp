@@ -48,5 +48,5 @@ void Grid::HitOrMiss(coords crd)
 
 bool Grid::wasShot(coords crd)
 {
-	return Places[crd.first][crd.second].Flag == 0 ? false : true;
+	return Places[crd.first][crd.second].Flag == 1 ? true : false;
 }
