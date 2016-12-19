@@ -4,15 +4,11 @@
 using namespace std;
 
 
-ComputerPlayer::ComputerPlayer(Strategy * _strategy)
-{
-	this->strategy = _strategy;
-}
+/*
+	Player
 
-HumanPlayer::HumanPlayer() {
+*/
 
-	cout << "created" << endl;
-}
 
 bool Player::hasShips()
 {
@@ -69,8 +65,29 @@ void Player::Move()
 
 
 
+/*
+	ComputerPlayer
+
+*/
 
 
+
+ComputerPlayer::ComputerPlayer(Strategy * _strategy)
+{
+	this->strategy = _strategy;
+}
+
+/*
+	HumanPlayer
+
+*/
+
+
+
+HumanPlayer::HumanPlayer() {
+
+	cout << "created" << endl;
+}
 
 
 coords HumanPlayer::SelectTarget()
@@ -132,6 +149,11 @@ bool HumanPlayer::SetShip(int ship_type) {
 		
 }
 
+/*
+
+	HumanInterface
+
+*/
 
 int HumanInterface::SelectShip()
 {
