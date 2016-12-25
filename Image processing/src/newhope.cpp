@@ -6,6 +6,7 @@
 #include <fstream>
 #include "CImg.h"
 #include "IMAGE.h"
+#include "Fourier.h"
 
 
 using namespace cimg_library;
@@ -15,6 +16,28 @@ using namespace std;
 
 
 int main(int argc, char * argv[]) {
+
+	/*
+	CImg<float> lena(8, 8, 1, 1, 0);
+	lena(2, 1) = 70;
+	lena(3, 1) = 80;
+	lena(4, 1) = 90;
+	lena(2, 2) = 90;
+	lena(3, 2) = 100;
+	lena(4, 2) = 110;
+	lena(2, 3) = 110;
+	lena(3, 3) = 120;
+	lena(4, 3) = 130;
+	lena(2, 4) = 130;
+	lena(3, 4) = 140;
+	lena(4, 4) = 150;
+	*/
+	CImg<float> lena = Load_Image("cln1.bmp");
+	cout << "Lena loadaded" << endl;
+	DFT(lena);
+	cin.get();
+
+	return 0;
 
 
 	float(*operations[3])(float, float) = { brightlut, contrastlut, negativelut };
