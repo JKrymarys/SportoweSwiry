@@ -8,9 +8,10 @@ using namespace cimg_library;
 using namespace std;
 
 
-void DFT(CImg<float> & image);
-complex<double> First_Transform(CImg<float> & image, int column, int row);
-complex<double> Second_Transform(complex<double> ** Arr, int column, int row, double N);
+complex<double> ** DFT(CImg<float> & image);
+CImg<float> * IDFT(complex<double> ** Arr, int M, int N);
+complex<double> First_Transform(complex<double> ** Arr, int column, int row, double N, bool inverse);
+complex<double> Second_Transform(complex<double> ** Arr, int column, int row, double N, bool inverse);
 void imageswap(CImg<float> & image);
 
 

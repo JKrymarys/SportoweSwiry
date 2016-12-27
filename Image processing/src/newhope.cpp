@@ -32,9 +32,21 @@ int main(int argc, char * argv[]) {
 	lena(3, 4) = 140;
 	lena(4, 4) = 150;
 	*/
-	CImg<float> lena = Load_Image("cln1.bmp");
+	CImg<float> lena = Load_Image("lena.bmp");
 	cout << "Lena loadaded" << endl;
-	DFT(lena);
+	complex<double>  ** After = DFT(lena);
+	/*
+	double newvalue;
+	for (int x = 0; x < lena.width(); x++)
+	{
+		for (int y = 0; y < lena.height(); y++)
+		{
+			cout << "At coordinates " << x << y << " Real Value - " << After[y][x].real() << " Imaginary - " << After[y][x].imag() << endl;
+		}
+	}
+	*/
+	lena = *(IDFT(After, lena.width(), lena.height()));
+	lena.save("output.bmp");
 	cin.get();
 
 	return 0;
