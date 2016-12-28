@@ -360,10 +360,11 @@ complex<double>** MaskFilter(int variant, CImg<float>& image)
 {
 	//TO DO:
 	// flip mask for proper variant
+	CImg<float> mask_img;
 	if (variant < 3)
-		CImg<float> mask = Load_Image("F5mask1.bmp");
+		 mask_img = Load_Image("F5mask1.bmp");
 	else
-		CImg<float> mask = Load_Image("F5mask2.bmp");
+		mask_img = Load_Image("F5mask2.bmp");
 
 	switch (variant)
 	{
@@ -372,7 +373,7 @@ complex<double>** MaskFilter(int variant, CImg<float>& image)
 
 		break;
 	case 3:
-		break
+		break;
 	}
 
 	complex<double>  **mask = DFT(image);
