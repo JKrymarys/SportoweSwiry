@@ -33,8 +33,9 @@ int main(int argc, char * argv[]) {
 	lena(4, 4) = 150;
 	*/
 	CImg<float> lena = Load_Image("lena.bmp");
+	//CImg<float> mask = Load_Image("F5mask1.bmp");
 	cout << "Lena loadaded" << endl;
-	complex<double>  ** After = LowPassFilter(lena,50);
+	complex<double>  ** After = MaskFilter(1,lena);
 	/*
 	double newvalue;
 	for (int x = 0; x < lena.width(); x++)

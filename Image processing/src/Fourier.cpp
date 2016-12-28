@@ -251,3 +251,149 @@ bool checkRadius(int x, int y, int x_0, int y_0, int radius)
 		return false;
 }
 
+
+complex<double>** HighPassFilter(CImg<float> &image, int radius) {
+
+	//little idiotproof solution :P
+	if (radius > image.width() / 2 || radius > image.height() / 2)
+	{
+		cout << "You have chosen too big radius" << endl;
+		return 0;
+	}
+
+	complex<double>  **mask = DFT(image);
+
+
+	//just 4 debbuging
+	CImg<float> mask_image(image.width(), image.height());
+	mask_image = *PrintMask(mask, image.width(), image.height());
+	mask_image.save("mask.bmp");
+
+	for (int x = 0; x < image.width(); ++x)
+	{
+		for (int y = 0; y < image.height(); ++y)
+		{
+			if (checkRadius(x, y, image.width() / 2, image.height() / 2, radius))
+				mask[y][x] = 0;
+		}
+	}
+
+	mask_image = *PrintMask(mask, image.width(), image.height());
+	mask_image.save("mask2.bmp");
+
+	return mask;
+}
+
+
+complex<double>** BandPassFilter(CImg<float> &image, int radius_start, int radius_end) {
+
+	//little idiotproof solution :P
+	if (radius_end > image.width() / 2 || radius_end > image.height() / 2)
+	{
+		cout << "You have chosen too big radius" << endl;
+		return 0;
+	}
+
+	complex<double>  **mask = DFT(image);
+
+
+	//just 4 debbuging
+	CImg<float> mask_image(image.width(), image.height());
+	mask_image = *PrintMask(mask, image.width(), image.height());
+	mask_image.save("mask.bmp");
+
+	for (int x = 0; x < image.width(); ++x)
+	{
+		for (int y = 0; y < image.height(); ++y)
+		{
+			if (!checkRadiusRegion(x, y, image.width() / 2, image.height() / 2, radius_start,radius_end))
+				mask[y][x] = 0;
+		}
+	}
+
+	mask_image = *PrintMask(mask, image.width(), image.height());
+	mask_image.save("mask2.bmp");
+
+	return mask;
+}
+
+complex<double>** BandCutFilter(CImg<float> &image, int radius_start, int radius_end) {
+
+	//little idiotproof solution :P
+	if (radius_end > image.width() / 2 || radius_end > image.height() / 2)
+	{
+		cout << "You have chosen too big radius" << endl;
+		return 0;
+	}
+
+	complex<double>  **mask = DFT(image);
+
+
+	//just 4 debbuging
+	CImg<float> mask_image(image.width(), image.height());
+	mask_image = *PrintMask(mask, image.width(), image.height());
+	mask_image.save("mask.bmp");
+
+	for (int x = 0; x < image.width(); ++x)
+	{
+		for (int y = 0; y < image.height(); ++y)
+		{
+			if (checkRadiusRegion(x, y, image.width() / 2, image.height() / 2, radius_start, radius_end))
+				mask[y][x] = 0;
+		}
+	}
+
+	mask_image = *PrintMask(mask, image.width(), image.height());
+	mask_image.save("mask2.bmp");
+
+	return mask;
+}
+bool checkRadiusRegion(int x, int y, int x_0, int y_0, int radius_start, int radius_end)
+{
+	if (pow(radius_start,2) <= pow(x - x_0, 2) + pow(y - y_0, 2) && pow(x - x_0, 2) + pow(y - y_0, 2) <= pow(radius_end,2))
+		return true;
+	else
+		return false;
+}
+
+complex<double>** MaskFilter(int variant, CImg<float>& image)
+{
+	//TO DO:
+	// flip mask for proper variant
+	if (variant < 3)
+		CImg<float> mask = Load_Image("F5mask1.bmp");
+	else
+		CImg<float> mask = Load_Image("F5mask2.bmp");
+
+	switch (variant)
+	{
+	
+	case 2:
+
+		break;
+	case 3:
+		break
+	}
+
+	complex<double>  **mask = DFT(image);
+
+	//just 4 debbuging
+	CImg<float> mask_image(image.width(), image.height());
+	mask_image = *PrintMask(mask, image.width(), image.height());
+	mask_image.save("mask.bmp");
+
+	for (int x = 0; x < image.width(); ++x)
+	{
+		for (int y = 0; y < image.height(); ++y)
+		{
+			if (mask_img(x,y) == 0)
+				mask[y][x] = 0;
+		}
+	}
+
+	mask_image = *PrintMask(mask, image.width(), image.height());
+	mask_image.save("mask2.bmp");
+
+	return mask;
+
+}
