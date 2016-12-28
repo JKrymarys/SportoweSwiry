@@ -34,7 +34,7 @@ int main(int argc, char * argv[]) {
 	*/
 	CImg<float> lena = Load_Image("lena.bmp");
 	cout << "Lena loadaded" << endl;
-	complex<double>  ** After = DFT(lena);
+	complex<double>  ** After = LowPassFilter(lena,50);
 	/*
 	double newvalue;
 	for (int x = 0; x < lena.width(); x++)
@@ -45,9 +45,9 @@ int main(int argc, char * argv[]) {
 		}
 	}
 	*/
-	lena = *(IDFT(After, lena.width(), lena.height()));
+	lena = *PrintMask(IDFT(After, lena.width(), lena.height()), lena.width(), lena.height());
 	lena.save("output.bmp");
-	cin.get();
+	//cin.get();
 
 	return 0;
 

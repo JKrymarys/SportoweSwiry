@@ -1,3 +1,4 @@
+#define _USE_MATH_DEFINES
 #include "Fourier.h"
 #include <cmath>
 #include <iostream>
@@ -5,7 +6,7 @@
 using namespace std;
 
 const complex<double> i(0.0, 1.0);
-const double pi = 3.1415;
+double pi = M_PI;
 
 
 complex<double> ** DFT(CImg<float> & image)
@@ -54,14 +55,24 @@ complex<double> ** DFT(CImg<float> & image)
 			//cout << Arr2[x][i] << endl;
 		}
 	}
-
-	return Arr2;
-
-	/*
-
 	image.channel(0);
-
 	double newvalue;
+
+	for (int i = 0; i < (image.width() / 2) ; ++i)
+	{
+		for (int j = 0; j < (image.height() / 2); ++j)
+		{
+			std::swap(Arr2[j][i], Arr2[j + image.height()/2 ][i + image.width()/2 ]);
+		}
+	}
+	for (int i = image.width() / 2; i < image.width(); ++i)
+	{
+		for (int j = 0; j < (image.height() / 2); ++j)
+		{
+			std::swap(Arr2[j][i], Arr2[j + image.height() / 2][i - image.width() / 2]);
+		}
+	}
+
 
 	for (int x = 0; x < image.width(); x++)
 	{
@@ -75,33 +86,30 @@ complex<double> ** DFT(CImg<float> & image)
 			//cout << "At coordinates " << x << y << " Real Value - " << Arr2[y][x].real() << " Imaginary - " << Arr2[y][x].imag() << endl;
 		}
 	}
+
 	imageswap(image);
 	image.save("test.bmp");
 
-	*/
+	return Arr2;
 
 
 }
 
 
-CImg<float> * IDFT(complex<double> ** Arr, int M, int N)
+complex<double> ** IDFT(complex<double> ** Arr, int M, int N)
 {
 
 	complex<double> ** Arr1 = new complex<double>*[N];
-	for (int i = 0; i < N; ++i)
+	for (int i = 0; i < N; i++)
 	{
 		Arr1[i] = new complex<double>[M];
 	}
 
 	complex<double> ** Arr2 = new complex<double>*[N];
-	for (int i = 0; i < N; ++i)
+	for (int i = 0; i < N; i++)
 	{
 		Arr2[i] = new complex<double>[M];
 	}
-
-
-
-
 
 	for (int i = 0; i < M; i++)
 	{
@@ -125,21 +133,7 @@ CImg<float> * IDFT(complex<double> ** Arr, int M, int N)
 		}
 	}
 
-	CImg<float> * toreturn = new CImg<float>(M, N);
-
-	for (int x = 0; x < toreturn->width(); x++)
-	{
-		for (int y = 0; y < toreturn->height(); y++)
-		{
-			//newvalue = sqrt(Arr2[y][x].real()*Arr2[y][x].real() + Arr2[y][x].imag()*Arr2[y][x].imag());
-			(*toreturn)(x, y) = abs(Arr2[y][x]);
-			//if (image(x, y) > 1000)
-			//cout << image(x, y) << endl;
-			//cout << "At coordinates " << x << y << " Real Value - " << Arr2[y][x].real() << " Imaginary - " << Arr2[y][x].imag() << endl;
-		}
-	}
-	return toreturn;
-	
+	return Arr2;
 }
 
 
@@ -157,8 +151,7 @@ complex<double> First_Transform(complex<double> ** Arr, int column, int row, dou
 		alfa = ((2 * pi* column * x) / N);
 		sum += Arr[row][x] * (cos(alfa) - k*i*sin(alfa));
 	}
-	if (inverse)
-		sum = sum / N;
+		sum = sum / sqrt(N);
 	return sum;
 }
 
@@ -176,8 +169,7 @@ complex<double> Second_Transform(complex<double> ** Arr, int column, int row, do
 		alfa = ((2 * pi* row * x) / N);
 		sum += Arr[x][column] * (cos(alfa) - k*i*sin(alfa));
 	}
-	if(inverse)
-		sum = sum / N;
+		sum = sum / sqrt(N);
 	return sum;
 
 }
@@ -193,9 +185,69 @@ void imageswap(CImg<float> & image)
 	}
 	for (int i = image.width() / 2; i < image.width(); i++)
 	{
-		for (int j =0; j < image.height()/2; j++)
+		for (int j =0; j < image.height()/2; j++) 
 		{
 			std::swap(image(i, j), image(i - image.width() / 2, j + image.height() / 2));
 		}
 	}
 }
+
+
+complex<double>** LowPassFilter(CImg<float> &image,int radius) {
+
+	//little idiotproof solution :P
+	if (radius > image.width() / 2 || radius > image.height() / 2)
+	{
+		cout << "You have chosen too big radius" << endl;
+		return 0;
+	}
+
+	complex<double>  **mask = DFT(image);
+	
+
+	//just 4 debbuging
+	CImg<float> mask_image(image.width(), image.height());
+		mask_image = *PrintMask(mask,image.width(),image.height());
+		mask_image.save("mask.bmp");
+
+		for (int x = 0; x < image.width(); ++x)
+		{
+			for (int y = 0; y < image.height(); ++y)
+			{
+				if (!checkRadius(x, y, image.width() / 2, image.height() / 2, radius))
+					mask[y][x] = 0;
+			}
+		}
+
+		mask_image = *PrintMask(mask, image.width(), image.height());
+		mask_image.save("mask2.bmp");
+
+		return mask;
+}
+
+CImg<float>* PrintMask(complex<double>**Arr, int N, int M)
+{
+	CImg<float> * toreturn = new CImg<float>(M, N);
+
+	for (int x = 0; x < toreturn->width(); x++)
+	{
+		for (int y = 0; y < toreturn->height(); y++)
+		{
+			//newvalue = sqrt(Arr2[y][x].real()*Arr2[y][x].real() + Arr2[y][x].imag()*Arr2[y][x].imag());
+			(*toreturn)(x, y) = abs(Arr[y][x]);
+			//if (image(x, y) > 1000)
+			//cout << image(x, y) << endl;
+			//cout << "At coordinates " << x << y << " Real Value - " << Arr2[y][x].real() << " Imaginary - " << Arr2[y][x].imag() << endl;
+		}
+	}
+	return toreturn;
+}
+
+bool checkRadius(int x, int y, int x_0, int y_0, int radius)
+{
+	if (pow(x - x_0, 2) + pow(y - y_0, 2) <= radius*radius)
+		return true;
+	else
+		return false;
+}
+
