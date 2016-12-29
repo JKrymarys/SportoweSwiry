@@ -96,6 +96,61 @@ complex<double> ** DFT(CImg<float> & image)
 }
 
 
+
+complex<double> ** IDFT(CImg<float> & image, int M, int N)
+{
+	complex<double> ** Arr_input = new complex<double>*[N];
+	for (int i = 0; i < N; i++)
+	{
+		Arr_input[i] = new complex<double>[M];
+	}
+
+	complex<double> ** Arr1 = new complex<double>*[N];
+	for (int i = 0; i < N; i++)
+	{
+		Arr1[i] = new complex<double>[M];
+	}
+
+	complex<double> ** Arr2 = new complex<double>*[N];
+	for (int i = 0; i < N; i++)
+	{
+		Arr2[i] = new complex<double>[M];
+	}
+
+	for (int i = 0; i < image.height(); i++)
+	{
+
+		for (int x = 0; x < image.width(); x++)
+		{
+			Arr_input[i][x] = image(x, i);
+		}
+	}
+
+	for (int i = 0; i < M; i++)
+	{
+		for (int x = 0; x < N; x++)
+		{
+
+			Arr1[i][x] = First_Transform(Arr_input, x, i, M, true);
+			//cout << Arr2[x][i] << endl;
+		}
+	}
+
+
+	for (int i = 0; i < N; i++)
+	{
+
+		for (int x = 0; x < M; x++)
+		{
+			Arr2[x][i] = Second_Transform(Arr1, i, x, N, true);
+			//cout << "At coordinates " << x << i << " Real Value - " << Arr[i][x].real() << " Imaginary - " << Arr[i][x].imag() << endl;
+			//cout << x << " " << i << " " << Arr[i][x] << endl;
+		}
+	}
+
+	return Arr2;
+}
+
 complex<double> ** IDFT(complex<double> ** Arr, int M, int N)
 {
 
@@ -396,5 +451,58 @@ complex<double>** MaskFilter(int variant, CImg<float>& image)
 	mask_image.save("mask2.bmp");
 
 	return mask;
+
+}
+
+complex<double>** PhaseMod(CImg<float>& image, int k, int l)
+{
+	int M = image.width();
+	int N = image.height();
+
+	complex<double> ** Arr = new complex<double>*[N];
+	for (int i = 0; i < N; i++)
+	{
+		Arr[i] = new complex<double>[M];
+	}
+
+	complex<double> ** Arr2 = new complex<double>*[N];
+	
+	
+	for (int y = 0; y < N; ++y)
+	{
+		for (int x = 0; x < M; ++x)
+		{
+			Arr[y][x] = exp(i*((-x*k*2*pi/N)+(-y*l*2*pi/M)+(k+l)*pi));
+		}
+	}
+
+
+	/*for (int i = 0; i < (image.width() / 2); ++i)
+	{
+		for (int j = 0; j < (image.height() / 2); ++j)
+		{
+			std::swap(Arr[j][i], Arr[j + image.height() / 2][i + image.width() / 2]);
+		}
+	}
+	for (int i = image.width() / 2; i < image.width(); ++i)
+	{
+		for (int j = 0; j < (image.height() / 2); ++j)
+		{
+			std::swap(Arr[j][i], Arr[j + image.height() / 2][i - image.width() / 2]);
+		}
+	}*/
+
+
+	Arr2 = DFT(image);
+
+	for (int y = 0; y < N; ++y)
+	{
+		for (int x = 0; x < M; ++x)
+		{
+			Arr2[y][x] *= Arr[y][x];
+		}
+	}
+
+	return Arr2;
 
 }

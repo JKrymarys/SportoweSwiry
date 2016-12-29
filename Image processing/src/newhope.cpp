@@ -35,7 +35,7 @@ int main(int argc, char * argv[]) {
 	CImg<float> lena = Load_Image("lena.bmp");
 	//CImg<float> mask = Load_Image("F5mask1.bmp");
 	cout << "Lena loadaded" << endl;
-	complex<double>  ** After = MaskFilter(1,lena);
+	complex<double>  ** After = PhaseMod(lena,5,1);
 	/*
 	double newvalue;
 	for (int x = 0; x < lena.width(); x++)
@@ -62,6 +62,7 @@ int main(int argc, char * argv[]) {
 	regex pattern_basic_operations("(?:--)(brightness|contrast|negative|vflip|hflip|dflip|shrink|enlarge|median|gmean|orobertsi)");
 	regex pattern_histograms("(?:--)(histogram|slowpass|huniform|cmean|cvariance|cstdev|cvarcoi|casyco|cfasyco|cvarcoii|centropy)");
 	regex pattern_morphology("(?:--)(dilation|erosion|opening|closing|HMT|M11|M12|M13|rgrowing)");
+	regex pattern_fourier("(?:--)(dft|idft|F1|F2|F3|F4|F5|F6|)");
 
 	if (argc < 2 || argc > 6)
 	{
@@ -403,7 +404,75 @@ int main(int argc, char * argv[]) {
 			return 0;
 		}
 	}
+	else if (regex_search(argv[1], pattern_fourier))
+	{
+		if ((string)(argv[1]) == "--dft")
+		{
+			CImg<float> image = Load_Image(argv[2]);
+			cout << "picure loadaded" << endl;
+			complex<double>  ** After = DFT(image);
+			image = *PrintMask(After, image.width(),image.height());
+			SaveImage(image);
+		}
+		else if ((string)(argv[1]) == "--idft")
+		{
+			CImg<float> image = Load_Image(argv[2]);
+			cout << "picure loadaded" << endl;
+			image = *PrintMask(IDFT(image, lena.width(), lena.height()), lena.width(), lena.height());
+			SaveImage(image);
+		}
+		else if ((string)(argv[1]) == "--f1")
+		{
+			CImg<float> image = Load_Image(argv[2]);
+			cout << "picure loadaded" << endl;
+			complex<double>  ** After = LowPassFilter(image,(int)argv[3]);
+			image = *PrintMask(IDFT(After, lena.width(), lena.height()), lena.width(), lena.height());
+			SaveImage(image);
+		}
+		else if ((string)(argv[1]) == "--f2")
+		{
+			CImg<float> image = Load_Image(argv[2]);
+			cout << "picure loadaded" << endl;
+			complex<double>  ** After = HighPassFilter(image,(int)argv[3]);
+			image = *PrintMask(IDFT(After, lena.width(), lena.height()), lena.width(), lena.height());
+			SaveImage(image);
+		}
+		else if ((string)(argv[1]) == "--f3")
+		{
+			CImg<float> image = Load_Image(argv[2]);
+			cout << "picure loadaded" << endl;
+			complex<double>  ** After = BandPassFilter(image, (int)argv[3], (int)argv[4]);
+			image = *PrintMask(IDFT(After, lena.width(), lena.height()), lena.width(), lena.height());
+			SaveImage(image);
+		}
+		else if ((string)(argv[1]) == "--f4")
+		{
+			CImg<float> image = Load_Image(argv[2]);
+			cout << "picure loadaded" << endl;
+			complex<double>  ** After = BandPassFilter(image, (int)argv[3], (int)argv[4]);
+			image = *PrintMask(IDFT(After, lena.width(), lena.height()), lena.width(), lena.height());
+			SaveImage(image);
+		}
+		else if ((string)(argv[1]) == "--f5")
+		{
+			CImg<float> image = Load_Image(argv[2]);
+			cout << "picure loadaded" << endl;
+			complex<double>  ** After = MaskFilter( (int)argv[3], image);
+			image = *PrintMask(IDFT(After, lena.width(), lena.height()), lena.width(), lena.height());
+			SaveImage(image);
+		}
+		else if ((string)(argv[1]) == "--f6")
+		{
+			CImg<float> image = Load_Image(argv[2]);
+			cout << "picure loadaded" << endl;
+			complex<double>  ** After = PhaseMod(image,(int)argv[3],(int)argv[4]);
+			image = *PrintMask(IDFT(After, lena.width(), lena.height()), lena.width(), lena.height());
+			SaveImage(image);
+		}
 
+
+
+	}
 	else { cout << "Error couldnt match to any known function :C " << endl;  return 0; }
 
 	return 0;

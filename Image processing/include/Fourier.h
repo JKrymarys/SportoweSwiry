@@ -11,6 +11,7 @@ using namespace std;
 
 complex<double> ** DFT(CImg<float> & image);
 complex<double> ** IDFT(complex<double> ** Arr, int M, int N);
+complex<double> ** IDFT(CImg<float> & image, int M, int N);
 complex<double> First_Transform(complex<double> ** Arr, int column, int row, double N, bool inverse);
 complex<double> Second_Transform(complex<double> ** Arr, int column, int row, double N, bool inverse);
 void imageswap(CImg<float> & image);
@@ -19,7 +20,9 @@ complex<double>** HighPassFilter(CImg<float> &image, int radius);
 complex<double>** BandPassFilter(CImg<float> &image, int radius_start, int radius_end);
 complex<double>** BandCutFilter(CImg<float> &image, int radius_start, int radius_end);
 complex<double>** MaskFilter(int variant, CImg<float>& image);
+complex<double>** PhaseMod(CImg<float>& image, int k, int j);
 CImg<float>* PrintMask(complex<double>**Arr, int M, int N);
+
 
 bool checkRadius(int x, int y, int x_0, int y_0, int radius);
 bool checkRadiusRegion(int x, int y, int x_0, int y_0, int radius_start, int radius_end);
