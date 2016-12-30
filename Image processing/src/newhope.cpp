@@ -33,8 +33,10 @@ int main(int argc, char * argv[]) {
 	lena(4, 4) = 150;
 	*/
 	CImg<float> lena = Load_Image("lena.bmp");
-	cout << "Lena loadaded" << endl;
-	complex<double>  ** After = DFT(lena);
+	//complex<double>  ** After = DFT(lena);
+	complex<double>  ** After = FFT(lena);
+	cout << endl << "done";
+	//savefourier(After, lena.width(), lena.height());
 	/*
 	double newvalue;
 	for (int x = 0; x < lena.width(); x++)

@@ -38,48 +38,25 @@ complex<double> ** DFT(CImg<float> & image)
 		for (int x = 0; x < image.width(); x++)
 		{
 			Arr[i][x] = First_Transform(Arr2, x, i, image.width(), false);
-			//cout << "At coordinates " << x << i << " Real Value - " << Arr[i][x].real() << " Imaginary - " << Arr[i][x].imag() << endl;
-			//cout << x << " " << i << " " << Arr[i][x] << endl;
+			
 		}
 	}
 
-	cout << "FIRST PART DONE";
 
-
+	
 	for (int i = 0; i < image.width(); i++)
 	{
 		for (int x = 0; x < image.height(); x++)
 		{
 			Arr2[x][i] = Second_Transform(Arr, i, x, image.height(), false);
-			//cout << Arr2[x][i] << endl;
+			cout << "At coordinates " << x << i << " Real Value - " << Arr2[i][x].real() << " Imaginary - " << Arr2[i][x].imag() << endl;
 		}
 	}
 
+	
 	return Arr2;
 
-	/*
-
-	image.channel(0);
-
-	double newvalue;
-
-	for (int x = 0; x < image.width(); x++)
-	{
-		for (int y = 0; y < image.height(); y++)
-		{
-			newvalue = abs(Arr2[y][x]);
-			//newvalue = sqrt(Arr2[y][x].real()*Arr2[y][x].real() + Arr2[y][x].imag()*Arr2[y][x].imag());
-			image(x, y) = newvalue;
-			//if (image(x, y) > 1000)
-			//cout << image(x, y) << endl;
-			//cout << "At coordinates " << x << y << " Real Value - " << Arr2[y][x].real() << " Imaginary - " << Arr2[y][x].imag() << endl;
-		}
-	}
-	imageswap(image);
-	image.save("test.bmp");
-
-	*/
-
+	
 
 }
 
@@ -198,4 +175,147 @@ void imageswap(CImg<float> & image)
 			std::swap(image(i, j), image(i - image.width() / 2, j + image.height() / 2));
 		}
 	}
+}
+
+void savefourier(complex<double> ** Arr, int width, int height)
+{
+	CImg<float> * tosave = new CImg<float>(width, height);
+	
+
+	for (int x = 0; x < width; x++)
+	{
+		for (int y = 0; y < height; y++)
+		{
+			(*tosave)(x, y) = abs(Arr[y][x]);
+		}
+	}
+	imageswap((*tosave));
+	tosave->save("test.bmp");
+}
+
+
+complex<double> ** FFT(CImg<float> & image)
+{
+	complex<double> ** Arr = new complex<double>*[image.height()];
+	for (int i = 0; i < image.height(); ++i)
+	{
+		Arr[i] = new complex<double>[image.width()];
+	}
+
+
+	for (int i = 0; i < image.height(); i++)
+	{
+
+		for (int x = 0; x < image.width(); x++)
+		{
+			Arr[i][x] = image(x, i);
+		}
+	}
+
+	//Transform each row
+
+	for (int i = 0; i < image.height(); i++)
+	{
+		FFT_ROW(Arr[i], image.width());
+	}
+
+
+	//Transform each colum
+	
+	for (int i = 0; i < image.width(); i++)
+	{
+		FFT_COLUMN(Arr, image.height(), i);
+	}
+
+	/*
+	cout << "FFT EFFECTS" << endl << endl;
+
+	for (int i = 0; i < image.height(); i++)
+	{
+
+		for (int x = 0; x < image.width(); x++)
+		{
+			cout << "At coordinates " << x << i << " Real Value - " << Arr[i][x].real() << " Imaginary - " << Arr[i][x].imag() << endl;
+			//cout << x << " " << i << " " << Arr[i][x] << endl;
+		}
+	}
+	*/
+	return Arr;
+}
+
+void FFT_ROW(complex<double> Arr[], int length)
+{
+	if (length <= 1)
+		return;
+
+	complex<double> * ArrOdd = new complex<double>[length / 2];
+	complex<double> * ArrEven = new complex<double>[length / 2];
+	for (int i = 0, x = 0; i < length / 2; x = x + 2, i++)
+	{
+		ArrEven[i] = Arr[x];
+		ArrOdd[i] = Arr[x + 1];
+	}
+
+
+	FFT_ROW(ArrEven, length / 2);
+	FFT_ROW(ArrOdd, length / 2);
+
+	
+	complex<double> alfa;
+	complex<double> t;
+	for (int k = 0; k < length / 2; ++k)
+	{
+		alfa = ((2 * pi * k) / length);
+		t = (cos(alfa) - i*sin(alfa)) * ArrOdd[k];
+		Arr[k] = ArrEven[k] + t;
+		Arr[k + length / 2] = ArrEven[k] - t;
+	}
+}
+
+/*
+void FFT_COLUMN(complex<double> ** Arr, int length, int column)
+{
+
+	complex<double> * ArrOdd = new complex<double>[length / 2];
+	complex<double> * ArrEven = new complex<double>[length / 2];
+	for (int i = 0, x = 0; i < length / 2; x = x + 2, i++)
+	{
+		ArrEven[i] = Arr[column][x];
+		ArrOdd[i] = Arr[column][x + 1];
+	}
+
+
+	FFT_ROW(ArrEven, length / 2);
+	FFT_ROW(ArrOdd, length / 2);
+
+
+	complex<double> alfa;
+	complex<double> t;
+	for (int k = 0; k < length / 2; ++k)
+	{
+		alfa = ((2 * pi * k) / length);
+		t = (cos(alfa) - i*sin(alfa)) * ArrOdd[k];
+		Arr[column][k] = ArrEven[k] + t;
+		Arr[column][k + length / 2] = ArrEven[k] - t;
+	}
+}
+*/
+
+void FFT_COLUMN(complex<double> ** Arr, int length, int column)
+{
+
+	complex<double> * Array = new complex<double>[length];
+	for (int i = 0; i < length; i++)
+	{
+		Array[i] = Arr[i][column];
+	}
+
+
+	FFT_ROW(Array, length);
+
+	for (int i = 0; i < length; i++)
+	{
+		 Arr[i][column] = Array[i];
+	}
+	delete[] Array;
 }
