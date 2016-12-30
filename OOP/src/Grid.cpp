@@ -51,14 +51,3 @@ bool Grid::wasShot(coords crd)
 	return Places[crd.first][crd.second].Flag == 1 ? true : false;
 }
 
-void Grid::Print()
-{
-	for (int y = 0; y < 10; ++y)
-	{
-		for (int x = 0; x < 10; ++x)
-		{
-			cout << Places[y][x].Flag;
-		}
-		cout << endl;
-	}
-}

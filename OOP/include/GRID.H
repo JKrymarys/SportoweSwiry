@@ -32,6 +32,7 @@ public:
 	void HitOrMiss(coords);
 	bool wasShot(coords);
 	void Print();
+	char get_Flag(coords);
 };
 
 #endif // !GRID_H_
