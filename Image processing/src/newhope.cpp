@@ -33,9 +33,16 @@ int main(int argc, char * argv[]) {
 	lena(4, 4) = 150;
 	*/
 	CImg<float> lena = Load_Image("lena.bmp");
+<<<<<<< HEAD
+	//complex<double>  ** After = DFT(lena);
+	complex<double>  ** After = FFT(lena);
+	cout << endl << "done";
+	//savefourier(After, lena.width(), lena.height());
+=======
 	//CImg<float> mask = Load_Image("F5mask1.bmp");
 	cout << "Lena loadaded" << endl;
 	complex<double>  ** After = PhaseMod(lena,5,1);
+>>>>>>> 0a5feffd1b092c9c9dcc0527a9ddca8fae6ed1ea
 	/*
 	double newvalue;
 	for (int x = 0; x < lena.width(); x++)

@@ -14,7 +14,13 @@ complex<double> ** IDFT(complex<double> ** Arr, int M, int N);
 complex<double> ** IDFT(CImg<float> & image, int M, int N);
 complex<double> First_Transform(complex<double> ** Arr, int column, int row, double N, bool inverse);
 complex<double> Second_Transform(complex<double> ** Arr, int column, int row, double N, bool inverse);
+void savefourier(complex<double> ** Arr, int M, int N);
 void imageswap(CImg<float> & image);
+<<<<<<< HEAD
+complex<double> ** FFT(CImg<float> & image);
+void FFT_ROW(complex<double> Arr[], int length);
+void FFT_COLUMN(complex<double> ** Arr, int length, int column);
+=======
 complex<double>** LowPassFilter(CImg<float> &image, int radius);
 complex<double>** HighPassFilter(CImg<float> &image, int radius);
 complex<double>** BandPassFilter(CImg<float> &image, int radius_start, int radius_end);
@@ -22,6 +28,7 @@ complex<double>** BandCutFilter(CImg<float> &image, int radius_start, int radius
 complex<double>** MaskFilter(int variant, CImg<float>& image);
 complex<double>** PhaseMod(CImg<float>& image, int k, int j);
 CImg<float>* PrintMask(complex<double>**Arr, int M, int N);
+>>>>>>> 0a5feffd1b092c9c9dcc0527a9ddca8fae6ed1ea
 
 
 bool checkRadius(int x, int y, int x_0, int y_0, int radius);
