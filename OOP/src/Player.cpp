@@ -77,6 +77,20 @@ ComputerPlayer::ComputerPlayer(Strategy * _strategy)
 	this->strategy = _strategy;
 }
 
+bool ComputerPlayer::SetShip(int type) {
+	return 0;
+	//tymczasowo
+}
+
+Ship* ComputerPlayer::SelectShip()
+{
+	return nullptr;
+	//tymczasowo
+}
+coords ComputerPlayer::SelectTarget() {
+	return coords(0,0);
+}
+
 /*
 	HumanPlayer
 

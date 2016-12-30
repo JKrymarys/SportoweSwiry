@@ -25,7 +25,7 @@ project(BattleShips)
 
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
-set(SOURCE_FILES src/main.cpp src/Game.cpp src/Grid.cpp src/Player.cpp src/Ship.cpp src/ComputerStrategies.cpp)
+set(SOURCE_FILES src/main.cpp src/Game.cpp src/Grid.cpp src/Player.cpp src/Ship.cpp src/ComputerStrategies.cpp src/TextUI.cpp)
 
 add_library(BattleShips ${SOURCE_FILES})
 
@@ -75,7 +75,7 @@ include_directories(
 add_executable (BatlleShipsTest ${SOURCE_TEST_FILES})
 
 target_link_libraries (BatlleShipsTest
-    BatlleShips
+    BattleShips
     ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY}
 )
 
@@ -84,4 +84,4 @@ add_custom_target(check ${CMAKE_COMMAND} -E env CTEST_OUTPUT_ON_FAILURE=1 BOOST_
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
 
 enable_testing()
-add_test(BatlleShips BatlleShipsTest)
+add_test(BattleShips BatlleShipsTest)

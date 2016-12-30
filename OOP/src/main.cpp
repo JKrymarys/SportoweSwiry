@@ -7,8 +7,8 @@ using namespace std;
 
 
 int main() {
+	Game game(5,"human","human");
+	game.PlayRound();
 
-
-	
 	return 0;
 }
