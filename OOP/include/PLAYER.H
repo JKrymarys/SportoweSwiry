@@ -21,10 +21,10 @@ public:
  class Player
 {
 public:
-	Player() {}
-	bool virtual SetShip(int ship_type);
-	coords virtual SelectTarget() ;
-	virtual Ship*  SelectShip(); //dlaczego nie moge utwrzyc jej jako virtual ??
+	Player()  {};
+	bool virtual SetShip(int ship_type) = 0;
+	coords virtual SelectTarget() = 0 ;
+	virtual Ship*  SelectShip() = 0; //dlaczego nie moge utwrzyc jej jako virtual ??
 	bool CanMove();
 	bool  hasShips();
 	void Move();

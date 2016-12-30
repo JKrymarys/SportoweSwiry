@@ -31,7 +31,7 @@ public:
 	void setPlace(Ship* ship, coords);
 	void HitOrMiss(coords);
 	bool wasShot(coords);
-
+	void Print();
 };
 
 #endif // !GRID_H_

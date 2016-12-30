@@ -1,9 +1,19 @@
 #include "GAME.H"
 #include <iostream>
 
+
+Game::Game(int max_rounds, string player1, string player2) {
+	StartGame(max_rounds);
+	AddPlayer(player1);
+	AddPlayer(player2);
+
+
+}
+
+
 void Game::StartGame(int _round_limit)
 {
-	const int ROUND_LIMIT = _round_limit;
+	int ROUND_LIMIT = _round_limit;
 
 }
 

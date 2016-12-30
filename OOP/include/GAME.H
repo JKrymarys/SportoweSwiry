@@ -10,7 +10,7 @@ using namespace std;
 class Game
 {
 public:
-	Game();
+	Game(int max_rounds, string player1, string player2);
 	void StartGame(int _round_limit);
 	void AddPlayer(string type);
 	void PlayRound();
@@ -18,7 +18,7 @@ public:
 
 private:
 	int RoundCount;
-	const int ROUND_LIMIT;
+	 int ROUND_LIMIT;
 	vector<Player*> Players;
 };
 #endif
