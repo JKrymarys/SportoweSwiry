@@ -17,32 +17,17 @@ using namespace std;
 
 int main(int argc, char * argv[]) {
 
-	/*
-	CImg<float> lena(8, 8, 1, 1, 0);
-	lena(2, 1) = 70;
-	lena(3, 1) = 80;
-	lena(4, 1) = 90;
-	lena(2, 2) = 90;
-	lena(3, 2) = 100;
-	lena(4, 2) = 110;
-	lena(2, 3) = 110;
-	lena(3, 3) = 120;
-	lena(4, 3) = 130;
-	lena(2, 4) = 130;
-	lena(3, 4) = 140;
-	lena(4, 4) = 150;
-	*/
-	CImg<float> lena = Load_Image("lena.bmp");
-<<<<<<< HEAD
+	
+	//CImg<float> lena = Load_Image("lena.bmp");
+
 	//complex<double>  ** After = DFT(lena);
-	complex<double>  ** After = FFT(lena);
-	cout << endl << "done";
+	//complex<double>  ** After = FFT(lena);
+	//cout << endl << "done";
 	//savefourier(After, lena.width(), lena.height());
-=======
+
 	//CImg<float> mask = Load_Image("F5mask1.bmp");
-	cout << "Lena loadaded" << endl;
-	complex<double>  ** After = PhaseMod(lena,5,1);
->>>>>>> 0a5feffd1b092c9c9dcc0527a9ddca8fae6ed1ea
+	//cout << "Lena loadaded" << endl;
+	//complex<double>  ** After = PhaseMod(lena,5,1);
 	/*
 	double newvalue;
 	for (int x = 0; x < lena.width(); x++)
@@ -53,11 +38,11 @@ int main(int argc, char * argv[]) {
 		}
 	}
 	*/
-	lena = *PrintMask(IDFT(After, lena.width(), lena.height()), lena.width(), lena.height());
-	lena.save("output.bmp");
+	//lena = *PrintMask(IFFT(After, lena.width(), lena.height()), lena.width(), lena.height());
+	//lena.save("output.bmp");
 	//cin.get();
 
-	return 0;
+	//return 0;
 
 
 	float(*operations[3])(float, float) = { brightlut, contrastlut, negativelut };
@@ -419,21 +404,50 @@ int main(int argc, char * argv[]) {
 			cout << "picure loadaded" << endl;
 			complex<double>  ** After = DFT(image);
 			image = *PrintMask(After, image.width(),image.height());
+			imageswap(image);
 			SaveImage(image);
+
+			for (int i = 0; i < image.height(); ++i) {
+				delete[] After[i];
+			}
+			delete[] After;
 		}
-		else if ((string)(argv[1]) == "--idft")
+
+		if ((string)(argv[1]) == "--idft")
 		{
 			CImg<float> image = Load_Image(argv[2]);
 			cout << "picure loadaded" << endl;
-			image = *PrintMask(IDFT(image, lena.width(), lena.height()), lena.width(), lena.height());
+			imageswap(image);
+			rescale(image);
+			complex<double>  ** After = IDFT(image, image.width(), image.height());
+			image = *PrintMask(After, image.width(), image.height());
 			SaveImage(image);
+			for (int i = 0; i < image.height(); ++i) {
+				delete[] After[i];
+			}
+			delete[] After;
+		}
+
+		else if ((string)(argv[1]) == "--fft")
+		{
+			CImg<float> image = Load_Image(argv[2]);
+			cout << "picure loadaded" << endl;
+			complex<double>  ** After = FFT(image);
+			image = *PrintMask(After, image.width(), image.height());
+			imageswap(image);
+			SaveImage(image);
+
+			for (int i = 0; i < image.height(); ++i) {
+				delete[] After[i];
+			}
+			delete[] After;
 		}
 		else if ((string)(argv[1]) == "--f1")
 		{
 			CImg<float> image = Load_Image(argv[2]);
 			cout << "picure loadaded" << endl;
 			complex<double>  ** After = LowPassFilter(image,(int)argv[3]);
-			image = *PrintMask(IDFT(After, lena.width(), lena.height()), lena.width(), lena.height());
+			image = *PrintMask(IDFT(After, image.width(), image.height()), image.width(), image.height());
 			SaveImage(image);
 		}
 		else if ((string)(argv[1]) == "--f2")
@@ -441,7 +455,7 @@ int main(int argc, char * argv[]) {
 			CImg<float> image = Load_Image(argv[2]);
 			cout << "picure loadaded" << endl;
 			complex<double>  ** After = HighPassFilter(image,(int)argv[3]);
-			image = *PrintMask(IDFT(After, lena.width(), lena.height()), lena.width(), lena.height());
+			image = *PrintMask(IDFT(After, image.width(), image.height()), image.width(), image.height());
 			SaveImage(image);
 		}
 		else if ((string)(argv[1]) == "--f3")
@@ -449,7 +463,7 @@ int main(int argc, char * argv[]) {
 			CImg<float> image = Load_Image(argv[2]);
 			cout << "picure loadaded" << endl;
 			complex<double>  ** After = BandPassFilter(image, (int)argv[3], (int)argv[4]);
-			image = *PrintMask(IDFT(After, lena.width(), lena.height()), lena.width(), lena.height());
+			image = *PrintMask(IDFT(After, image.width(), image.height()), image.width(), image.height());
 			SaveImage(image);
 		}
 		else if ((string)(argv[1]) == "--f4")
@@ -457,7 +471,7 @@ int main(int argc, char * argv[]) {
 			CImg<float> image = Load_Image(argv[2]);
 			cout << "picure loadaded" << endl;
 			complex<double>  ** After = BandPassFilter(image, (int)argv[3], (int)argv[4]);
-			image = *PrintMask(IDFT(After, lena.width(), lena.height()), lena.width(), lena.height());
+			image = *PrintMask(IDFT(After, image.width(), image.height()), image.width(), image.height());
 			SaveImage(image);
 		}
 		else if ((string)(argv[1]) == "--f5")
@@ -465,7 +479,7 @@ int main(int argc, char * argv[]) {
 			CImg<float> image = Load_Image(argv[2]);
 			cout << "picure loadaded" << endl;
 			complex<double>  ** After = MaskFilter( (int)argv[3], image);
-			image = *PrintMask(IDFT(After, lena.width(), lena.height()), lena.width(), lena.height());
+			image = *PrintMask(IDFT(After, image.width(), image.height()), image.width(), image.height());
 			SaveImage(image);
 		}
 		else if ((string)(argv[1]) == "--f6")
@@ -473,7 +487,7 @@ int main(int argc, char * argv[]) {
 			CImg<float> image = Load_Image(argv[2]);
 			cout << "picure loadaded" << endl;
 			complex<double>  ** After = PhaseMod(image,(int)argv[3],(int)argv[4]);
-			image = *PrintMask(IDFT(After, lena.width(), lena.height()), lena.width(), lena.height());
+			image = *PrintMask(IDFT(After, image.width(), image.height()), image.width(), image.height());
 			SaveImage(image);
 		}
 

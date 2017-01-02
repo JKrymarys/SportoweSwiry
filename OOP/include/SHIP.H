@@ -26,6 +26,10 @@ public:
 	int getType();
 	void setCoords(coords start_coords, coords end_coords);
 	bool hasAvailableMove();
+	coords getFirstCoords();
+	coords getSecondCoords();
+	int getLength();
+
 
 protected:
 	int Lives;

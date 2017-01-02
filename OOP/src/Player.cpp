@@ -46,7 +46,7 @@ bool Player::CrossCheck(const coords & c1, const coords & c2, const coords & c3)
 		return false;
 }
 
-void Player::Move()
+void HumanPlayer::Move()
 {
 	Ship * usedship = nullptr;
 	while (usedship == nullptr)
@@ -77,6 +77,16 @@ ComputerPlayer::ComputerPlayer(Strategy * _strategy)
 	this->strategy = _strategy;
 }
 
+void ComputerPlayer::Move()
+{
+	
+	Ship * usedship = SelectShip();
+	
+	coords Target = SelectTarget(usedship);
+	
+	usedship->Shot(Target);
+}
+
 bool ComputerPlayer::SetShip(int type) {
 	return 0;
 	//tymczasowo
@@ -84,11 +94,12 @@ bool ComputerPlayer::SetShip(int type) {
 
 Ship* ComputerPlayer::SelectShip()
 {
-	return nullptr;
+	return strategy->SelectShip(this->Ships);
 	//tymczasowo
 }
-coords ComputerPlayer::SelectTarget() {
-	return coords(0,0);
+
+coords ComputerPlayer::SelectTarget(Ship* usedship) {
+	return strategy->getTargetLocation((*usedship), this->player_grid);
 }
 
 /*

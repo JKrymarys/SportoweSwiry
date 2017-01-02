@@ -44,65 +44,23 @@ complex<double> ** DFT(CImg<float> & image)
 	}
 
 
-	
 	for (int i = 0; i < image.width(); i++)
 	{
 		for (int x = 0; x < image.height(); x++)
 		{
 			Arr2[x][i] = Second_Transform(Arr, i, x, image.height(), false);
-			cout << "At coordinates " << x << i << " Real Value - " << Arr2[i][x].real() << " Imaginary - " << Arr2[i][x].imag() << endl;
 		}
 	}
-<<<<<<< HEAD
 
+	for (int i = 0; i < image.height(); ++i) {
+		delete[] Arr[i];
+	}
+	delete[] Arr;
 	
 	return Arr2;
 
-	
-=======
-	image.channel(0);
-	double newvalue;
-
-	for (int i = 0; i < (image.width() / 2) ; ++i)
-	{
-		for (int j = 0; j < (image.height() / 2); ++j)
-		{
-			std::swap(Arr2[j][i], Arr2[j + image.height()/2 ][i + image.width()/2 ]);
-		}
-	}
-	for (int i = image.width() / 2; i < image.width(); ++i)
-	{
-		for (int j = 0; j < (image.height() / 2); ++j)
-		{
-			std::swap(Arr2[j][i], Arr2[j + image.height() / 2][i - image.width() / 2]);
-		}
-	}
-
-
-	for (int x = 0; x < image.width(); x++)
-	{
-		for (int y = 0; y < image.height(); y++)
-		{
-			newvalue = abs(Arr2[y][x]);
-			//newvalue = sqrt(Arr2[y][x].real()*Arr2[y][x].real() + Arr2[y][x].imag()*Arr2[y][x].imag());
-			image(x, y) = newvalue;
-			//if (image(x, y) > 1000)
-			//cout << image(x, y) << endl;
-			//cout << "At coordinates " << x << y << " Real Value - " << Arr2[y][x].real() << " Imaginary - " << Arr2[y][x].imag() << endl;
-		}
-	}
-
-	imageswap(image);
-	image.save("test.bmp");
-
-	return Arr2;
-
->>>>>>> 0a5feffd1b092c9c9dcc0527a9ddca8fae6ed1ea
 
 }
-
-
-
 complex<double> ** IDFT(CImg<float> & image, int M, int N)
 {
 	complex<double> ** Arr_input = new complex<double>*[N];
@@ -156,7 +114,6 @@ complex<double> ** IDFT(CImg<float> & image, int M, int N)
 
 	return Arr2;
 }
-
 complex<double> ** IDFT(complex<double> ** Arr, int M, int N)
 {
 
@@ -178,7 +135,6 @@ complex<double> ** IDFT(complex<double> ** Arr, int M, int N)
 		{
 	
 			Arr1[i][x] = First_Transform(Arr, x, i, M, true);
-			//cout << Arr2[x][i] << endl;
 		}
 	}
 
@@ -188,15 +144,17 @@ complex<double> ** IDFT(complex<double> ** Arr, int M, int N)
 
 		for (int x = 0; x < M; x++)
 		{
-			Arr2[x][i] = Second_Transform(Arr1,i, x, N, true);
-			//cout << "At coordinates " << x << i << " Real Value - " << Arr[i][x].real() << " Imaginary - " << Arr[i][x].imag() << endl;
-			//cout << x << " " << i << " " << Arr[i][x] << endl;
+			Arr2[x][i] = Second_Transform(Arr1,i, x, N, true);;
 		}
 	}
 
+	for (int i = 0; i < N; ++i) {
+		delete[] Arr1[i];
+	}
+	delete[] Arr1;
+
 	return Arr2;
 }
-
 
 complex<double> First_Transform(complex<double> ** Arr, int column, int row, double N, bool inverse)
 {
@@ -212,7 +170,8 @@ complex<double> First_Transform(complex<double> ** Arr, int column, int row, dou
 		alfa = ((2 * pi* column * x) / N);
 		sum += Arr[row][x] * (cos(alfa) - k*i*sin(alfa));
 	}
-		sum = sum / sqrt(N);
+	if(inverse)
+		sum = sum / N;
 	return sum;
 }
 
@@ -230,7 +189,8 @@ complex<double> Second_Transform(complex<double> ** Arr, int column, int row, do
 		alfa = ((2 * pi* row * x) / N);
 		sum += Arr[x][column] * (cos(alfa) - k*i*sin(alfa));
 	}
-		sum = sum / sqrt(N);
+	if (inverse)
+		sum = sum / N;
 	return sum;
 
 }
@@ -253,7 +213,6 @@ void imageswap(CImg<float> & image)
 	}
 }
 
-<<<<<<< HEAD
 void savefourier(complex<double> ** Arr, int width, int height)
 {
 	CImg<float> * tosave = new CImg<float>(width, height);
@@ -269,7 +228,6 @@ void savefourier(complex<double> ** Arr, int width, int height)
 	imageswap((*tosave));
 	tosave->save("test.bmp");
 }
-
 
 complex<double> ** FFT(CImg<float> & image)
 {
@@ -304,19 +262,39 @@ complex<double> ** FFT(CImg<float> & image)
 		FFT_COLUMN(Arr, image.height(), i);
 	}
 
-	/*
-	cout << "FFT EFFECTS" << endl << endl;
+	return Arr;
+}
 
-	for (int i = 0; i < image.height(); i++)
+complex<double> ** IFFT(complex<double> ** Arr, int M, int N) {
+	
+
+	
+	conjugate(Arr, M, N);
+
+
+	for (int i = 0; i < M; i++)
 	{
-
-		for (int x = 0; x < image.width(); x++)
-		{
-			cout << "At coordinates " << x << i << " Real Value - " << Arr[i][x].real() << " Imaginary - " << Arr[i][x].imag() << endl;
-			//cout << x << " " << i << " " << Arr[i][x] << endl;
-		}
+		FFT_COLUMN(Arr, N, i);
 	}
-	*/
+	
+
+
+	for (int i = 0; i < M; i++)
+		for (int j = 0; j < N; j++)
+			Arr[j][i] /= M;
+
+	//conjugate(Arr, M, N);
+	//Transform each colum
+
+	for (int i = 0; i < N; i++)
+	{
+		FFT_ROW(Arr[i], M);
+	}
+
+	for (int i = 0; i < M; i++)
+		for (int j = 0; j < N; j++)
+			Arr[j][i] /=  N;
+	
 	return Arr;
 }
 
@@ -349,35 +327,6 @@ void FFT_ROW(complex<double> Arr[], int length)
 	}
 }
 
-/*
-void FFT_COLUMN(complex<double> ** Arr, int length, int column)
-{
-
-	complex<double> * ArrOdd = new complex<double>[length / 2];
-	complex<double> * ArrEven = new complex<double>[length / 2];
-	for (int i = 0, x = 0; i < length / 2; x = x + 2, i++)
-	{
-		ArrEven[i] = Arr[column][x];
-		ArrOdd[i] = Arr[column][x + 1];
-	}
-
-
-	FFT_ROW(ArrEven, length / 2);
-	FFT_ROW(ArrOdd, length / 2);
-
-
-	complex<double> alfa;
-	complex<double> t;
-	for (int k = 0; k < length / 2; ++k)
-	{
-		alfa = ((2 * pi * k) / length);
-		t = (cos(alfa) - i*sin(alfa)) * ArrOdd[k];
-		Arr[column][k] = ArrEven[k] + t;
-		Arr[column][k + length / 2] = ArrEven[k] - t;
-	}
-}
-*/
-
 void FFT_COLUMN(complex<double> ** Arr, int length, int column)
 {
 
@@ -392,10 +341,10 @@ void FFT_COLUMN(complex<double> ** Arr, int length, int column)
 
 	for (int i = 0; i < length; i++)
 	{
-		 Arr[i][column] = Array[i];
+		Arr[i][column] = Array[i];
 	}
 	delete[] Array;
-=======
+}
 
 complex<double>** LowPassFilter(CImg<float> &image,int radius) {
 
@@ -432,16 +381,12 @@ complex<double>** LowPassFilter(CImg<float> &image,int radius) {
 CImg<float>* PrintMask(complex<double>**Arr, int N, int M)
 {
 	CImg<float> * toreturn = new CImg<float>(M, N);
-
+	double coefficient = 1 / sqrt(M*N);
 	for (int x = 0; x < toreturn->width(); x++)
 	{
 		for (int y = 0; y < toreturn->height(); y++)
 		{
-			//newvalue = sqrt(Arr2[y][x].real()*Arr2[y][x].real() + Arr2[y][x].imag()*Arr2[y][x].imag());
-			(*toreturn)(x, y) = abs(Arr[y][x]);
-			//if (image(x, y) > 1000)
-			//cout << image(x, y) << endl;
-			//cout << "At coordinates " << x << y << " Real Value - " << Arr2[y][x].real() << " Imaginary - " << Arr2[y][x].imag() << endl;
+			(*toreturn)(x, y) = coefficient*abs(Arr[y][x]);
 		}
 	}
 	return toreturn;
@@ -454,7 +399,6 @@ bool checkRadius(int x, int y, int x_0, int y_0, int radius)
 	else
 		return false;
 }
-
 
 complex<double>** HighPassFilter(CImg<float> &image, int radius) {
 
@@ -487,7 +431,6 @@ complex<double>** HighPassFilter(CImg<float> &image, int radius) {
 
 	return mask;
 }
-
 
 complex<double>** BandPassFilter(CImg<float> &image, int radius_start, int radius_end) {
 
@@ -552,6 +495,7 @@ complex<double>** BandCutFilter(CImg<float> &image, int radius_start, int radius
 
 	return mask;
 }
+
 bool checkRadiusRegion(int x, int y, int x_0, int y_0, int radius_start, int radius_end)
 {
 	if (pow(radius_start,2) <= pow(x - x_0, 2) + pow(y - y_0, 2) && pow(x - x_0, 2) + pow(y - y_0, 2) <= pow(radius_end,2))
@@ -654,5 +598,23 @@ complex<double>** PhaseMod(CImg<float>& image, int k, int l)
 
 	return Arr2;
 
->>>>>>> 0a5feffd1b092c9c9dcc0527a9ddca8fae6ed1ea
+}
+
+void conjugate(complex<double> ** Arr, int M, int N)
+{
+	for (int i = 0; i < M; i++)
+		for (int j = 0; j < N; j++)
+			Arr[j][i] = std::conj(Arr[j][i]);
+}
+
+void rescale(CImg<float> & image)
+{
+	double coefficient = sqrt(image.width()*image.height());
+	for (int x = 0; x < image.width(); x++)
+	{
+		for (int y = 0; y < image.height(); y++)
+		{
+			image(x, y) = coefficient*image(x,y);
+		}
+	}
 }

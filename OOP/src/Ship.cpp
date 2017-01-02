@@ -6,15 +6,11 @@
 
 bool Ship::hasAvailableMove()
 {
-	int start_x = std::min(this->x_begin, this->x_end);
-	int end_x = std::max(this->x_begin, this->x_end);
-	int start_y = std::min(this->y_begin, this->y_end);
-	int end_y = std::max(this->y_begin, this->y_end);
 
-	int i = start_x - Lenght - 1 > 0 ? start_x - Lenght - 1 : 0;
-	int j = start_y - Lenght - 1 > 0 ? start_y - Lenght - 1 : 0;
-	int end_i = start_x + Lenght + 1 < 10 ? start_x + Lenght + 1 : 10;
-	int end_j = start_y + Lenght + 1 < 10 ? start_y + Lenght + 1 : 10;
+	int i = x_begin - Lenght - 1 > 0 ? x_begin - Lenght - 1 : 0;
+	int j = y_begin - Lenght - 1 > 0 ? y_begin - Lenght - 1 : 0;
+	int end_i = x_begin + Lenght + 1 < 10 ? x_begin + Lenght + 1 : 10;
+	int end_j = y_begin + Lenght + 1 < 10 ? y_begin + Lenght + 1 : 10;
 	for(; i < end_i; i++)
 		for (; j < end_j; j++)
 		{
@@ -78,12 +74,26 @@ int Ship::getType() {
 }
 
 void Ship::setCoords(coords start, coords end) {
-	this->x_begin = start.first;
-	this->x_end = end.first;
-	this->y_begin = start.second;
-	this->y_end = end.second;
+	this->x_begin = std::min(start.first, end.first);
+	this->x_end = std::max(start.first, end.first);
+	this->y_begin = std::min(start.second, end.second);
+	this->y_end = std::max(start.second, end.second);
+
+
 }
 
+coords Ship::getFirstCoords()
+{
+	return coords(x_begin, y_begin);
+}
+coords Ship::getSecondCoords() {
+	return coords(x_end, y_end);
+}
+
+int Ship::getLength()
+{
+	return Lenght;
+}
 
 
 

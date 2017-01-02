@@ -4,19 +4,19 @@
 
 class Strategy {
 public:
-	virtual void getTargetLocation() = 0;
-	Ship* SelectShip();
+	coords getTargetLocation(Ship & ship, Grid & grid);
+	virtual Ship* SelectShip(vector<Ship*> & Ships) = 0;
 	void getShipLocation();
 };
 
 class Greedy_strategy :public Strategy {
 public:
-	void getTargetLocation() {} // FOR NOW
+	virtual Ship* SelectShip(vector<Ship*> & Ships) = 0;
 };
 
 class Random_strategy : public Strategy {
 public:
-	void getTargetLocation() {} // FOR NOW 
+	virtual Ship* SelectShip(vector<Ship*> & Ships) = 0;
 };
 
 
