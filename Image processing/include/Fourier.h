@@ -31,6 +31,7 @@ complex<double>** BandCutFilter(CImg<float> &image, int radius_start, int radius
 complex<double>** MaskFilter(int variant, CImg<float>& image);
 complex<double>** PhaseMod(CImg<float>& image, int k, int j);
 CImg<float>* PrintMask(complex<double>**Arr, int M, int N);
+CImg<float>* Print(complex<double>**Arr, int N, int M);
 
 
 bool checkRadius(int x, int y, int x_0, int y_0, int radius);

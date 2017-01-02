@@ -52,6 +52,8 @@ complex<double> ** DFT(CImg<float> & image)
 		}
 	}
 
+
+
 	for (int i = 0; i < image.height(); ++i) {
 		delete[] Arr[i];
 	}
@@ -210,6 +212,21 @@ complex<double> ** FFT(CImg<float> & image)
 		FFT_COLUMN(Arr, image.height(), i);
 	}
 
+	for (int i = 0; i < (image.width() / 2); ++i)
+	{
+		for (int j = 0; j < (image.height() / 2); ++j)
+		{
+			std::swap(Arr[j][i], Arr[j + image.height() / 2][i + image.width() / 2]);
+		}
+	}
+	for (int i = image.width() / 2; i < image.width(); ++i)
+	{
+		for (int j = 0; j < (image.height() / 2); ++j)
+		{
+			std::swap(Arr[j][i], Arr[j + image.height() / 2][i - image.width() / 2]);
+		}
+	}
+
 	return Arr;
 }
 
@@ -335,6 +352,19 @@ CImg<float>* PrintMask(complex<double>**Arr, int N, int M)
 		for (int y = 0; y < toreturn->height(); y++)
 		{
 			(*toreturn)(x, y) = coefficient*abs(Arr[y][x]);
+		}
+	}
+	return toreturn;
+}
+
+CImg<float>* Print(complex<double>**Arr, int N, int M)
+{
+	CImg<float> * toreturn = new CImg<float>(M, N);
+	for (int x = 0; x < toreturn->width(); x++)
+	{
+		for (int y = 0; y < toreturn->height(); y++)
+		{
+			(*toreturn)(x, y) = abs(Arr[y][x]);
 		}
 	}
 	return toreturn;

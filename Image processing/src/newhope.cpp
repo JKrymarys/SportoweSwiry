@@ -20,7 +20,7 @@ int main(int argc, char * argv[]) {
 	
 	//CImg<float> lena = Load_Image("lena.bmp");
 
-	//complex<double>  ** After = DFT(lena);
+	//complex<double>  ** After = FFT(lena);
 	//complex<double>  ** After = FFT(lena);
 	//cout << endl << "done";
 	//savefourier(After, lena.width(), lena.height());
@@ -420,7 +420,6 @@ int main(int argc, char * argv[]) {
 			cout << "picure loadaded" << endl;
 			complex<double>  ** After = FFT(image);
 			image = *PrintMask(After, image.width(), image.height());
-			imageswap(image);
 			SaveImage(image);
 
 			for (int i = 0; i < image.height(); ++i) {
@@ -434,7 +433,7 @@ int main(int argc, char * argv[]) {
 			cout << "picure loadaded" << endl;
 			int radius = atoi(argv[3]);
 			complex<double>  ** After = LowPassFilter(image, radius);
-			image = *PrintMask(IFFT(After, image.width(), image.height()), image.width(), image.height());
+			image = *Print(IFFT(After, image.width(), image.height()), image.width(), image.height());
 			SaveImage(image);
 
 			for (int i = 0; i < image.height(); ++i) {
@@ -448,7 +447,7 @@ int main(int argc, char * argv[]) {
 			cout << "picure loadaded" << endl;
 			int radius = atoi(argv[3]);
 			complex<double>  ** After = HighPassFilter(image, radius);
-			image = *PrintMask(IFFT(After, image.width(), image.height()), image.width(), image.height());
+			image = *Print(IFFT(After, image.width(), image.height()), image.width(), image.height());
 			SaveImage(image);
 
 			for (int i = 0; i < image.height(); ++i) {
