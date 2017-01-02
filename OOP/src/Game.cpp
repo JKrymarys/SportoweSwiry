@@ -7,7 +7,13 @@ Game::Game(int max_rounds, string player1, string player2) {
 	AddPlayer(player1);
 	AddPlayer(player2);
 
+}
 
+int Game::getCurrentRound() {
+	return RoundCount;
+}
+int Game::getMaxRound() {
+	return ROUND_LIMIT;
 }
 
 

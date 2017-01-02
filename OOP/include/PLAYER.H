@@ -16,6 +16,7 @@ public:
 	int SelectShip(); // returns type o ship
 	coords getTargetLocation();
 	coords getCoords(); // used to place ships
+
 };
 
  class Player
@@ -27,14 +28,13 @@ public:
 	virtual Ship*  SelectShip() = 0; //dlaczego nie moge utwrzyc jej jako virtual ??
 	bool CanMove();
 	bool  hasShips();
+	();
 	virtual void Move();
 	
 	
- 
 protected:
 	vector<Ship*> Ships;
-	Grid player_grid;
-	bool CrossCheck(const coords & c1, const coords & c2);
+	Grid player_grid;	bool CrossCheck(const coords & c1, const coords & c2);
 	bool CrossCheck(const coords & c1, const coords & c2, const coords & c3);
 };
 
@@ -44,8 +44,7 @@ public:
 	bool SetShip(int ship_type);
 	Ship* SelectShip();
 	pair<int,int> SelectTarget();
-	void Move();
-protected:
+	void Move();protected:
 	HumanInterface User_interface;
 };
 

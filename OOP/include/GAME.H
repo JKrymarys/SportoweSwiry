@@ -15,6 +15,8 @@ public:
 	void AddPlayer(string type);
 	void PlayRound();
 	void EndGame();
+	int getCurrentRound();
+	int getMaxRound();
 
 private:
 	int RoundCount;
