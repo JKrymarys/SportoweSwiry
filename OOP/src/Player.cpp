@@ -46,22 +46,7 @@ bool Player::CrossCheck(const coords & c1, const coords & c2, const coords & c3)
 		return false;
 }
 
-void HumanPlayer::Move()
-{
-	Ship * usedship = nullptr;
-	while (usedship == nullptr)
-	{
-		Ship * usedship = SelectShip();
-	}
-	// select ship should return nullptr if user wanted to use ship that can't shot 
-	coords Target = SelectTarget();
-	while (!usedship->isTargetInRange(Target))
-	{
-		cout << "Given coordinates are not in range of choosen ship";
-		Target = SelectTarget();
-	}
-	usedship->Shot(Target);
-}
+
 
 
 
@@ -80,16 +65,58 @@ ComputerPlayer::ComputerPlayer(Strategy * _strategy)
 void ComputerPlayer::Move()
 {
 	
-	Ship * usedship = SelectShip();
+	Ship * usedship = SelectShip(); // THESE FUNCTION THEMSELVES CHECK IF EVERYTHING IS CORRECT
 	
 	coords Target = SelectTarget(usedship);
 	
 	usedship->Shot(Target);
 }
 
-bool ComputerPlayer::SetShip(int type) {
-	return 0;
-	//tymczasowo
+bool ComputerPlayer::SetShip(int ship_type) {
+	Ship* new_ship;
+	if(ship_type = ONE_FUNNEL_SHIP)
+		new_ship = new SingleFunnelShip(&player_grid);
+	else if (ship_type == TWO_FUNNEL_SHIP || ship_type == THREE_FUNNEL_SHIP)
+		new_ship = new MultiFunnelShip(&player_grid, ship_type);
+
+	coords* ship_location = new coords[ship_type];
+
+	enum Directions{horizontal, vertical};
+
+	int direction = rand() % 2;
+	int x_begin;
+	int y_begin;
+	do
+	{
+		ship_location[0].first = rand() % 11;
+		ship_location[0].second = rand() % 11;
+	} while (player_grid.isAvaliable(ship_location[0]));
+	
+	if (ship_type == TWO_FUNNEL_SHIP || ship_type == THREE_FUNNEL_SHIP)
+	{
+		if (direction == horizontal)
+		{
+			if (player_grid.isAvaliable(coords(x_begin + 1, y_begin)))
+				ship_location[1] = coords(x_begin + 1, y_begin);
+		}
+			
+		else
+			ship_location[1] = coords(x_begin , y_begin +1)
+	
+	}
+	
+
+	
+	this->Ships.push_back(new_ship);//add ship to the vector
+	new_ship->setCoords(ship_location[0], ship_location[ship_type - 1]);
+
+	for (int i = 0; i < ship_type; i++)
+	{
+		player_grid.setPlace(new_ship, ship_location[i]);
+
+	}
+
+	return true;
 }
 
 Ship* ComputerPlayer::SelectShip()
@@ -114,6 +141,22 @@ HumanPlayer::HumanPlayer() {
 	cout << "created" << endl;
 }
 
+void HumanPlayer::Move()
+{
+	Ship * usedship = nullptr;
+	while (usedship == nullptr)
+	{
+		Ship * usedship = SelectShip();
+	}
+	// select ship should return nullptr if user wanted to use ship that can't shot 
+	coords Target = SelectTarget();
+	while (!usedship->isTargetInRange(Target))
+	{
+		cout << "Given coordinates are not in range of choosen ship";
+		Target = SelectTarget();
+	}
+	usedship->Shot(Target);
+}
 
 coords HumanPlayer::SelectTarget()
 {
@@ -156,9 +199,16 @@ bool HumanPlayer::SetShip(int ship_type) {
 			return false;
 		}
 		if (i == 1 && (!CrossCheck(ship_location[0], ship_location[1]))) // sprawdzalem jesli nie sprawdzi sie pierwszy warunek nie bedzie probowal sprawdzic drugiego
+		{
+			cout << "You cannot place your ship across";
 			return false;
+		}
 		if (i == 2 && (!CrossCheck(ship_location[0], ship_location[1], ship_location[2])))
+		{
+			cout << "You cannot place your ship across";
 			return false;
+		}
+			
 	}
 
 	this->Ships.push_back(new_ship);//add ship to the vector

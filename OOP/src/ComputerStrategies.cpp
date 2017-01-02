@@ -19,9 +19,7 @@ coords Strategy::getTargetLocation(Ship & ship, Grid & grid) {
 	return coords(x_generated, y_generated);
 }
 
-void Strategy::getShipLocation() {
 
-}
 
 Ship* Greedy_strategy::SelectShip(vector<Ship*> & Ships) {
 

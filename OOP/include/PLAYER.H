@@ -28,7 +28,6 @@ public:
 	virtual Ship*  SelectShip() = 0; //dlaczego nie moge utwrzyc jej jako virtual ??
 	bool CanMove();
 	bool  hasShips();
-	();
 	virtual void Move();
 	
 	
@@ -44,7 +43,8 @@ public:
 	bool SetShip(int ship_type);
 	Ship* SelectShip();
 	pair<int,int> SelectTarget();
-	void Move();protected:
+	void Move();
+protected:
 	HumanInterface User_interface;
 };
 

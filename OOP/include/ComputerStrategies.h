@@ -6,7 +6,6 @@ class Strategy {
 public:
 	coords getTargetLocation(Ship & ship, Grid & grid);
 	virtual Ship* SelectShip(vector<Ship*> & Ships) = 0;
-	void getShipLocation();
 };
 
 class Greedy_strategy :public Strategy {

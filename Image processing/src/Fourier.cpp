@@ -61,59 +61,7 @@ complex<double> ** DFT(CImg<float> & image)
 
 
 }
-complex<double> ** IDFT(CImg<float> & image, int M, int N)
-{
-	complex<double> ** Arr_input = new complex<double>*[N];
-	for (int i = 0; i < N; i++)
-	{
-		Arr_input[i] = new complex<double>[M];
-	}
 
-	complex<double> ** Arr1 = new complex<double>*[N];
-	for (int i = 0; i < N; i++)
-	{
-		Arr1[i] = new complex<double>[M];
-	}
-
-	complex<double> ** Arr2 = new complex<double>*[N];
-	for (int i = 0; i < N; i++)
-	{
-		Arr2[i] = new complex<double>[M];
-	}
-
-	for (int i = 0; i < image.height(); i++)
-	{
-
-		for (int x = 0; x < image.width(); x++)
-		{
-			Arr_input[i][x] = image(x, i);
-		}
-	}
-
-	for (int i = 0; i < M; i++)
-	{
-		for (int x = 0; x < N; x++)
-		{
-
-			Arr1[i][x] = First_Transform(Arr_input, x, i, M, true);
-			//cout << Arr2[x][i] << endl;
-		}
-	}
-
-
-	for (int i = 0; i < N; i++)
-	{
-
-		for (int x = 0; x < M; x++)
-		{
-			Arr2[x][i] = Second_Transform(Arr1, i, x, N, true);
-			//cout << "At coordinates " << x << i << " Real Value - " << Arr[i][x].real() << " Imaginary - " << Arr[i][x].imag() << endl;
-			//cout << x << " " << i << " " << Arr[i][x] << endl;
-		}
-	}
-
-	return Arr2;
-}
 complex<double> ** IDFT(complex<double> ** Arr, int M, int N)
 {
 
@@ -355,7 +303,7 @@ complex<double>** LowPassFilter(CImg<float> &image,int radius) {
 		return 0;
 	}
 
-	complex<double>  **mask = DFT(image);
+	complex<double>  **mask = FFT(image);
 	
 
 	//just 4 debbuging
@@ -409,7 +357,7 @@ complex<double>** HighPassFilter(CImg<float> &image, int radius) {
 		return 0;
 	}
 
-	complex<double>  **mask = DFT(image);
+	complex<double>  **mask = FFT(image);
 
 
 	//just 4 debbuging
@@ -441,7 +389,7 @@ complex<double>** BandPassFilter(CImg<float> &image, int radius_start, int radiu
 		return 0;
 	}
 
-	complex<double>  **mask = DFT(image);
+	complex<double>  **mask = FFT(image);
 
 
 	//just 4 debbuging
@@ -524,7 +472,7 @@ complex<double>** MaskFilter(int variant, CImg<float>& image)
 		break;
 	}
 
-	complex<double>  **mask = DFT(image);
+	complex<double>  **mask = FFT(image);
 
 	//just 4 debbuging
 	CImg<float> mask_image(image.width(), image.height());
@@ -586,7 +534,7 @@ complex<double>** PhaseMod(CImg<float>& image, int k, int l)
 	}*/
 
 
-	Arr2 = DFT(image);
+	Arr2 = FFT(image);
 
 	for (int y = 0; y < N; ++y)
 	{
@@ -595,6 +543,11 @@ complex<double>** PhaseMod(CImg<float>& image, int k, int l)
 			Arr2[y][x] *= Arr[y][x];
 		}
 	}
+
+	for (int i = 0; i < N; ++i) {
+		delete[] Arr[i];
+	}
+	delete[] Arr;
 
 	return Arr2;
 

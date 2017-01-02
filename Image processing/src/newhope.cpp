@@ -413,20 +413,6 @@ int main(int argc, char * argv[]) {
 			delete[] After;
 		}
 
-		if ((string)(argv[1]) == "--idft")
-		{
-			CImg<float> image = Load_Image(argv[2]);
-			cout << "picure loadaded" << endl;
-			imageswap(image);
-			rescale(image);
-			complex<double>  ** After = IDFT(image, image.width(), image.height());
-			image = *PrintMask(After, image.width(), image.height());
-			SaveImage(image);
-			for (int i = 0; i < image.height(); ++i) {
-				delete[] After[i];
-			}
-			delete[] After;
-		}
 
 		else if ((string)(argv[1]) == "--fft")
 		{
@@ -446,49 +432,80 @@ int main(int argc, char * argv[]) {
 		{
 			CImg<float> image = Load_Image(argv[2]);
 			cout << "picure loadaded" << endl;
-			complex<double>  ** After = LowPassFilter(image,(int)argv[3]);
-			image = *PrintMask(IDFT(After, image.width(), image.height()), image.width(), image.height());
+			int radius = atoi(argv[3]);
+			complex<double>  ** After = LowPassFilter(image, radius);
+			image = *PrintMask(IFFT(After, image.width(), image.height()), image.width(), image.height());
 			SaveImage(image);
+
+			for (int i = 0; i < image.height(); ++i) {
+				delete[] After[i];
+			}
+			delete[] After;
 		}
 		else if ((string)(argv[1]) == "--f2")
 		{
 			CImg<float> image = Load_Image(argv[2]);
 			cout << "picure loadaded" << endl;
-			complex<double>  ** After = HighPassFilter(image,(int)argv[3]);
-			image = *PrintMask(IDFT(After, image.width(), image.height()), image.width(), image.height());
+			int radius = atoi(argv[3]);
+			complex<double>  ** After = HighPassFilter(image, radius);
+			image = *PrintMask(IFFT(After, image.width(), image.height()), image.width(), image.height());
 			SaveImage(image);
+
+			for (int i = 0; i < image.height(); ++i) {
+				delete[] After[i];
+			}
+			delete[] After;
 		}
 		else if ((string)(argv[1]) == "--f3")
 		{
 			CImg<float> image = Load_Image(argv[2]);
 			cout << "picure loadaded" << endl;
 			complex<double>  ** After = BandPassFilter(image, (int)argv[3], (int)argv[4]);
-			image = *PrintMask(IDFT(After, image.width(), image.height()), image.width(), image.height());
+			image = *PrintMask(IFFT(After, image.width(), image.height()), image.width(), image.height());
 			SaveImage(image);
+
+			for (int i = 0; i < image.height(); ++i) {
+				delete[] After[i];
+			}
+			delete[] After;
 		}
 		else if ((string)(argv[1]) == "--f4")
 		{
 			CImg<float> image = Load_Image(argv[2]);
 			cout << "picure loadaded" << endl;
 			complex<double>  ** After = BandPassFilter(image, (int)argv[3], (int)argv[4]);
-			image = *PrintMask(IDFT(After, image.width(), image.height()), image.width(), image.height());
+			image = *PrintMask(IFFT(After, image.width(), image.height()), image.width(), image.height());
 			SaveImage(image);
+
+			for (int i = 0; i < image.height(); ++i) {
+				delete[] After[i];
+			}
+			delete[] After;
 		}
 		else if ((string)(argv[1]) == "--f5")
 		{
 			CImg<float> image = Load_Image(argv[2]);
 			cout << "picure loadaded" << endl;
 			complex<double>  ** After = MaskFilter( (int)argv[3], image);
-			image = *PrintMask(IDFT(After, image.width(), image.height()), image.width(), image.height());
+			image = *PrintMask(IFFT(After, image.width(), image.height()), image.width(), image.height());
 			SaveImage(image);
+
+			for (int i = 0; i < image.height(); ++i) {
+				delete[] After[i];
+			}
+			delete[] After;
 		}
 		else if ((string)(argv[1]) == "--f6")
 		{
 			CImg<float> image = Load_Image(argv[2]);
 			cout << "picure loadaded" << endl;
 			complex<double>  ** After = PhaseMod(image,(int)argv[3],(int)argv[4]);
-			image = *PrintMask(IDFT(After, image.width(), image.height()), image.width(), image.height());
+			image = *PrintMask(IFFT(After, image.width(), image.height()), image.width(), image.height());
 			SaveImage(image);
+			for (int i = 0; i < image.height(); ++i) {
+				delete[] After[i];
+			}
+			delete[] After;
 		}
 
 
