@@ -459,7 +459,9 @@ int main(int argc, char * argv[]) {
 		{
 			CImg<float> image = Load_Image(argv[2]);
 			cout << "picure loadaded" << endl;
-			complex<double>  ** After = BandPassFilter(image, (int)argv[3], (int)argv[4]);
+			int arg3 = atoi(argv[3]);
+			int arg4 = atoi(argv[4]);
+			complex<double>  ** After = BandPassFilter(image, arg3, arg4);
 			image = *PrintMask(IFFT(After, image.width(), image.height()), image.width(), image.height());
 			SaveImage(image);
 
@@ -472,7 +474,9 @@ int main(int argc, char * argv[]) {
 		{
 			CImg<float> image = Load_Image(argv[2]);
 			cout << "picure loadaded" << endl;
-			complex<double>  ** After = BandPassFilter(image, (int)argv[3], (int)argv[4]);
+			int arg3 = atoi(argv[3]);
+			int arg4 = atoi(argv[4]);
+			complex<double>  ** After = BandCutFilter(image, arg3, arg4);
 			image = *PrintMask(IFFT(After, image.width(), image.height()), image.width(), image.height());
 			SaveImage(image);
 
@@ -485,7 +489,8 @@ int main(int argc, char * argv[]) {
 		{
 			CImg<float> image = Load_Image(argv[2]);
 			cout << "picure loadaded" << endl;
-			complex<double>  ** After = MaskFilter( (int)argv[3], image);
+			int arg3 = atoi(argv[3]);
+			complex<double>  ** After = MaskFilter( arg3, image);
 			image = *PrintMask(IFFT(After, image.width(), image.height()), image.width(), image.height());
 			SaveImage(image);
 
@@ -498,7 +503,9 @@ int main(int argc, char * argv[]) {
 		{
 			CImg<float> image = Load_Image(argv[2]);
 			cout << "picure loadaded" << endl;
-			complex<double>  ** After = PhaseMod(image,(int)argv[3],(int)argv[4]);
+			int arg3 = atoi(argv[3]);
+			int arg4 = atoi(argv[4]);
+			complex<double>  ** After = PhaseMod(image, arg3, arg4);
 			image = *PrintMask(IFFT(After, image.width(), image.height()), image.width(), image.height());
 			SaveImage(image);
 			for (int i = 0; i < image.height(); ++i) {
