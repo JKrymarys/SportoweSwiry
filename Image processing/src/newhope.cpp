@@ -462,7 +462,7 @@ int main(int argc, char * argv[]) {
 			int arg3 = atoi(argv[3]);
 			int arg4 = atoi(argv[4]);
 			complex<double>  ** After = BandPassFilter(image, arg3, arg4);
-			image = *PrintMask(IFFT(After, image.width(), image.height()), image.width(), image.height());
+			image = *Print(IFFT(After, image.width(), image.height()), image.width(), image.height());
 			SaveImage(image);
 
 			for (int i = 0; i < image.height(); ++i) {
@@ -491,7 +491,7 @@ int main(int argc, char * argv[]) {
 			cout << "picure loadaded" << endl;
 			int arg3 = atoi(argv[3]);
 			complex<double>  ** After = MaskFilter( arg3, image);
-			image = *PrintMask(IFFT(After, image.width(), image.height()), image.width(), image.height());
+			image = *Print(IFFT(After, image.width(), image.height()), image.width(), image.height());
 			SaveImage(image);
 
 			for (int i = 0; i < image.height(); ++i) {

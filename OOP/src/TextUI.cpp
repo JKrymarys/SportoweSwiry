@@ -8,7 +8,7 @@ void TextUI::ShowGrid()
 	{
 		for (int x = 0; x < 10; ++x)
 		{
-			cout << this->Hplayer.getGridFlag(coords(y,x));
+			cout << Hplayer->getGridFlag(y,x);
 		}
 		cout << endl;
 	}

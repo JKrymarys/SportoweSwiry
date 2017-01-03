@@ -102,9 +102,9 @@ bool ComputerPlayer::SetShip(int ship_type) {
 			if (player_grid.isAvaliable(coords(x_begin + 1, y_begin)))
 				ship_location[1] = coords(x_begin + 1, y_begin);
 		}
-			
+
 		else
-			ship_location[1] = coords(x_begin , y_begin +1)
+			ship_location[1] = coords(x_begin, y_begin + 1);
 	
 	}
 	
@@ -225,6 +225,11 @@ bool HumanPlayer::SetShip(int ship_type) {
 
 	return true;
 		
+}
+
+char HumanPlayer::getGridFlag(int y, int x)
+{
+	return player_grid.get_Flag(coords(y,x));
 }
 
 /*

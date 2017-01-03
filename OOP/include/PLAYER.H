@@ -45,6 +45,7 @@ public:
 	Ship* SelectShip();
 	pair<int,int> SelectTarget();
 	void Move();
+	char getGridFlag(int y, int x);
 protected:
 	HumanInterface User_interface;
 };

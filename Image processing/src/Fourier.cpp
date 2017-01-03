@@ -487,21 +487,26 @@ complex<double>** MaskFilter(int variant, CImg<float>& image)
 	//TO DO:
 	// flip mask for proper variant
 	CImg<float> mask_img;
-	if (variant < 3)
-		 mask_img = Load_Image("F5mask1.bmp");
-	else
-		mask_img = Load_Image("F5mask2.bmp");
-
 	switch (variant)
 	{
-	
+	case 1:
+		mask_img.load("F51.bmp");
+		break;	
 	case 2:
-
+		mask_img.load("F52.bmp");
 		break;
 	case 3:
+		mask_img.load("F53.bmp");
+		break;
+	case 4:
+		mask_img.load("F54.bmp");
+		break;
+	case 5:
+		mask_img.load("F55.bmp");
 		break;
 	}
 
+	
 	complex<double>  **mask = FFT(image);
 
 	//just 4 debbuging
