@@ -8,8 +8,8 @@
 class TextUI: public HumanInterface
 {
 private:
-	Game thisGame;
-	HumanPlayer Hplayer;
+	Game* thisGame;
+	HumanPlayer* Hplayer;
 public:
 	TextUI();
 	~TextUI();
