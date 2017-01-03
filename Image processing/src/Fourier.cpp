@@ -346,12 +346,12 @@ complex<double>** LowPassFilter(CImg<float> &image,int radius) {
 CImg<float>* PrintMask(complex<double>**Arr, int N, int M)
 {
 	CImg<float> * toreturn = new CImg<float>(M, N);
-	double coefficient = 1 / sqrt(M*N);
+	//double coefficient = 1 / sqrt(M*N);
 	for (int x = 0; x < toreturn->width(); x++)
 	{
 		for (int y = 0; y < toreturn->height(); y++)
 		{
-			(*toreturn)(x, y) = coefficient*abs(Arr[y][x]);
+			(*toreturn)(x, y) = 10*log(1+abs(Arr[y][x]));
 		}
 	}
 	return toreturn;
@@ -536,7 +536,7 @@ complex<double>** PhaseMod(CImg<float>& image, int k, int l)
 		Arr[i] = new complex<double>[M];
 	}
 
-	complex<double> ** Arr2 = new complex<double>*[N];
+	complex<double> ** Arr2;
 	
 	
 	for (int y = 0; y < N; ++y)
@@ -566,6 +566,10 @@ complex<double>** PhaseMod(CImg<float>& image, int k, int l)
 
 	Arr2 = FFT(image);
 
+	CImg<float> mask_image(image.width(), image.height());
+	mask_image = *PrintMask(Arr2, image.width(), image.height());
+	mask_image.save("mask.bmp");
+
 	for (int y = 0; y < N; ++y)
 	{
 		for (int x = 0; x < M; ++x)
@@ -573,6 +577,10 @@ complex<double>** PhaseMod(CImg<float>& image, int k, int l)
 			Arr2[y][x] *= Arr[y][x];
 		}
 	}
+
+
+	mask_image = *PrintMask(Arr2, image.width(), image.height());
+	mask_image.save("mask2.bmp");
 
 	for (int i = 0; i < N; ++i) {
 		delete[] Arr[i];

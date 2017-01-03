@@ -24,7 +24,7 @@ bool Ship::hasAvailableMove()
 
 
 bool Ship::CanShoot() {
-	if (!isSunk() && CanShoot() && this->hasAvailableMove())
+	if (!isSunk() && this->hasAvailableMove())
 		return true;
 	else
 		return false;
@@ -48,6 +48,7 @@ bool Ship::isTargetInRange( coords target ) {
 
 void Ship::Shot(coords target) {
 	this->grid->HitOrMiss(target);
+	RemainingShoots--;
 }
 
 void Ship::getHit() {
@@ -119,14 +120,22 @@ MultiFunnelShip::MultiFunnelShip(Grid* p_grid,int  ship_type) {
 	this->Lives = 1;
 	this->Lenght = 1;
 	this->RemainingShoots = ship_type - 1;
-	this->ShotTwice = false;
+	this->TakenShots = 0;
 }
 
 void MultiFunnelShip::Reset() {
-	if (ShotTwice)
+	if (TakenShots == 2)
 		RemainingShoots = 1;
 	else
 		RemainingShoots = 2;
 	
-	ShotTwice = false;
+	TakenShots = 0;
+}
+
+void MultiFunnelShip::Shot(coords target)
+{
+	this->grid->HitOrMiss(target);
+	TakenShots++;
+	RemainingShoots--;
+
 }

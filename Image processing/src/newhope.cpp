@@ -477,7 +477,7 @@ int main(int argc, char * argv[]) {
 			int arg3 = atoi(argv[3]);
 			int arg4 = atoi(argv[4]);
 			complex<double>  ** After = BandCutFilter(image, arg3, arg4);
-			image = *PrintMask(IFFT(After, image.width(), image.height()), image.width(), image.height());
+			image = *Print(IFFT(After, image.width(), image.height()), image.width(), image.height());
 			SaveImage(image);
 
 			for (int i = 0; i < image.height(); ++i) {
@@ -506,7 +506,7 @@ int main(int argc, char * argv[]) {
 			int arg3 = atoi(argv[3]);
 			int arg4 = atoi(argv[4]);
 			complex<double>  ** After = PhaseMod(image, arg3, arg4);
-			image = *PrintMask(IFFT(After, image.width(), image.height()), image.width(), image.height());
+			image = *Print(IFFT(After, image.width(), image.height()), image.width(), image.height());
 			SaveImage(image);
 			for (int i = 0; i < image.height(); ++i) {
 				delete[] After[i];

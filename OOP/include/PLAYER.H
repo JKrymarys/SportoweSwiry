@@ -33,14 +33,15 @@ public:
 	
 protected:
 	vector<Ship*> Ships;
-	Grid player_grid;	bool CrossCheck(const coords & c1, const coords & c2);
+	Grid player_grid;	
+	bool CrossCheck(const coords & c1, const coords & c2);
 	bool CrossCheck(const coords & c1, const coords & c2, const coords & c3);
 };
 
 class HumanPlayer:public Player {
 public:
 	HumanPlayer();
-	bool SetShip(int ship_type);
+	bool SetShip(int ship_type); // to improve
 	Ship* SelectShip();
 	pair<int,int> SelectTarget();
 	void Move();
@@ -56,7 +57,7 @@ class ComputerPlayer :public Player
 {
 public:
 	ComputerPlayer(Strategy * strategy);
-	bool SetShip(int ship_type);
+	bool SetShip(int ship_type); // to improve
 	Ship* SelectShip();
 	pair<int, int> SelectTarget(Ship * usedship);
 	void Move();

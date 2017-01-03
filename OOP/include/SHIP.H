@@ -17,8 +17,8 @@ class Ship {
 
 public:
 	bool CanShoot();
-	bool isTargetInRange(coords coordinates);
-	void Shot(coords coordinates);
+	bool isTargetInRange(coords coordinates); // to check
+	virtual void Shot(coords coordinates);
 	void getHit();
 	void Sink();
 	bool isSunk();
@@ -56,8 +56,9 @@ class MultiFunnelShip :public Ship
 {
 public:
 	MultiFunnelShip(Grid* p_grid, int ship_type);
+	virtual void Shot(coords coordinates);
 	void Reset();
 private:
-	bool ShotTwice;
+	int TakenShots;
 };
 #endif // !SHIP_H_

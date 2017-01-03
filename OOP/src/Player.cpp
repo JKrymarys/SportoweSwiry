@@ -12,10 +12,13 @@ using namespace std;
 
 bool Player::hasShips()
 {
-	if (Ships.size() == 0)
-		return false;
-	else
-		return true;
+	for (auto i : Ships)
+	{
+		if (!(i->isSunk()))
+			return true;
+	}
+	//if not
+	return false;
 
 }
 
