@@ -1,0 +1,19 @@
+CImg<float> mask_img;
+	switch (variant)
+	{
+	case 1:
+		mask_img.load("F51");
+		break;	
+	case 2:
+		mask_img.load("F52");
+		break;
+	case 3:
+		mask_img.load("F53");
+		break;
+	case 4:
+		mask_img.load("F54");
+		break;
+	case 5:
+		mask_img.load("F55");
+		break;
+	}
