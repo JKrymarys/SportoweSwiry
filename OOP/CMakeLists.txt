@@ -64,7 +64,12 @@ else()
 endif()
 
 set(SOURCE_TEST_FILES
-    test/tests.cpp
+	test/master.cpp
+    test/ShipTest.cpp
+	test/GameTest.cpp
+	test/GridTest.cpp
+	test/PlayerTest.cpp
+	test/ShipTest.cpp
  )
 
 include_directories(

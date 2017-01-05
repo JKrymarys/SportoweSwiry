@@ -7,8 +7,8 @@
 coords Strategy::getTargetLocation(Ship & ship, Grid & grid) {
 	int x_random_range = 2 * (ship.getLength() + 1) + (ship.getSecondCoords().first - ship.getFirstCoords().first);
 	int y_random_range = 2 * (ship.getLength() + 1) + (ship.getSecondCoords().second - ship.getFirstCoords().second);
-	x_random_range > 10 ? x_random_range = 10 : 0 ;
-	y_random_range > 10 ? y_random_range = 10 : 0 ;
+	x_random_range > 10 ? x_random_range = 10 : 0;
+	y_random_range > 10 ? y_random_range = 10 : 0;
 	int x_generated;
 	int y_generated;
 	do
@@ -39,11 +39,11 @@ Ship* Greedy_strategy::SelectShip(vector<Ship*> & Ships) {
 }
 
 
- Ship* Random_strategy::SelectShip(vector<Ship*> & Ships) {
-	 int random = rand() % Ships.size() + 1;
-	 while (!Ships.at(random)->CanShoot)
-	 {
-		 random = rand() % Ships.size() + 1;
-	 }
-	 return Ships.at(random);
- }
+Ship* Random_strategy::SelectShip(vector<Ship*> & Ships) {
+	int random = rand() % Ships.size() + 1;
+	while (!Ships.at(random)->CanShoot())
+	{
+		random = rand() % Ships.size() + 1;
+	}
+	return Ships.at(random);
+}

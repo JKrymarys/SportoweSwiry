@@ -3,6 +3,8 @@
 
 //#include "SHIP.H"
 #include <utility>
+#include <stdexcept>
+
 
 class Ship;
 
@@ -26,13 +28,21 @@ private:
 	void Miss(coords);
 
 public:
+	class bad_range : public std::logic_error
+	{
+	private:
+		coords br;
+	public:
+		explicit bad_range(coords ix, const std::string & s = "Out of range in Grid object \n");
+		coords bi_val() const { return br; }
+		virtual ~bad_range() {};
+	};
 	Grid();
 	bool isAvaliable(coords);
 	void setPlace(Ship* ship, coords);
 	void HitOrMiss(coords);
 	bool wasShot(coords);
 	void Print();
-	char get_Flag(coords);
 };
 
 #endif // !GRID_H_

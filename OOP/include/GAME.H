@@ -20,7 +20,8 @@ public:
 
 private:
 	int RoundCount;
-	 int ROUND_LIMIT;
+	int ROUND_LIMIT;
 	vector<Player*> Players;
 };
+
 #endif

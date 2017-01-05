@@ -5,7 +5,7 @@
 #include "PLAYER.H"
 #include <iostream>
 
-class TextUI: public HumanInterface
+class TextUI : public HumanInterface
 {
 private:
 	Game* thisGame;
@@ -17,6 +17,6 @@ public:
 	void PlayRound();
 	void ShowGrid();
 	void Shoot();
-	};
+};
 
 #endif

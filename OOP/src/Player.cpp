@@ -152,16 +152,16 @@ void HumanPlayer::Move()
 		Ship * usedship = SelectShip();
 	}
 	// select ship should return nullptr if user wanted to use ship that can't shot 
-	coords Target = SelectTarget();
+	coords Target = SelectTarget(usedship);
 	while (!usedship->isTargetInRange(Target))
 	{
 		cout << "Given coordinates are not in range of choosen ship";
-		Target = SelectTarget();
+		Target = SelectTarget(usedship);
 	}
 	usedship->Shot(Target);
 }
 
-coords HumanPlayer::SelectTarget()
+coords HumanPlayer::SelectTarget(Ship * usedship)
 {
 	return User_interface.getTargetLocation();
 }
@@ -227,10 +227,7 @@ bool HumanPlayer::SetShip(int ship_type) {
 		
 }
 
-char HumanPlayer::getGridFlag(int y, int x)
-{
-	return player_grid.get_Flag(coords(y,x));
-}
+
 
 /*
 

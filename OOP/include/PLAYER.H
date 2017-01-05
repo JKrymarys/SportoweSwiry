@@ -1,6 +1,7 @@
 #ifndef PLAYER_H_
 #define PLAYER_H_
 
+
 #include <vector>
 #include "SHIP.H"
 #include "ComputerStrategies.h"
@@ -19,31 +20,31 @@ public:
 
 };
 
- class Player
+class Player
 {
 public:
-	Player()  {};
+	Player() {};
 	bool virtual SetShip(int ship_type) = 0;
-	coords virtual SelectTarget() = 0 ;
+	coords virtual SelectTarget(Ship * usedship) = 0;
 	virtual Ship*  SelectShip() = 0; //dlaczego nie moge utwrzyc jej jako virtual ??
 	bool CanMove();
 	bool  hasShips();
 	virtual void Move();
-	
-	
+
+
 protected:
 	vector<Ship*> Ships;
-	Grid player_grid;	
+	Grid player_grid;
 	bool CrossCheck(const coords & c1, const coords & c2);
 	bool CrossCheck(const coords & c1, const coords & c2, const coords & c3);
 };
 
-class HumanPlayer:public Player {
+class HumanPlayer :public Player {
 public:
 	HumanPlayer();
 	bool SetShip(int ship_type); // to improve
 	Ship* SelectShip();
-	pair<int,int> SelectTarget();
+	coords SelectTarget(Ship * usedship);
 	void Move();
 	char getGridFlag(int y, int x);
 protected:
@@ -60,7 +61,7 @@ public:
 	ComputerPlayer(Strategy * strategy);
 	bool SetShip(int ship_type); // to improve
 	Ship* SelectShip();
-	pair<int, int> SelectTarget(Ship * usedship);
+	coords SelectTarget(Ship * usedship);
 	void Move();
 private:
 	Strategy * strategy;
