@@ -50,9 +50,6 @@ bool Player::CrossCheck(const coords & c1, const coords & c2, const coords & c3)
 }
 
 
-
-
-
 /*
 	ComputerPlayer
 
