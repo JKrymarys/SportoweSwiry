@@ -13,11 +13,7 @@ using namespace std;
 
 */
 
-void Player::setGrids(Grid* _player_grid, Grid* _oponent_grid)
-{
-	this->player_grid = _player_grid;
-	this->oponent_grid = _oponent_grid; 
-}
+
 
 bool Player::hasShips()
 {
@@ -60,11 +56,9 @@ bool Player::CrossCheck(const coords & c1, const coords & c2, const coords & c3)
 
 void Player::Set_Player_Ships()
 {
-	bool isOK;
-	isOK = this->SetShip(1);
-	isOK = this->SetShip(2);
-	isOK = this->SetShip(3);
-	cout << isOK << endl;
+	SetThreeFunnelShip();
+	SetTwoFunnelShip();
+	SetOneFunnelShip();
 }
 
 /*
@@ -90,42 +84,18 @@ void ComputerPlayer::Move()
 	
 	usedship->Shot(Target);
 }
-
-bool ComputerPlayer::SetShip(int ship_type) {
-	Ship* new_ship;
-	if(ship_type = ONE_FUNNEL_SHIP)
-		new_ship = new SingleFunnelShip(player_grid);
-	else if (ship_type == TWO_FUNNEL_SHIP || ship_type == THREE_FUNNEL_SHIP)
-		new_ship = new MultiFunnelShip(player_grid, ship_type);
-
-	coords* ship_location = new coords[ship_type];
-
-	enum Directions{horizontal, vertical};
-
+void ComputerPlayer::SetThreeFunnelShip()
+{
+	SingleFunnelShip * tosetship = new SingleFunnelShip(oponent_grid);
+	enum Directions {
+		HORIZONTALY = 0,
+		VERTICALLY = 1,
+	};
 	int direction = rand() % 2;
-	int x_begin;
-	int y_begin;
-	do
+	if (direction == HORIZONTALY)
 	{
-		ship_location[0].first = rand() % 11;
-		ship_location[0].second = rand() % 11;
-	} while (player_grid->isAvaliable(ship_location[0]));
-	
-	if (ship_type == TWO_FUNNEL_SHIP || ship_type == THREE_FUNNEL_SHIP)
-	{
-		if (direction == horizontal)
-		{
-			if (player_grid->isAvaliable(coords(x_begin + 1, y_begin)))
-				ship_location[1] = coords(x_begin + 1, y_begin);
-		}
-
-		else
-			ship_location[1] = coords(x_begin, y_begin + 1);
-	
+		int start_x = rand %
 	}
-	
-
-	
 	this->Ships.push_back(new_ship);//add ship to the vector
 	new_ship->setCoords(ship_location[0], ship_location[ship_type - 1]);
 
@@ -136,7 +106,12 @@ bool ComputerPlayer::SetShip(int ship_type) {
 	}
 
 	return true;
+
+
 }
+void SetTwoFunnelShip();
+void SetOneFunnelShip();
+
 
 Ship* ComputerPlayer::SelectShip()
 {
@@ -233,10 +208,10 @@ bool HumanPlayer::SetShip(int ship_type) {
 				{
 					isOK = false;
 				}
-				//if (!player_grid->canShipBePlaced(ship_location, new_ship, ship_type))
-				//{
-				//	isOK = false;
-				//}
+				if (!player_grid->canShipBePlaced(ship_location, new_ship, ship_type))
+				{
+					isOK = false;
+				}
 			}
 		}
 
