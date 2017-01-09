@@ -5,35 +5,35 @@
 #include<algorithm>
 
 coords Strategy::getTargetLocation(Ship & ship, Grid & grid) {
-	int x_random_range = 2 * (ship.getLength() + 1) + (ship.getSecondCoords().first - ship.getFirstCoords().first);
-	int y_random_range = 2 * (ship.getLength() + 1) + (ship.getSecondCoords().second - ship.getFirstCoords().second);
-	x_random_range > 10 ? x_random_range = 10 : 0;
-	y_random_range > 10 ? y_random_range = 10 : 0;
-	int x_generated;
-	int y_generated;
-	do
+
+	int LEFT_UPPER_CORNER_X = (ship.getXbegin() - ship.getLength() - 1 > 0 ? ship.getXbegin() - ship.getLength() - 1 : 0);
+	int LEFT_UPPER_CORNER_Y = (ship.getYbegin() - ship.getLength() - 1 > 0 ? ship.getYbegin() - ship.getLength() - 1 : 0);
+	int RIGHT_LOWER_CORNER_X = (ship.getXend() + ship.getLength() + 1 < 9 ? ship.getXend() + ship.getLength() + 1 : 9);
+	int RIGHT_LOWER_CORNER_Y = (ship.getYend() + ship.getLength() + 1 < 9 ? ship.getYend() + ship.getLength() + 1 : 9);
+
+	int x_generated = rand() % (RIGHT_LOWER_CORNER_X - LEFT_UPPER_CORNER_X + 1) + LEFT_UPPER_CORNER_X;
+	int y_generated = rand() % (RIGHT_LOWER_CORNER_Y - LEFT_UPPER_CORNER_Y + 1) + LEFT_UPPER_CORNER_Y;
+
+	while (grid.wasShot(coords(x_generated, y_generated)))
 	{
-		x_generated = rand() % x_random_range + 1;
-		y_generated = rand() % y_random_range + 1;
-	} while (!grid.wasShot(coords(x_generated, y_generated)));
+		x_generated = rand() % (RIGHT_LOWER_CORNER_X - LEFT_UPPER_CORNER_X + 1) + LEFT_UPPER_CORNER_X;
+		y_generated = rand() % (RIGHT_LOWER_CORNER_Y - LEFT_UPPER_CORNER_Y + 1) + LEFT_UPPER_CORNER_Y;
+
+	}
 	return coords(x_generated, y_generated);
+
 }
 
 
 
 Ship* Greedy_strategy::SelectShip(vector<Ship*> & Ships) {
 
-	std::vector<Ship *>::iterator it = Ships.begin();
-	Ship * toreturn;
-	do
+	Ship * toreturn = Ships.at(0);
+	for (auto it = Ships.begin(); it != Ships.end(); ++it)
 	{
-		toreturn = (*it);
-		++it;
-	} while (it != Ships.end() && toreturn->CanShoot());
-	for (++it; it != Ships.end(); ++it)
-	{
-		if ((*it)->getLength() > toreturn->getLength() && (*it)->CanShoot())
-			toreturn = (*it);
+		if (((*it)->getLength() > toreturn->getLength()))
+			if ((*it)->CanShoot())
+				toreturn = (*it);
 	}
 	return toreturn;
 }

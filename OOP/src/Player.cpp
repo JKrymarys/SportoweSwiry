@@ -233,16 +233,18 @@ bool HumanPlayer::SetShip(int ship_type) {
 				{
 					isOK = false;
 				}
-				if (!player_grid->canShipBePlaced(ship_location, new_ship, ship_type))
-				{
-					isOK = false;
-				}
+				//if (!player_grid->canShipBePlaced(ship_location, new_ship, ship_type))
+				//{
+				//	isOK = false;
+				//}
 			}
 		}
 
-		catch (...)
+		catch (Grid::bad_range & br)
 		{
 			cout << "excpetion cought" << endl;
+			cout << br.what();
+			cout << br.bi_val().first << " " << br.bi_val().second;
 		}
 
 	} while (isOK);

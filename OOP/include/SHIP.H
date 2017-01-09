@@ -1,10 +1,7 @@
 #ifndef SHIP_H_
 #define SHIP_H_
-
-#include "GRID.H"
 #include <utility>
-
-typedef pair<int, int>  coords;
+#include "GRID.H"
 
 enum Ship_types
 {
@@ -14,23 +11,24 @@ enum Ship_types
 };
 
 class Ship {
-
 public:
-	bool CanShoot();
-	bool isTargetInRange(coords coordinates); // to check
-	virtual void Shot(coords coordinates);
+	Ship(int _Lives, int _Length, int remaining_shots, Grid * p_grid);
 	void getHit();
-	void Sink();
-	bool isSunk();
-	virtual void Reset() = 0;
-	int getType();
+	int getLives() { return Lives; }
+	int getRemainingShoots() { return RemainingShoots; }
+	int getXbegin() { return x_begin; }
+	int getXend() { return x_end; }
+	int getYbegin() { return y_begin; }
+	int getYend() { return y_end; }
 	void setCoords(coords start_coords, coords end_coords);
+	bool isSunk();
 	bool hasAvailableMove();
-	coords getFirstCoords();
-	coords getSecondCoords();
-	int getLength();
-
-
+	bool CanShoot();
+	virtual void Shot(coords coordinates);
+	virtual void Reset() = 0;
+	int getLength() { return Lenght; }
+	int getType() { return type; }
+	bool isTargetInRange(coords coordinates);
 protected:
 	int Lives;
 	int RemainingShoots;
@@ -41,10 +39,9 @@ protected:
 	int Lenght;
 	int type;
 	Grid* grid;
-
 };
 
-class SingleFunnelShip :public Ship
+class SingleFunnelShip : public Ship
 {
 public:
 	SingleFunnelShip(Grid* p_grid);
@@ -52,7 +49,7 @@ public:
 
 };
 
-class MultiFunnelShip :public Ship
+class MultiFunnelShip : public Ship
 {
 public:
 	MultiFunnelShip(Grid* p_grid, int ship_type);
@@ -60,5 +57,8 @@ public:
 	void Reset();
 private:
 	int TakenShots;
+
 };
+
 #endif // !SHIP_H_
+
