@@ -137,6 +137,10 @@ void ComputerPlayer::SetTwoFunnelShip()
 		VERTICALLY = 1,
 	};
 	int direction = rand() % 2;
+	int LEFT_UPPER_CORNER_X; 
+	int LEFT_UPPER_CORNER_Y; 
+	int RIGHT_LOWER_CORNER_X;
+	int RIGHT_LOWER_CORNER_Y; 
 	if (direction == HORIZONTALY)
 	{
 		int start_x;
@@ -147,9 +151,13 @@ void ComputerPlayer::SetTwoFunnelShip()
 			isOK = true;
 			start_x = rand() % 9;
 			y = rand() % 10;
-			for (int i = start_x - 1; i <= start_x + 2; i++)
-				for (int j = y - 1; j <= y+1 ; j++)
-					if (j <=9 && i <= 9 && j >=0 && i >= 0 &&!player_grid->isAvaliable(coords(i, j)))
+			LEFT_UPPER_CORNER_X = (start_x - 1 < 0 ? 0 : start_x - 1);
+			LEFT_UPPER_CORNER_Y = (y - 1 < 0 ? 0 : y - 1);
+			RIGHT_LOWER_CORNER_X = (start_x + 2 > 9 ? 9 : start_x + 2);
+			RIGHT_LOWER_CORNER_Y = (y + 1 > 9 ? 9 : y + 1);
+			for (int i = LEFT_UPPER_CORNER_X; i <= RIGHT_LOWER_CORNER_X; i++)
+				for (int j = LEFT_UPPER_CORNER_Y; j <= RIGHT_LOWER_CORNER_Y ; j++)
+					if (!player_grid->isAvaliable(coords(i, j)))
 						isOK = false;
 		} while (!isOK);
 
@@ -172,9 +180,13 @@ void ComputerPlayer::SetTwoFunnelShip()
 			isOK = true;
 			start_y = rand() % 9;
 			x = rand() % 10;
-			for (int i = x - 1; i <= x+1; i++)
-				for (int j = start_y - 1; j < start_y + 2; j++)
-					if (j <= 9 && i <= 9 && j >= 0 && i >= 0 && !player_grid->isAvaliable(coords(i, j)))
+			LEFT_UPPER_CORNER_X = (x - 1 < 0 ? 0 : x - 1);
+			LEFT_UPPER_CORNER_Y = (start_y - 1 < 0 ? 0 : start_y - 1);
+			RIGHT_LOWER_CORNER_X = (x + 1 > 9 ? 9 : x + 1);
+			RIGHT_LOWER_CORNER_Y = (start_y + 2 > 9 ? 9 : start_y + 2);
+			for (int i = LEFT_UPPER_CORNER_X; i <= RIGHT_LOWER_CORNER_X; i++)
+				for (int j = LEFT_UPPER_CORNER_Y; j <= RIGHT_LOWER_CORNER_Y; j++)
+					if (!player_grid->isAvaliable(coords(i, j)))
 						isOK = false;
 		} while (!isOK);
 
@@ -193,14 +205,22 @@ void ComputerPlayer::SetOneFunnelShip()
 	int x;
 	int y;
 	bool isOK;
+	int LEFT_UPPER_CORNER_X;
+	int LEFT_UPPER_CORNER_Y;
+	int RIGHT_LOWER_CORNER_X;
+	int RIGHT_LOWER_CORNER_Y;
 	do
 	{
 		isOK = true;
 		x = rand() % 10;
 		y = rand() % 10;
-		for (int i = x - 1; i <= x + 1; ++i)
-			for (int j = y - 1; j <= y + 1; ++j)
-				if (j <= 9 && i <= 9 && j >= 0 && i >= 0 && !player_grid->isAvaliable(coords(i, j)))
+		LEFT_UPPER_CORNER_X = (x - 1 < 0 ? 0 : x - 1);
+		LEFT_UPPER_CORNER_Y = (y - 1 < 0 ? 0 : y - 1);
+		RIGHT_LOWER_CORNER_X = (x + 1 > 9 ? 9 : x + 1);
+		RIGHT_LOWER_CORNER_Y = (y + 1 > 9 ? 9 : y + 1);
+		for (int i = LEFT_UPPER_CORNER_X; i <= RIGHT_LOWER_CORNER_X; i++)
+			for (int j = LEFT_UPPER_CORNER_Y; j <= RIGHT_LOWER_CORNER_Y; j++)
+				if (!player_grid->isAvaliable(coords(i, j)))
 					isOK = false;
 	} while (!isOK);
 	Ships.push_back(new_ship);
