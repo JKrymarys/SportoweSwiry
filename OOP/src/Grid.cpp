@@ -58,9 +58,9 @@ bool Grid::canShipBePlaced(coords* ship_location, Ship* ship,int ship_type)
 	int y_smaller = std::min(ship_location[0].second, ship_location[ship_type - 1].second);
 	int y_bigger = std::max(ship_location[0].second, ship_location[ship_type - 1].second);
 
-	for (int x = (x_smaller - 1 == 0) ? 0 : x_smaller - 1; x < (x_bigger + 1 > 10) ? 10 : x_bigger; ++x)
+	for (int x = (x_smaller - 1 == 0) ? 0 : x_smaller - 1; x < ((x_bigger + 1 > 10) ? 10 : x_bigger); ++x)
 	{
-		for (int y = (y_smaller - 1 == 0) ? 0 : y_smaller - 1; x < (y_bigger + 1 > 10) ? 10 : y_bigger; ++y)
+		for (int y = (y_smaller - 1 == 0) ? 0 : y_smaller - 1; x < ((y_bigger + 1 > 10) ? 10 : y_bigger); ++y)
 		{
 			if (!this->isAvaliable(coords(x, y))) //spot suspected to be not avaliable
 			{
