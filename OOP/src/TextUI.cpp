@@ -14,7 +14,7 @@ void TextUI::printGrid(Grid * grid)
 	{
 		for (int x = 0; x < 10; ++x)
 		{
-			cout << grid->wasShot(coords(x,y));
+			cout << grid->isAvaliable(coords(x,y));
 		}
 		cout << endl;
 	}

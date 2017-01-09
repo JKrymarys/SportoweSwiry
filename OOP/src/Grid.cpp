@@ -46,7 +46,7 @@ Grid::Grid()
 bool Grid::isAvaliable(coords crd)
 {
 	if (crd.first < 0 || crd.second < 0 || crd.first > 9 || crd.second > 9)
-		throw bad_range(crd);
+		throw bad_range(crd, "Out of range in is avaliable function \n" );
 	return Places[crd.first][crd.second].ShipHere == nullptr ? true : false;
 }
 
@@ -81,7 +81,7 @@ bool Grid::canShipBePlaced(coords* ship_location, Ship* ship,int ship_type)
 void Grid::setPlace(Ship* ship, coords crd)
 {
 	if (crd.first < 0 || crd.second < 0 || crd.first > 10 || crd.second > 10)
-		throw bad_range(crd);
+		throw bad_range(crd, "Out of range in setPlace function \n");
 	Places[crd.first][crd.second].ShipHere = ship;
 }
 

@@ -4,6 +4,8 @@
 #include <memory>
 #include <vector>
 
+
+
 Game::Game(int max_rounds, string player1, string player2, bool UI_text) {
 	
 	IUserInterface*  ptr = nullptr;
@@ -25,12 +27,21 @@ Game::Game(int max_rounds, string player1, string player2, bool UI_text) {
 	AddPlayer(player1,grid1,grid2, UI_text);
 	AddPlayer(player2,grid2,grid1, UI_text);
 	
-	for each (Player* pl in Players)
-	{
-		pl->Set_Player_Ships();
-	}
+	//for each (Player* pl in Players)
+	//{
+	//	pl->Set_Player_Ships();
+	//}
 
+	Players.at(1)->Set_Player_Ships();
 	cout << "DEBUG:: game constructor done" << endl;
+	try {
+		PrintGrid(false);
+	}
+	catch (Grid::bad_range br)
+	{
+		cout << br.what() << endl;
+		cout << br.bi_val().first << " " << br.bi_val().second;
+	}
 
 	
 }
@@ -125,5 +136,5 @@ void Game::PlayRound()
 
 void Game::PrintGrid(bool first_grid)
 {
-	this->UI->printGrid((first_grid) ? grid_player1 : grid_player2);
+	first_grid ? UI->printGrid(grid_player1) : UI->printGrid(grid_player2);
 }

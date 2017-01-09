@@ -12,7 +12,7 @@ class IUserInterface;
 class Player
 {
 public:
-	Player() {};
+	Player(Grid* grid_player, Grid* grid_oponent) : player_grid(grid_player), oponent_grid(grid_oponent) {};
 	void  Set_Player_Ships();
 	coords virtual SelectTarget(Ship * usedship) = 0;
 	virtual Ship*  SelectShip() = 0; //dlaczego nie moge utwrzyc jej jako virtual ??
@@ -30,12 +30,11 @@ protected:
 	virtual void SetTwoFunnelShip() = 0;
 	virtual void SetOneFunnelShip() = 0;
 private:
-	bool virtual SetShip(int ship_type) = 0;
 };
 
 class HumanPlayer :public Player {
 public:
-	HumanPlayer(Grid* grid_player,Grid* grid_oponent, IUserInterface* UI);
+	HumanPlayer(Grid* grid_player, Grid* grid_oponent, IUserInterface* UI) : Player(grid_player, grid_oponent), User_interface(UI) {}
 	Ship* SelectShip();
 	coords SelectTarget(Ship * usedship);
 	void Move();
@@ -44,10 +43,9 @@ protected:
 	IUserInterface* User_interface;
 	
 private:
-	bool SetShip(int ship_type); // to improve
-	void SetThreeFunnelShip();
-	void SetTwoFunnelShip();
-	void SetOneFunnelShip();
+	void SetThreeFunnelShip() {};
+	void SetTwoFunnelShip() {};
+	void SetOneFunnelShip() {};
 };
 
 
@@ -57,7 +55,7 @@ private:
 class ComputerPlayer :public Player
 {
 public:
-	ComputerPlayer(Strategy * strategy, Grid* grid_player, Grid* grid_oponent);
+	ComputerPlayer(Strategy * strategy_, Grid* grid_player, Grid* grid_oponent) : Player(grid_player, grid_oponent), strategy(strategy_) {}
 	Ship* SelectShip();
 	coords SelectTarget(Ship * usedship);
 	void Move();
@@ -67,7 +65,6 @@ protected:
 	void SetOneFunnelShip();
 private:
 	Strategy * strategy;
-	bool SetShip(int ship_type); // to improve
 };
 
 #endif

@@ -57,8 +57,26 @@ bool Player::CrossCheck(const coords & c1, const coords & c2, const coords & c3)
 void Player::Set_Player_Ships()
 {
 	SetThreeFunnelShip();
-	SetTwoFunnelShip();
-	SetOneFunnelShip();
+	cout << "Three funnel ship done" << endl;
+	try {
+		SetTwoFunnelShip();
+	}
+	catch (Grid::bad_range br)
+	{
+		cout << br.what();
+		cout << br.bi_val().first << " " << br.bi_val().second << endl;
+	}
+	cout << "Two funnel ship done" << endl;
+	try {
+		SetOneFunnelShip();
+
+	}
+	catch (Grid::bad_range br)
+	{
+		cout << br.what();
+		cout << br.bi_val().first << " " << br.bi_val().second << endl;
+	}
+	cout << "One funnel ship done" << endl;
 }
 
 /*
@@ -67,13 +85,6 @@ void Player::Set_Player_Ships()
 */
 
 
-
-ComputerPlayer::ComputerPlayer(Strategy * _strategy, Grid* _player_grid, Grid* _oponent_grid)
-{
-	this->strategy = _strategy;
-	this->player_grid = _player_grid;
-	this->oponent_grid = _oponent_grid;
-}
 
 void ComputerPlayer::Move()
 {
@@ -98,7 +109,7 @@ void ComputerPlayer::SetThreeFunnelShip()
 		int y = rand() % 10;
 		Ships.push_back(new_ship);
 		new_ship->setCoords(coords(start_x, y), coords(start_x + 2, y));
-		for (int i = 0; i < new_ship->getType(); i++)
+		for (int i = 0; i < new_ship->getLength(); i++)
 		{
 			player_grid->setPlace(new_ship, coords(start_x + i, y));
 
@@ -110,7 +121,7 @@ void ComputerPlayer::SetThreeFunnelShip()
 		int x = rand() % 10;
 		Ships.push_back(new_ship);
 		new_ship->setCoords(coords(x, start_y), coords(x, start_y + 2));
-		for (int i = 0; i < new_ship->getType(); i++)
+		for (int i = 0; i < new_ship->getLength(); i++)
 		{
 			player_grid->setPlace(new_ship, coords(x ,start_y+i));
 
@@ -128,18 +139,24 @@ void ComputerPlayer::SetTwoFunnelShip()
 	int direction = rand() % 2;
 	if (direction == HORIZONTALY)
 	{
-		int start_x = rand() % 9;
-		int y = rand() % 10; // checking if the space is free
-		for (int i = start_x - 1; i < start_x + 2; i++)
-			for (int j = y - 1; j < y + 1; j++)
-				player_grid->isAvaliable();
-
-
+		int start_x;
+		int y;
+		bool isOK;
+		do
+		{
+			isOK = true;
+			start_x = rand() % 9;
+			y = rand() % 10;
+			for (int i = start_x - 1; i <= start_x + 2; i++)
+				for (int j = y - 1; j <= y+1 ; j++)
+					if (j <=9 && i <= 9 && j >=0 && i >= 0 &&!player_grid->isAvaliable(coords(i, j)))
+						isOK = false;
+		} while (!isOK);
 
 
 		Ships.push_back(new_ship);
-		new_ship->setCoords(coords(start_x, y), coords(start_x + 2, y));
-		for (int i = 0; i < new_ship->getType(); i++)
+		new_ship->setCoords(coords(start_x, y), coords(start_x + 1, y));
+		for (int i = 0; i < new_ship->getLength(); i++)
 		{
 			player_grid->setPlace(new_ship, coords(start_x + i, y));
 
@@ -147,18 +164,50 @@ void ComputerPlayer::SetTwoFunnelShip()
 	}
 	if (direction == VERTICALLY)
 	{
-		int start_y = rand() % 8;
-		int x = rand() % 10;
+		int start_y;
+		int x;
+		bool isOK; 
+		do
+		{
+			isOK = true;
+			start_y = rand() % 9;
+			x = rand() % 10;
+			for (int i = x - 1; i <= x+1; i++)
+				for (int j = start_y - 1; j < start_y + 2; j++)
+					if (j <= 9 && i <= 9 && j >= 0 && i >= 0 && !player_grid->isAvaliable(coords(i, j)))
+						isOK = false;
+		} while (!isOK);
+
 		Ships.push_back(new_ship);
-		new_ship->setCoords(coords(x, start_y), coords(x, start_y + 2));
-		for (int i = 0; i < new_ship->getType(); i++)
+		new_ship->setCoords(coords(x, start_y), coords(x, start_y+1));
+		for (int i = 0; i < new_ship->getLength(); i++)
 		{
 			player_grid->setPlace(new_ship, coords(x, start_y + i));
 
 		}
 	}
 }
-void SetOneFunnelShip();
+void ComputerPlayer::SetOneFunnelShip()
+{
+	SingleFunnelShip * new_ship = new SingleFunnelShip(oponent_grid);
+	int x;
+	int y;
+	bool isOK;
+	do
+	{
+		isOK = true;
+		x = rand() % 10;
+		y = rand() % 10;
+		for (int i = x - 1; i <= x + 1; ++i)
+			for (int j = y - 1; j <= y + 1; ++j)
+				if (j <= 9 && i <= 9 && j >= 0 && i >= 0 && !player_grid->isAvaliable(coords(i, j)))
+					isOK = false;
+	} while (!isOK);
+	Ships.push_back(new_ship);
+	new_ship->setCoords(coords(x, y), coords(x, y));
+	player_grid->setPlace(new_ship, coords(x, y));
+	
+}
 
 
 Ship* ComputerPlayer::SelectShip()
@@ -179,12 +228,6 @@ coords ComputerPlayer::SelectTarget(Ship* usedship) {
 
 
 
-HumanPlayer::HumanPlayer(Grid* _player_grid, Grid* _oponent_grid, IUserInterface* UI) {
-
-	this->player_grid = _player_grid;
-	this->oponent_grid = _oponent_grid;
-	this->User_interface = UI;
-}
 
 void HumanPlayer::Move()
 {
@@ -225,7 +268,7 @@ Ship* HumanPlayer::SelectShip() {
 
 // Trzeba jeszcze dodac sprawdzanie czy nie chce stawiac po przekatnej
 
-bool HumanPlayer::SetShip(int ship_type) {
+/*bool HumanPlayer::SetShip(int ship_type) {
 	Ship* new_ship;
 	
 
@@ -283,6 +326,8 @@ bool HumanPlayer::SetShip(int ship_type) {
 	return true;
 		
 }
+
+*/
 
 bool HumanPlayer::getGridFlag(int x, int y)
 {
