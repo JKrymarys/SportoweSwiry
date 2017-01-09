@@ -212,38 +212,42 @@ bool HumanPlayer::SetShip(int ship_type) {
 		new_ship = new MultiFunnelShip(player_grid, ship_type);
 	
 	coords * ship_location = new coords[ship_type];
+	bool isOK = true;
 	
-	try
+	do 
 	{
-		for (int i = 0; i < ship_type; i++)
+		try
 		{
-			ship_location[i] = User_interface->getCoords();
-			if (!player_grid->isAvaliable(ship_location[i]))
+			for (int i = 0; i < ship_type; i++)
 			{
-				cout << "This place is not avaliable" << endl;
-				return false;
+				ship_location[i] = User_interface->getCoords();
+				if (!player_grid->isAvaliable(ship_location[i]))
+				{
+					isOK = false;
+				}
+				if (i == 1 && (!CrossCheck(ship_location[0], ship_location[1]))) // sprawdzalem jesli nie sprawdzi sie pierwszy warunek nie bedzie probowal sprawdzic drugiego
+				{
+					isOK = false;
+				}
+				if (i == 2 && (!CrossCheck(ship_location[0], ship_location[1], ship_location[2])))
+				{
+					isOK = false;
+				}
+				if (!player_grid->canShipBePlaced(ship_location, new_ship, ship_type))
+				{
+					isOK = false;
+				}
 			}
-			if (i == 1 && (!CrossCheck(ship_location[0], ship_location[1]))) // sprawdzalem jesli nie sprawdzi sie pierwszy warunek nie bedzie probowal sprawdzic drugiego
-			{
-				cout << "You cannot place your ship across";
-				return false;
-			}
-			if (i == 2 && (!CrossCheck(ship_location[0], ship_location[1], ship_location[2])))
-			{
-				cout << "You cannot place your ship across";
-				return false;
-			}
-
 		}
-			
-	}
-	catch (...)
-	{
-		cout << "excpetion cought" << endl;
-	}
+
+		catch (...)
+		{
+			cout << "excpetion cought" << endl;
+		}
+
+	} while (isOK);
+
 	this->Ships.push_back(new_ship);//add ship to the vector
-
-
 
 	for (int i = 0; i < ship_type; i++)
 	{
