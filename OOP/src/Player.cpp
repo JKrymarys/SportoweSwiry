@@ -86,7 +86,7 @@ void ComputerPlayer::Move()
 }
 void ComputerPlayer::SetThreeFunnelShip()
 {
-	SingleFunnelShip * tosetship = new SingleFunnelShip(oponent_grid);
+	MultiFunnelShip * new_ship = new MultiFunnelShip(oponent_grid, THREE_FUNNEL_SHIP);
 	enum Directions {
 		HORIZONTALY = 0,
 		VERTICALLY = 1,
@@ -94,22 +94,70 @@ void ComputerPlayer::SetThreeFunnelShip()
 	int direction = rand() % 2;
 	if (direction == HORIZONTALY)
 	{
-		int start_x = rand %
-	}
-	this->Ships.push_back(new_ship);//add ship to the vector
-	new_ship->setCoords(ship_location[0], ship_location[ship_type - 1]);
+		int start_x = rand() % 8;
+		int y = rand() % 10;
+		Ships.push_back(new_ship);
+		new_ship->setCoords(coords(start_x, y), coords(start_x + 2, y));
+		for (int i = 0; i < new_ship->getType(); i++)
+		{
+			player_grid->setPlace(new_ship, coords(start_x + i, y));
 
-	for (int i = 0; i < ship_type; i++)
+		}
+	}
+	if (direction == VERTICALLY)
 	{
-		player_grid->setPlace(new_ship, ship_location[i]);
+		int start_y = rand() % 8;
+		int x = rand() % 10;
+		Ships.push_back(new_ship);
+		new_ship->setCoords(coords(x, start_y), coords(x, start_y + 2));
+		for (int i = 0; i < new_ship->getType(); i++)
+		{
+			player_grid->setPlace(new_ship, coords(x ,start_y+i));
 
+		}
 	}
-
-	return true;
-
 
 }
-void SetTwoFunnelShip();
+void ComputerPlayer::SetTwoFunnelShip()
+{
+	MultiFunnelShip * new_ship = new MultiFunnelShip(oponent_grid, TWO_FUNNEL_SHIP);
+	enum Directions {
+		HORIZONTALY = 0,
+		VERTICALLY = 1,
+	};
+	int direction = rand() % 2;
+	if (direction == HORIZONTALY)
+	{
+		int start_x = rand() % 9;
+		int y = rand() % 10; // checking if the space is free
+		for (int i = start_x - 1; i < start_x + 2; i++)
+			for (int j = y - 1; j < y + 1; j++)
+				player_grid->isAvaliable();
+
+
+
+
+		Ships.push_back(new_ship);
+		new_ship->setCoords(coords(start_x, y), coords(start_x + 2, y));
+		for (int i = 0; i < new_ship->getType(); i++)
+		{
+			player_grid->setPlace(new_ship, coords(start_x + i, y));
+
+		}
+	}
+	if (direction == VERTICALLY)
+	{
+		int start_y = rand() % 8;
+		int x = rand() % 10;
+		Ships.push_back(new_ship);
+		new_ship->setCoords(coords(x, start_y), coords(x, start_y + 2));
+		for (int i = 0; i < new_ship->getType(); i++)
+		{
+			player_grid->setPlace(new_ship, coords(x, start_y + i));
+
+		}
+	}
+}
 void SetOneFunnelShip();
 
 
