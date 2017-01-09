@@ -1,22 +1,33 @@
 #ifndef TEXTUI_H_
 #define TEXTUI_H_
 
-#include "GAME.H"
+//#include "GAME.H"
 #include "PLAYER.H"
 #include <iostream>
+typedef pair<int, int> coords;
 
-class TextUI : public HumanInterface
-{
+
+class IUserInterface {
+public:
+//	virtual void getShipLocation(int size_of_ship) = 0;
+	virtual int SelectShip() = 0; // returns type o ship
+	virtual coords getTargetLocation() = 0;
+	virtual coords getCoords() = 0; // used to place ships
+	virtual void printGrid(Grid *) = 0;
+};
+
+class TextUI : public IUserInterface {
 private:
-	Game* thisGame;
-	HumanPlayer* Hplayer;
+	Player* player;
 public:
 	TextUI();
 	~TextUI();
-	void mainMenu();
-	void PlayRound();
-	void ShowGrid();
-	void Shoot();
+	void getShipLocation(int size_of_ship);
+	int SelectShip(); // returns type o ship
+	coords getTargetLocation();
+	coords getCoords(); // used to place ships
+	void printGrid(Grid *);
+
 };
 
 #endif
