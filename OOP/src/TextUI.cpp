@@ -14,7 +14,14 @@ void TextUI::printGrid(Grid * grid)
 	{
 		for (int x = 0; x < 10; ++x)
 		{
-			cout << grid->isAvaliable(coords(x,y));
+			if (!grid->isAvaliable(coords(x, y)) && !grid->wasShot(coords(x, y)))
+				cout << "i";
+			else if (!grid->isAvaliable(coords(x, y)) && grid->wasShot(coords(x, y)))
+				cout << "X";
+			else if (grid->isAvaliable(coords(x, y)) && grid->wasShot(coords(x, y)))
+				cout << "*";
+			else
+				cout << "O";
 		}
 		cout << endl;
 	}
@@ -26,13 +33,14 @@ void TextUI::PrintText(string string)
 
 int TextUI::SelectShip()
 {
-	int ship_id = 1;
-	cout << "Choose ship:" << endl;
-	
-	/*while (ship_id != 1 || ship_id != 2 || ship_id != 3)
+	int ship_id;
+	do
 	{
+		cout << "Choose ship:" << endl;
+		cin.clear();
 		cin >> ship_id;
-	}*/
+
+	} while (ship_id > 3 || ship_id < 0);
 
 	cout << "You have chosen ship: " << ship_id << endl;
 	return ship_id;

@@ -9,7 +9,7 @@ SHIP
 Ship::Ship(int _Lives, int _Length, int remaining_shots, Grid * p_grid) :
 	Lives(_Lives), Lenght(_Length), RemainingShoots(remaining_shots), grid(p_grid)
 {
-
+	this->type = this->Lenght;
 }
 
 void Ship::getHit() {
@@ -103,7 +103,7 @@ SINGLE_FUNNEL_SHIP
 
 
 SingleFunnelShip::SingleFunnelShip(Grid* p_grid) :
-	Ship(1, 1, 1, p_grid) {
+	Ship(1, 1, 1, p_grid){
 }
 
 void SingleFunnelShip::Reset() {

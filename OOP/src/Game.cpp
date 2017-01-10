@@ -26,11 +26,9 @@ Game::Game(int max_rounds, string player1, string player2, bool UI_text) {
 	grid_player2 = grid2;
 	AddPlayer(player1,grid1,grid2, UI_text);
 	AddPlayer(player2,grid2,grid1, UI_text);
-	int i = 0;
 	
 	for each (Player* pl in Players)
 	{
-		cout << "Player "<<i++  << " set ships:" << endl;
 		pl->Set_Player_Ships();
 	}
 
@@ -48,7 +46,7 @@ Game::Game(int max_rounds, string player1, string player2, bool UI_text) {
 		cout << br.bi_val().first << " " << br.bi_val().second;
 	}
 
-	
+	this->StartGame();
 }
 
 int Game::getCurrentRound() {
@@ -130,6 +128,12 @@ void Game::PlayRound()
 	cout << "DEBUG: start PlayRound no:" <<RoundCount<< endl;
 	while (Players.at(0)->CanMove() || Players.at(1)->CanMove())
 	{
+		cout << "Player grid" << endl;
+		PrintGrid(true);
+		cout << "Computer grid" << endl;
+		PrintGrid(false);
+
+
 		if (Players.at(0)->CanMove())
 			Players.at(0)->Move();
 		if (Players.at(1)->CanMove())

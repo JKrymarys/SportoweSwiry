@@ -14,7 +14,7 @@ enum Ship_types
 
 class Ship {
 public:
-	Ship(int _Lives, int _Length, int remaining_shots, Grid * p_grid); // http://stackoverflow.com/questions/18479295/member-initializer-does-not-name-a-non-static-data-member-or-base-class
+	Ship(int _Lives, int _Length, int remaining_shots, Grid * p_grid);
 	void getHit();
 	int getLives() { return Lives; }
 	int getRemainingShoots() { return RemainingShoots; }

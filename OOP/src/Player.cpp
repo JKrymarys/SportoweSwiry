@@ -252,18 +252,20 @@ coords ComputerPlayer::SelectTarget(Ship* usedship) {
 
 void HumanPlayer::Move()
 {
-	Ship * usedship = nullptr;
-	while (usedship == nullptr)
-	{
-		Ship * usedship = SelectShip();
-	}
+	Ship * usedship;
+	do{
+	 usedship = SelectShip();
+	} while (usedship == nullptr);
+	cout << "Debug: usedship = " << usedship->getType() << endl;
 	// select ship should return nullptr if user wanted to use ship that can't shot 
-	coords Target = SelectTarget(usedship);
-	while (!usedship->isTargetInRange(Target))
+	coords Target;
+	do
 	{
-		cout << "Given coordinates are not in range of choosen ship";
+		User_interface->PrintText("Given coordinates are not in range of choosen ship");
 		Target = SelectTarget(usedship);
-	}
+
+	} while (!usedship->isTargetInRange(Target));
+	cout << "Shoooooooooot" << endl;
 	usedship->Shot(Target);
 }
 
@@ -272,15 +274,21 @@ coords HumanPlayer::SelectTarget(Ship * usedship)
 	return User_interface->getTargetLocation();
 }
 
-Ship* HumanPlayer::SelectShip() {
+Ship* HumanPlayer::SelectShip()
+{
 	int type = User_interface->SelectShip();
 	
 	for (auto i : Ships)
 	{
+		cout << "humanPlayer->selectship type " << i->getType() << endl;
+
 		if (i->getType() == type && i->CanShoot())
+		{
+			cout << "OK" << endl;
 			return i;
+		}
 	}
-	cout << "no such a ship" << endl;
+	User_interface->PrintText("Invalid ship");
 	return nullptr;
 }
 
@@ -288,7 +296,7 @@ Ship* HumanPlayer::SelectShip() {
 
 void HumanPlayer::SetOneFunnelShip()
 {
-	Ship* new_ship = new SingleFunnelShip(player_grid);
+	Ship* new_ship = new SingleFunnelShip(oponent_grid);
 	coords ship_location;
 	bool isOK;
 	User_interface->PrintText("Set One Funnel Ship");
@@ -296,6 +304,10 @@ void HumanPlayer::SetOneFunnelShip()
 	{
 		ship_location = User_interface->getCoords();
 		isOK = true;
+
+		//this loop is going to check if there is no other ship in the close neighbourhood  
+		// this loop intelligenty check if user want to place ship on the border of grid, and adjust its behavior (by not going out of grid)
+		// also by check isOK boolean value it can stop just when some other ship  is detected
 		for (int x = (ship_location.first - 1) < 0 ? 0 : ship_location.first - 1; x <= ((ship_location.first + 1) > 9 ? 9 : ship_location.first +1) && isOK; ++x)
 			for (int y = (ship_location.second - 1) < 0 ? 0 : ship_location.second - 1; y <= ((ship_location.second + 1) > 9 ? 9 : ship_location.second) && isOK; ++y)
 				if (!player_grid->isAvaliable(coords(x, y)))
@@ -305,7 +317,7 @@ void HumanPlayer::SetOneFunnelShip()
 				}
 	} while (!isOK);
 
-	Ships.push_back(new_ship);
+	this->Ships.push_back(new_ship);
 	new_ship->setCoords(ship_location, ship_location);
 	player_grid->setPlace(new_ship, ship_location);
 	User_interface->PrintText("One Funnel Ship has been set");
@@ -314,7 +326,7 @@ void HumanPlayer::SetOneFunnelShip()
 void HumanPlayer::SetTwoFunnelShip()
 {
 	User_interface->PrintText("Set Two Funnel Ship");
-	Ship* new_ship = new SingleFunnelShip(player_grid);
+	Ship* new_ship = new MultiFunnelShip(oponent_grid,TWO_FUNNEL_SHIP);
 	coords* ship_location = new coords[TWO_FUNNEL_SHIP];
 	bool isOK;
 	for (int it = 0; it < TWO_FUNNEL_SHIP; ++it)
@@ -341,11 +353,12 @@ void HumanPlayer::SetTwoFunnelShip()
 
 			if (isOK)
 			{
-
+				//this loop is going to check if there is no other ship in the close neighbourhood  
+				// this loop intelligenty check if user want to place ship on the border of grid, and adjust its behavior (by not going out of grid)
+				// also by check isOK boolean value it can stop just when some other ship  is detected
 				for (int x = (ship_location[it].first - 1) < 0 ? 0 : ship_location[it].first - 1; x <= ((ship_location[it].first + 1) > 9 ? 9 : ship_location[it].first + 1) && isOK; ++x)
 					for (int y = (ship_location[it].second - 1) < 0 ? 0 : ship_location[it].second -1; y <= ((ship_location[it].second + 1) > 9 ? 9 : ship_location[it].second + 1) && isOK; ++y)
 					{
-						cout << "Test if field is avaliable: " << x << " " << y << endl;
 						if (!player_grid->isAvaliable(coords(x, y)))
 						{
 							isOK = false;
@@ -357,7 +370,7 @@ void HumanPlayer::SetTwoFunnelShip()
 
 		} while (!isOK);
 	}
-	Ships.push_back(new_ship);
+	this->Ships.push_back(new_ship);
 	
 	new_ship->setCoords(ship_location[0], ship_location[1]);
 	for(int i = 0; i< TWO_FUNNEL_SHIP; ++i)
@@ -370,7 +383,7 @@ void HumanPlayer::SetTwoFunnelShip()
 void HumanPlayer::SetThreeFunnelShip()
 {
 	User_interface->PrintText("Set Three Funnel Ship");
-	Ship* new_ship = new SingleFunnelShip(player_grid);
+	Ship* new_ship = new MultiFunnelShip(oponent_grid, THREE_FUNNEL_SHIP);
 	coords* ship_location = new coords[THREE_FUNNEL_SHIP];
 	bool isOK;
 	for (int it = 0; it < THREE_FUNNEL_SHIP; ++it)
@@ -378,12 +391,15 @@ void HumanPlayer::SetThreeFunnelShip()
 		do
 		{
 			isOK = true;
+			
 			ship_location[it] = User_interface->getCoords();
 
-			if (it == 1 && ship_location[it] == ship_location[0]) { User_interface->PrintText("Choose field next to"); isOK = false; }
-			else if (it == 2 && (ship_location[it] == ship_location[0] || ship_location[it] == ship_location[1])) { User_interface->PrintText("Choose field next to"); isOK = false; }
+			//check if field has already been chosen to place this ship
+			if (it == 1 && ship_location[it] == ship_location[0]) { User_interface->PrintText("Already chosen. Choose field next to"); isOK = false; }
+			else if (it == 2 && (ship_location[it] == ship_location[0] || ship_location[it] == ship_location[1])) { User_interface->PrintText("Already chosen. Choose field next to"); isOK = false; }
 			else {
 
+				//check if following coords are inline and just next to (2 and all 3)
 				if (it == THREE_FUNNEL_SHIP - 2 && !CrossCheck(ship_location[0], ship_location[1]))
 				{
 					User_interface->PrintText("Cross check failed");
@@ -391,21 +407,15 @@ void HumanPlayer::SetThreeFunnelShip()
 				}
 				else if (it == THREE_FUNNEL_SHIP - 1 && !CrossCheck(ship_location[0], ship_location[1], ship_location[2]))
 				{
-					cout << ship_location[0].first <<" "<< ship_location[0].second << endl;
-					cout << ship_location[1].first << " " << ship_location[1].second << endl;
-					cout << ship_location[2].first << " " << ship_location[2].second << endl;
-					cout << (bool)CrossCheck(ship_location[0], ship_location[1], ship_location[2]) << endl;
-
 					User_interface->PrintText("Cross check failed");
 					isOK = false;
 				}
 			}
-		
+		// as three funnel ship is placed first there is no need to perform addictional validation
 		} while (!isOK);
-
-		cout << "coord set" << endl;
+	
 	}
-	Ships.push_back(new_ship);
+	this->Ships.push_back(new_ship);
 
 	new_ship->setCoords(ship_location[0], ship_location[2]);
 	for (int i = 0; i< THREE_FUNNEL_SHIP; ++i)
