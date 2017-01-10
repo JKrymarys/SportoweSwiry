@@ -19,6 +19,7 @@ public:
 	bool CanMove();
 	bool  hasShips();
 	virtual void Move() = 0;
+	void Reset();
 
 protected:
 	vector<Ship*> Ships;

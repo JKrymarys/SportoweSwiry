@@ -7,9 +7,8 @@ SHIP
 
 
 Ship::Ship(int _Lives, int _Length, int remaining_shots, Grid * p_grid) :
-	Lives(_Lives), Lenght(_Length), RemainingShoots(remaining_shots), grid(p_grid)
+	Lives(_Lives), Lenght(_Length), RemainingShoots(remaining_shots), grid(p_grid), type(_Length)
 {
-	this->type = this->Lenght;
 }
 
 void Ship::getHit() {
@@ -85,7 +84,7 @@ bool Ship::isTargetInRange(coords target) {
 	int RIGHT_LOWER_CORNER_X = x_end + Lenght + 1 < 9 ? x_end + Lenght + 1 : 9;
 	int RIGHT_LOWER_CORNER_Y = y_end + Lenght + 1 < 9 ? y_end + Lenght + 1 : 9;
 
-	if ((target.second >= LEFT_UPPER_CORNER_Y && target.second <= RIGHT_LOWER_CORNER_Y) && (target.first >= LEFT_UPPER_CORNER_X && target.first <= RIGHT_LOWER_CORNER_X))
+	if ((target.second >= LEFT_UPPER_CORNER_Y && target.second <= RIGHT_LOWER_CORNER_Y) && (target.first >= LEFT_UPPER_CORNER_X && target.first <= RIGHT_LOWER_CORNER_X) && !grid->wasShot(target))
 		return true;
 
 	return false;

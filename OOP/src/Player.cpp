@@ -79,6 +79,14 @@ void Player::Set_Player_Ships()
 	cout << "One funnel ship done" << endl;
 }
 
+void Player::Reset()
+{
+	for (auto i : Ships)
+	{
+		i->Reset();
+	}
+}
+
 /*
 	ComputerPlayer
 
@@ -93,7 +101,24 @@ void ComputerPlayer::Move()
 	
 	coords Target = SelectTarget(usedship);
 	
-	usedship->Shot(Target);
+	try
+	{
+		usedship->Shot(Target);
+	}
+	catch (Ship::bad_coordinates err)
+	{
+		cout << err.what() << endl;
+		cout << err.crd_val().first << " " << err.crd_val().second << endl;
+	}
+	catch (Ship::ship_error err)
+	{
+		cout << err.what() << endl;
+	}
+	catch (Grid::bad_range err)
+	{
+		cout << err.what() << endl;
+		cout << err.bi_val().first << " " << err.bi_val().second << endl;
+	}
 }
 void ComputerPlayer::SetThreeFunnelShip()
 {
@@ -234,12 +259,11 @@ void ComputerPlayer::SetOneFunnelShip()
 Ship* ComputerPlayer::SelectShip()
 {
 	return strategy->SelectShip(this->Ships);
-	//tymczasowo
 }
 
 
 coords ComputerPlayer::SelectTarget(Ship* usedship) {
-	return strategy->getTargetLocation((*usedship), *player_grid);
+	return strategy->getTargetLocation((*usedship), *oponent_grid);
 }
 
 /*
@@ -266,7 +290,24 @@ void HumanPlayer::Move()
 
 	} while (!usedship->isTargetInRange(Target));
 	cout << "Shoooooooooot" << endl;
+	try
+	{
 	usedship->Shot(Target);
+	}
+	catch (Ship::bad_coordinates err)
+	{
+		cout << err.what() << endl;
+		cout << err.crd_val().first << " " << err.crd_val().second << endl;
+	}
+	catch (Ship::ship_error err)
+	{
+		cout << err.what() << endl;
+	}
+	catch (Grid::bad_range err)
+	{
+		cout << err.what() << endl;
+		cout << err.bi_val().first << " " << err.bi_val().second << endl;
+	}
 }
 
 coords HumanPlayer::SelectTarget(Ship * usedship)

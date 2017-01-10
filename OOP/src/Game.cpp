@@ -66,6 +66,10 @@ void Game::StartGame()
 	{
 		cout << "round: " << RoundCount << endl;
 			PlayRound();
+		for (auto i : Players)
+		{
+			i->Reset();
+		}
 		
 		//case 1: last round played
 		if (RoundCount >= RoundMAX)
@@ -73,18 +77,17 @@ void Game::StartGame()
 
 		cout << "check1" << endl;
 		//case 2: one of the players has lost its last ship
-		if(Players[0]->hasShips() || Players[1]->hasShips())
+		if(!Players[0]->hasShips() || !Players[1]->hasShips())
 			if_continue = false;
 
 		cout << "check2" << endl;
 		//case 3: no more avaliable shots
-		for each(Player* p in Players)
+		for (auto i : Players)
 		{
-			if (!p->CanMove())
+			if (!i->CanMove())
 				if_continue = false;
-
-			cout << "check3" << endl;
 		}
+
 		RoundCount++;
 	}
 	cout << "DEBUG: end StartGame" << endl;

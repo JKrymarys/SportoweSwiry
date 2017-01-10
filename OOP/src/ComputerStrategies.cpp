@@ -28,22 +28,31 @@ coords Strategy::getTargetLocation(Ship & ship, Grid & grid) {
 
 Ship* Greedy_strategy::SelectShip(vector<Ship*> & Ships) {
 
-	Ship * toreturn = Ships.at(0);
-	for (auto it = Ships.begin(); it != Ships.end(); ++it)
+	Ship * toreturn = nullptr;
+	auto it = Ships.begin();
+	while (it != Ships.end() || toreturn == nullptr)
+	{
+		if ((*it)->CanShoot())
+			toreturn = (*it);
+		++it;
+	}
+	while (it != Ships.end())
 	{
 		if (((*it)->getLength() > toreturn->getLength()))
 			if ((*it)->CanShoot())
 				toreturn = (*it);
+		++it;
 	}
+
 	return toreturn;
 }
 
 
 Ship* Random_strategy::SelectShip(vector<Ship*> & Ships) {
-	int random = rand() % Ships.size() + 1;
+	int random = rand() % Ships.size();
 	while (!Ships.at(random)->CanShoot())
 	{
-		random = rand() % Ships.size() + 1;
+		random = rand() % Ships.size();
 	}
 	return Ships.at(random);
 }

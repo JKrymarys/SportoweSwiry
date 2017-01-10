@@ -58,7 +58,7 @@ coords TextUI::getTargetLocation() {
 		cin >> x >> y;
 	}
 
-	return coords(x, y);
+	return coords(x - 1, y - 1);
 
 }
 
