@@ -128,6 +128,12 @@ void Game::PlayRound()
 	cout << "DEBUG: start PlayRound no:" <<RoundCount<< endl;
 	while (Players.at(0)->CanMove() || Players.at(1)->CanMove())
 	{
+		cout << "Player grid" << endl;
+		PrintGrid(true);
+		cout << "Computer grid" << endl;
+		PrintGrid(false);
+
+
 		if (Players.at(0)->CanMove())
 			Players.at(0)->Move();
 		if (Players.at(1)->CanMove())

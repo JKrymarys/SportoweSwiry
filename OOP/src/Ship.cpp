@@ -111,7 +111,7 @@ void MultiFunnelShip::Shot(coords target)
 	this->grid->HitOrMiss(target);
 	TakenShots++;
 	RemainingShoots--;
-
+}
 
 void MultiFunnelShip::Reset() {
 	if (TakenShots == 2)

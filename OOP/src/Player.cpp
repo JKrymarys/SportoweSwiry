@@ -265,6 +265,7 @@ void HumanPlayer::Move()
 		Target = SelectTarget(usedship);
 
 	} while (!usedship->isTargetInRange(Target));
+	cout << "Shoooooooooot" << endl;
 	usedship->Shot(Target);
 }
 
@@ -295,7 +296,7 @@ Ship* HumanPlayer::SelectShip()
 
 void HumanPlayer::SetOneFunnelShip()
 {
-	Ship* new_ship = new SingleFunnelShip(player_grid);
+	Ship* new_ship = new SingleFunnelShip(oponent_grid);
 	coords ship_location;
 	bool isOK;
 	User_interface->PrintText("Set One Funnel Ship");
@@ -325,7 +326,7 @@ void HumanPlayer::SetOneFunnelShip()
 void HumanPlayer::SetTwoFunnelShip()
 {
 	User_interface->PrintText("Set Two Funnel Ship");
-	Ship* new_ship = new MultiFunnelShip(player_grid,TWO_FUNNEL_SHIP);
+	Ship* new_ship = new MultiFunnelShip(oponent_grid,TWO_FUNNEL_SHIP);
 	coords* ship_location = new coords[TWO_FUNNEL_SHIP];
 	bool isOK;
 	for (int it = 0; it < TWO_FUNNEL_SHIP; ++it)
@@ -382,7 +383,7 @@ void HumanPlayer::SetTwoFunnelShip()
 void HumanPlayer::SetThreeFunnelShip()
 {
 	User_interface->PrintText("Set Three Funnel Ship");
-	Ship* new_ship = new MultiFunnelShip(player_grid, THREE_FUNNEL_SHIP);
+	Ship* new_ship = new MultiFunnelShip(oponent_grid, THREE_FUNNEL_SHIP);
 	coords* ship_location = new coords[THREE_FUNNEL_SHIP];
 	bool isOK;
 	for (int it = 0; it < THREE_FUNNEL_SHIP; ++it)
