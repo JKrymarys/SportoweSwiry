@@ -45,6 +45,7 @@ class SingleFunnelShip : public Ship
 {
 public:
 	SingleFunnelShip(Grid* p_grid);
+	
 	void Reset();
 
 };

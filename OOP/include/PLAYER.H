@@ -5,7 +5,7 @@
 #include <vector>
 #include "SHIP.H"
 #include "ComputerStrategies.h"
-
+#include <string>
 class IUserInterface;
 
 
@@ -15,7 +15,7 @@ public:
 	Player(Grid* grid_player, Grid* grid_oponent) : player_grid(grid_player), oponent_grid(grid_oponent) {};
 	void  Set_Player_Ships();
 	coords virtual SelectTarget(Ship * usedship) = 0;
-	virtual Ship*  SelectShip() = 0; //dlaczego nie moge utwrzyc jej jako virtual ??
+	virtual Ship*  SelectShip() = 0; 
 	bool CanMove();
 	bool  hasShips();
 	virtual void Move() = 0;
@@ -43,13 +43,11 @@ protected:
 	IUserInterface* User_interface;
 	
 private:
-	void SetThreeFunnelShip() {};
-	void SetTwoFunnelShip() {};
-	void SetOneFunnelShip() {};
+	void SetThreeFunnelShip();
+	void SetTwoFunnelShip();
+	void SetOneFunnelShip();
 };
 
-
-//text mode interface
 
 
 class ComputerPlayer :public Player

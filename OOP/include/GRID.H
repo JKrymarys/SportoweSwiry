@@ -42,7 +42,7 @@ public:
 	void setPlace(Ship* ship, coords);
 	void HitOrMiss(coords);
 	bool wasShot(coords);
-	bool canShipBePlaced(coords* ship_location, Ship* ship, int ship_type);
+	
 };
 
 #endif // !GRID_H_

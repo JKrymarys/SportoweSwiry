@@ -26,15 +26,20 @@ Game::Game(int max_rounds, string player1, string player2, bool UI_text) {
 	grid_player2 = grid2;
 	AddPlayer(player1,grid1,grid2, UI_text);
 	AddPlayer(player2,grid2,grid1, UI_text);
+	int i = 0;
 	
-	//for each (Player* pl in Players)
-	//{
-	//	pl->Set_Player_Ships();
-	//}
+	for each (Player* pl in Players)
+	{
+		cout << "Player "<<i++  << " set ships:" << endl;
+		pl->Set_Player_Ships();
+	}
 
-	Players.at(1)->Set_Player_Ships();
+	//Players.at(1)->Set_Player_Ships();
 	cout << "DEBUG:: game constructor done" << endl;
 	try {
+		cout << "Player Grid:" << endl;
+		PrintGrid(true);
+		cout << "Computer grid" << endl;
 		PrintGrid(false);
 	}
 	catch (Grid::bad_range br)
@@ -48,7 +53,7 @@ Game::Game(int max_rounds, string player1, string player2, bool UI_text) {
 
 int Game::getCurrentRound() {
 	return RoundCount;
-}
+} 
 int Game::getMaxRound() {
 	return RoundMAX;
 }

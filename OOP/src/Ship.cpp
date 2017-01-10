@@ -23,6 +23,8 @@ bool Ship::isSunk() {
 		return false;
 }
 
+
+
 void Ship::setCoords(coords start, coords end) {
 	this->x_begin = std::min(start.first, end.first);
 	this->x_end = std::max(start.first, end.first);

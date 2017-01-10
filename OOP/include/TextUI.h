@@ -14,6 +14,7 @@ public:
 	virtual coords getTargetLocation() = 0;
 	virtual coords getCoords() = 0; // used to place ships
 	virtual void printGrid(Grid *) = 0;
+	virtual void PrintText(string  string) = 0;
 };
 
 class TextUI : public IUserInterface {
@@ -27,6 +28,7 @@ public:
 	coords getTargetLocation();
 	coords getCoords(); // used to place ships
 	void printGrid(Grid *);
+	void PrintText(string  string);
 
 };
 

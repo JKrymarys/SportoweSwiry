@@ -1,5 +1,5 @@
 #include "TEXTUI.H"
-
+#
 using namespace std;
 
 
@@ -18,6 +18,10 @@ void TextUI::printGrid(Grid * grid)
 		}
 		cout << endl;
 	}
+}
+void TextUI::PrintText(string string)
+{
+	cout << string << endl;
 }
 
 int TextUI::SelectShip()
@@ -40,9 +44,9 @@ coords TextUI::getTargetLocation() {
 	cout << "Target Location: " << endl;
 	cout << "Type coordinates x,y" << endl;
 	cin >> x >> y;
-	while (x > 10 || y > 10 || x < 0 || y < 0) // should be grid->height, grid ->length
+	while (x > 10 || y > 10 || x < 1 || y < 1) // should be grid->height, grid ->length
 	{
-		cout << "Coordinates out of range, retype";
+		cout << "Coordinates out of range, retype" << endl;
 		cin >> x >> y;
 	}
 
@@ -55,7 +59,11 @@ coords TextUI::getCoords() {
 
 	cout << "Type coordinates x, y " << endl;
 	cin >> toreturn.first >> toreturn.second;
-
-	return toreturn;
+	while (toreturn.first >  10 || toreturn.second > 10 || toreturn.first < 1 || toreturn.second< 1 ) // should be grid->height, grid ->length
+	{
+		cout << "Coordinates out of range, retype" << endl;
+		cin >> toreturn.first >> toreturn.second;
+	}
+	return coords(toreturn.first-1, toreturn.second-1);
 
 }
