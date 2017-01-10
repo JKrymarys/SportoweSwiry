@@ -1,27 +1,28 @@
 #ifndef GAME_H_
 #define GAME_H_
 
-#include <vector>
 #include "PLAYER.H"
-#include "GAME.H"
-
-using namespace std;
+#include <vector>
 
 class Game
 {
 public:
-	Game(int max_rounds, string player1, string player2);
-	void StartGame(int _round_limit);
-	void AddPlayer(string type);
+	Game(int max_rounds, string player1, string player2, bool TextUI);
+	void StartGame();
+	void AddPlayer( string type, Grid* grid_player, Grid* grid_oponent, bool text_mode);
 	void PlayRound();
 	void EndGame();
 	int getCurrentRound();
 	int getMaxRound();
+	void PrintGrid(bool first_grid);
 
 private:
 	int RoundCount;
-	int ROUND_LIMIT;
+	int RoundMAX;
 	vector<Player*> Players;
+	IUserInterface * UI;
+	Grid* grid_player1;
+	Grid* grid_player2;
 };
 
 #endif

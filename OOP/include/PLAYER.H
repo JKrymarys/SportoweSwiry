@@ -5,67 +5,64 @@
 #include <vector>
 #include "SHIP.H"
 #include "ComputerStrategies.h"
+#include <string>
+class IUserInterface;
 
-
-using namespace std;
-
-
-
-class HumanInterface {
-public:
-	void getShipLocation(int size_of_ship);
-	int SelectShip(); // returns type o ship
-	coords getTargetLocation();
-	coords getCoords(); // used to place ships
-
-};
 
 class Player
 {
 public:
-	Player() {};
-	bool virtual SetShip(int ship_type) = 0;
+	Player(Grid* grid_player, Grid* grid_oponent) : player_grid(grid_player), oponent_grid(grid_oponent) {};
+	void  Set_Player_Ships();
 	coords virtual SelectTarget(Ship * usedship) = 0;
-	virtual Ship*  SelectShip() = 0; //dlaczego nie moge utwrzyc jej jako virtual ??
+	virtual Ship*  SelectShip() = 0; 
 	bool CanMove();
 	bool  hasShips();
-	virtual void Move();
-
+	virtual void Move() = 0;
 
 protected:
 	vector<Ship*> Ships;
-	Grid player_grid;
+	Grid *player_grid;
+	Grid *oponent_grid;
 	bool CrossCheck(const coords & c1, const coords & c2);
 	bool CrossCheck(const coords & c1, const coords & c2, const coords & c3);
+	virtual void SetThreeFunnelShip() = 0;
+	virtual void SetTwoFunnelShip() = 0;
+	virtual void SetOneFunnelShip() = 0;
+private:
 };
 
 class HumanPlayer :public Player {
 public:
-	HumanPlayer();
-	bool SetShip(int ship_type); // to improve
+	HumanPlayer(Grid* grid_player, Grid* grid_oponent, IUserInterface* UI) : Player(grid_player, grid_oponent), User_interface(UI) {}
 	Ship* SelectShip();
 	coords SelectTarget(Ship * usedship);
 	void Move();
-	char getGridFlag(int y, int x);
+	bool getGridFlag(int x, int y);
 protected:
-	HumanInterface User_interface;
+	IUserInterface* User_interface;
+	
+private:
+	void SetThreeFunnelShip();
+	void SetTwoFunnelShip();
+	void SetOneFunnelShip();
 };
 
-
-//text mode interface
 
 
 class ComputerPlayer :public Player
 {
 public:
-	ComputerPlayer(Strategy * strategy);
-	bool SetShip(int ship_type); // to improve
+	ComputerPlayer(Strategy * strategy_, Grid* grid_player, Grid* grid_oponent) : Player(grid_player, grid_oponent), strategy(strategy_) {}
 	Ship* SelectShip();
 	coords SelectTarget(Ship * usedship);
 	void Move();
+protected:
+	void SetThreeFunnelShip();
+	void SetTwoFunnelShip();
+	void SetOneFunnelShip();
 private:
 	Strategy * strategy;
-
 };
 
 #endif

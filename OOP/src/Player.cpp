@@ -1,5 +1,9 @@
 #include "PLAYER.H"
 #include <iostream>
+#include <vector>
+#include "SHIP.H"
+#include "ComputerStrategies.h"
+#include "TEXTUI.H"
 
 using namespace std;
 
@@ -8,6 +12,7 @@ using namespace std;
 	Player
 
 */
+
 
 
 bool Player::hasShips()
@@ -35,7 +40,7 @@ bool Player::CanMove()
 
 bool Player::CrossCheck(const coords & c1, const coords & c2)
 {
-	if ((c1.first == c2.first) || (c1.second == c2.second))
+	if (((c1.first == c2.first) || (c1.second == c2.second)) && (abs(c1.first + c1.second - c2.first - c2.second) == 1))
 		return true;
 	else
 		return false;
@@ -43,15 +48,36 @@ bool Player::CrossCheck(const coords & c1, const coords & c2)
 
 bool Player::CrossCheck(const coords & c1, const coords & c2, const coords & c3)
 {
-	if ((c1.first == c2.first == c3.first )|| (c1.second == c2.second == c3.second))
+	if (((c1.first == c2.first && c2.first == c3.first ) || (c1.second == c2.second && c2.second == c3.second)) && abs(c1.first + c1.second - c3.first - c3.second)==2)
 		return true;
 	else
 		return false;
 }
 
+void Player::Set_Player_Ships()
+{
+	SetThreeFunnelShip();
+	cout << "Three funnel ship done" << endl;
+	try {
+		SetTwoFunnelShip();
+	}
+	catch (Grid::bad_range br)
+	{
+		cout << br.what();
+		cout << br.bi_val().first << " " << br.bi_val().second << endl;
+	}
+	cout << "Two funnel ship done" << endl;
+	try {
+		SetOneFunnelShip();
 
-
-
+	}
+	catch (Grid::bad_range br)
+	{
+		cout << br.what();
+		cout << br.bi_val().first << " " << br.bi_val().second << endl;
+	}
+	cout << "One funnel ship done" << endl;
+}
 
 /*
 	ComputerPlayer
@@ -59,11 +85,6 @@ bool Player::CrossCheck(const coords & c1, const coords & c2, const coords & c3)
 */
 
 
-
-ComputerPlayer::ComputerPlayer(Strategy * _strategy)
-{
-	this->strategy = _strategy;
-}
 
 void ComputerPlayer::Move()
 {
@@ -74,53 +95,141 @@ void ComputerPlayer::Move()
 	
 	usedship->Shot(Target);
 }
-
-bool ComputerPlayer::SetShip(int ship_type) {
-	Ship* new_ship;
-	if(ship_type = ONE_FUNNEL_SHIP)
-		new_ship = new SingleFunnelShip(&player_grid);
-	else if (ship_type == TWO_FUNNEL_SHIP || ship_type == THREE_FUNNEL_SHIP)
-		new_ship = new MultiFunnelShip(&player_grid, ship_type);
-
-	coords* ship_location = new coords[ship_type];
-
-	enum Directions{horizontal, vertical};
-
+void ComputerPlayer::SetThreeFunnelShip()
+{
+	MultiFunnelShip * new_ship = new MultiFunnelShip(oponent_grid, THREE_FUNNEL_SHIP);
+	enum Directions {
+		HORIZONTALY = 0,
+		VERTICALLY = 1,
+	};
 	int direction = rand() % 2;
-	int x_begin;
-	int y_begin;
+	if (direction == HORIZONTALY)
+	{
+		int start_x = rand() % 8;
+		int y = rand() % 10;
+		Ships.push_back(new_ship);
+		new_ship->setCoords(coords(start_x, y), coords(start_x + 2, y));
+		for (int i = 0; i < new_ship->getLength(); i++)
+		{
+			player_grid->setPlace(new_ship, coords(start_x + i, y));
+
+		}
+	}
+	if (direction == VERTICALLY)
+	{
+		int start_y = rand() % 8;
+		int x = rand() % 10;
+		Ships.push_back(new_ship);
+		new_ship->setCoords(coords(x, start_y), coords(x, start_y + 2));
+		for (int i = 0; i < new_ship->getLength(); i++)
+		{
+			player_grid->setPlace(new_ship, coords(x ,start_y+i));
+
+		}
+	}
+
+}
+void ComputerPlayer::SetTwoFunnelShip()
+{
+	MultiFunnelShip * new_ship = new MultiFunnelShip(oponent_grid, TWO_FUNNEL_SHIP);
+	enum Directions {
+		HORIZONTALY = 0,
+		VERTICALLY = 1,
+	};
+	int direction = rand() % 2;
+	int LEFT_UPPER_CORNER_X; 
+	int LEFT_UPPER_CORNER_Y; 
+	int RIGHT_LOWER_CORNER_X;
+	int RIGHT_LOWER_CORNER_Y; 
+	if (direction == HORIZONTALY)
+	{
+		int start_x;
+		int y;
+		bool isOK;
+		do
+		{
+			isOK = true;
+			start_x = rand() % 9;
+			y = rand() % 10;
+			LEFT_UPPER_CORNER_X = (start_x - 1 < 0 ? 0 : start_x - 1);
+			LEFT_UPPER_CORNER_Y = (y - 1 < 0 ? 0 : y - 1);
+			RIGHT_LOWER_CORNER_X = (start_x + 2 > 9 ? 9 : start_x + 2);
+			RIGHT_LOWER_CORNER_Y = (y + 1 > 9 ? 9 : y + 1);
+			for (int i = LEFT_UPPER_CORNER_X; i <= RIGHT_LOWER_CORNER_X; i++)
+				for (int j = LEFT_UPPER_CORNER_Y; j <= RIGHT_LOWER_CORNER_Y ; j++)
+					if (!player_grid->isAvaliable(coords(i, j)))
+						isOK = false;
+
+		} while (!isOK);
+
+
+		Ships.push_back(new_ship);
+		new_ship->setCoords(coords(start_x, y), coords(start_x + 1, y));
+		for (int i = 0; i < new_ship->getLength(); i++)
+		{
+			player_grid->setPlace(new_ship, coords(start_x + i, y));
+
+		}
+	}
+	if (direction == VERTICALLY)
+	{
+		int start_y;
+		int x;
+		bool isOK; 
+		do
+		{
+			isOK = true;
+			start_y = rand() % 9;
+			x = rand() % 10;
+			LEFT_UPPER_CORNER_X = (x - 1 < 0 ? 0 : x - 1);
+			LEFT_UPPER_CORNER_Y = (start_y - 1 < 0 ? 0 : start_y - 1);
+			RIGHT_LOWER_CORNER_X = (x + 1 > 9 ? 9 : x + 1);
+			RIGHT_LOWER_CORNER_Y = (start_y + 2 > 9 ? 9 : start_y + 2);
+			for (int i = LEFT_UPPER_CORNER_X; i <= RIGHT_LOWER_CORNER_X; i++)
+				for (int j = LEFT_UPPER_CORNER_Y; j <= RIGHT_LOWER_CORNER_Y; j++)
+					if (!player_grid->isAvaliable(coords(i, j)))
+						isOK = false;
+		} while (!isOK);
+
+		Ships.push_back(new_ship);
+		new_ship->setCoords(coords(x, start_y), coords(x, start_y+1));
+		for (int i = 0; i < new_ship->getLength(); i++)
+		{
+			player_grid->setPlace(new_ship, coords(x, start_y + i));
+
+		}
+	}
+}
+void ComputerPlayer::SetOneFunnelShip()
+{
+	SingleFunnelShip * new_ship = new SingleFunnelShip(oponent_grid);
+	int x;
+	int y;
+	bool isOK;
+	int LEFT_UPPER_CORNER_X;
+	int LEFT_UPPER_CORNER_Y;
+	int RIGHT_LOWER_CORNER_X;
+	int RIGHT_LOWER_CORNER_Y;
 	do
 	{
-		ship_location[0].first = rand() % 11;
-		ship_location[0].second = rand() % 11;
-	} while (player_grid.isAvaliable(ship_location[0]));
+		isOK = true;
+		x = rand() % 10;
+		y = rand() % 10;
+		LEFT_UPPER_CORNER_X = (x - 1 < 0 ? 0 : x - 1);
+		LEFT_UPPER_CORNER_Y = (y - 1 < 0 ? 0 : y - 1);
+		RIGHT_LOWER_CORNER_X = (x + 1 > 9 ? 9 : x + 1);
+		RIGHT_LOWER_CORNER_Y = (y + 1 > 9 ? 9 : y + 1);
+		for (int i = LEFT_UPPER_CORNER_X; i <= RIGHT_LOWER_CORNER_X; i++)
+			for (int j = LEFT_UPPER_CORNER_Y; j <= RIGHT_LOWER_CORNER_Y; j++)
+				if (!player_grid->isAvaliable(coords(i, j)))
+					isOK = false;
+	} while (!isOK);
+	Ships.push_back(new_ship);
+	new_ship->setCoords(coords(x, y), coords(x, y));
+	player_grid->setPlace(new_ship, coords(x, y));
 	
-	if (ship_type == TWO_FUNNEL_SHIP || ship_type == THREE_FUNNEL_SHIP)
-	{
-		if (direction == horizontal)
-		{
-			if (player_grid.isAvaliable(coords(x_begin + 1, y_begin)))
-				ship_location[1] = coords(x_begin + 1, y_begin);
-		}
-
-		else
-			ship_location[1] = coords(x_begin, y_begin + 1);
-	
-	}
-	
-
-	
-	this->Ships.push_back(new_ship);//add ship to the vector
-	new_ship->setCoords(ship_location[0], ship_location[ship_type - 1]);
-
-	for (int i = 0; i < ship_type; i++)
-	{
-		player_grid.setPlace(new_ship, ship_location[i]);
-
-	}
-
-	return true;
 }
+
 
 Ship* ComputerPlayer::SelectShip()
 {
@@ -128,8 +237,9 @@ Ship* ComputerPlayer::SelectShip()
 	//tymczasowo
 }
 
+
 coords ComputerPlayer::SelectTarget(Ship* usedship) {
-	return strategy->getTargetLocation((*usedship), this->player_grid);
+	return strategy->getTargetLocation((*usedship), *player_grid);
 }
 
 /*
@@ -139,10 +249,6 @@ coords ComputerPlayer::SelectTarget(Ship* usedship) {
 
 
 
-HumanPlayer::HumanPlayer() {
-
-	cout << "created" << endl;
-}
 
 void HumanPlayer::Move()
 {
@@ -163,11 +269,11 @@ void HumanPlayer::Move()
 
 coords HumanPlayer::SelectTarget(Ship * usedship)
 {
-	return User_interface.getTargetLocation();
+	return User_interface->getTargetLocation();
 }
 
 Ship* HumanPlayer::SelectShip() {
-	int type = User_interface.SelectShip();
+	int type = User_interface->SelectShip();
 	
 	for (auto i : Ships)
 	{
@@ -179,97 +285,140 @@ Ship* HumanPlayer::SelectShip() {
 }
 
 
-// getPair to grid, and allote there adress coresponding to proper ship
 
-// Trzeba jeszcze dodac sprawdzanie czy nie chce stawiac po przekatnej
-
-bool HumanPlayer::SetShip(int ship_type) {
-	Ship* new_ship;
-
-	if (ship_type = ONE_FUNNEL_SHIP)
-		new_ship = new SingleFunnelShip(&player_grid);
-	else if (ship_type == TWO_FUNNEL_SHIP || ship_type == THREE_FUNNEL_SHIP)
-		new_ship = new MultiFunnelShip( &player_grid, ship_type);
-	
-	coords* ship_location = new coords[ship_type];
-	
-	for (int i = 0; i < ship_type; i++)
-	{
-		ship_location[i] = User_interface.getCoords();
-		if (!player_grid.isAvaliable(ship_location[i]))
-		{
-			cout << "This place is not avaliable" << endl;
-			return false;
-		}
-		if (i == 1 && (!CrossCheck(ship_location[0], ship_location[1]))) // sprawdzalem jesli nie sprawdzi sie pierwszy warunek nie bedzie probowal sprawdzic drugiego
-		{
-			cout << "You cannot place your ship across";
-			return false;
-		}
-		if (i == 2 && (!CrossCheck(ship_location[0], ship_location[1], ship_location[2])))
-		{
-			cout << "You cannot place your ship across";
-			return false;
-		}
-			
-	}
-
-	this->Ships.push_back(new_ship);//add ship to the vector
-	new_ship->setCoords( ship_location[0], ship_location[ship_type-1]);
-
-	for (int i = 0; i < ship_type; i++)
-	{
-		player_grid.setPlace(new_ship, ship_location[i]);
-		
-	}
-
-	return true;
-		
-}
-
-
-
-/*
-
-	HumanInterface
-
-*/
-
-int HumanInterface::SelectShip()
+void HumanPlayer::SetOneFunnelShip()
 {
-	int ship_id = -1;
-	cout << "Choose ship:" << endl;
-	
-	do{
-		cin >> ship_id;
-	} while (ship_id != 1 || ship_id != 2 || ship_id != 3);
-
-	
-	return ship_id;
-}
-
-coords HumanInterface::getTargetLocation() {
-
-	int x, y;
-	
-	cout << "Type coordinates x,y" << endl;
-	cin >> x >> y;
-	while (x > 10 || y > 10) // should be grid->height, grid ->length
+	Ship* new_ship = new SingleFunnelShip(player_grid);
+	coords ship_location;
+	bool isOK;
+	User_interface->PrintText("Set One Funnel Ship");
+	do
 	{
-		cout << "Coordinates out of range, retype";
-		cin >> x >> y;
+		ship_location = User_interface->getCoords();
+		isOK = true;
+		for (int x = (ship_location.first - 1) < 0 ? 0 : ship_location.first - 1; x <= ((ship_location.first + 1) > 9 ? 9 : ship_location.first +1) && isOK; ++x)
+			for (int y = (ship_location.second - 1) < 0 ? 0 : ship_location.second - 1; y <= ((ship_location.second + 1) > 9 ? 9 : ship_location.second) && isOK; ++y)
+				if (!player_grid->isAvaliable(coords(x, y)))
+				{
+					isOK = false;
+					cout << "Not avaliable" << endl;
+				}
+	} while (!isOK);
+
+	Ships.push_back(new_ship);
+	new_ship->setCoords(ship_location, ship_location);
+	player_grid->setPlace(new_ship, ship_location);
+	User_interface->PrintText("One Funnel Ship has been set");
+}
+
+void HumanPlayer::SetTwoFunnelShip()
+{
+	User_interface->PrintText("Set Two Funnel Ship");
+	Ship* new_ship = new SingleFunnelShip(player_grid);
+	coords* ship_location = new coords[TWO_FUNNEL_SHIP];
+	bool isOK;
+	for (int it = 0; it < TWO_FUNNEL_SHIP; ++it)
+	{
+		do
+		{
+
+			isOK = true;
+			ship_location[it] = User_interface->getCoords();
+
+			if (it == 1 && ship_location[it] == ship_location[0]) 
+			{ 
+				User_interface->PrintText("Choose field next to"); 
+				isOK = false; 
+			}
+			else 
+			{
+				 if (it == TWO_FUNNEL_SHIP - 1 && !CrossCheck(ship_location[0], ship_location[1]))
+					{
+						User_interface->PrintText("Cross check failed");
+						isOK = false;
+					}
+			}
+
+			if (isOK)
+			{
+
+				for (int x = (ship_location[it].first - 1) < 0 ? 0 : ship_location[it].first - 1; x <= ((ship_location[it].first + 1) > 9 ? 9 : ship_location[it].first + 1) && isOK; ++x)
+					for (int y = (ship_location[it].second - 1) < 0 ? 0 : ship_location[it].second -1; y <= ((ship_location[it].second + 1) > 9 ? 9 : ship_location[it].second + 1) && isOK; ++y)
+					{
+						cout << "Test if field is avaliable: " << x << " " << y << endl;
+						if (!player_grid->isAvaliable(coords(x, y)))
+						{
+							isOK = false;
+							User_interface->PrintText("Field is not avaliable");
+						}
+
+					}
+			}
+
+		} while (!isOK);
 	}
+	Ships.push_back(new_ship);
+	
+	new_ship->setCoords(ship_location[0], ship_location[1]);
+	for(int i = 0; i< TWO_FUNNEL_SHIP; ++i)
+		player_grid->setPlace(new_ship, ship_location[i]);
 
-	return coords(x, y);
 
+	User_interface->PrintText("Two Funnel Ship has been set");
 }
 
-coords HumanInterface::getCoords() {
-	coords toreturn;
+void HumanPlayer::SetThreeFunnelShip()
+{
+	User_interface->PrintText("Set Three Funnel Ship");
+	Ship* new_ship = new SingleFunnelShip(player_grid);
+	coords* ship_location = new coords[THREE_FUNNEL_SHIP];
+	bool isOK;
+	for (int it = 0; it < THREE_FUNNEL_SHIP; ++it)
+	{
+		do
+		{
+			isOK = true;
+			ship_location[it] = User_interface->getCoords();
 
-	cout << "Type coordinates x, y " << endl;
-	cin >> toreturn.first >> toreturn.second;
+			if (it == 1 && ship_location[it] == ship_location[0]) { User_interface->PrintText("Choose field next to"); isOK = false; }
+			else if (it == 2 && (ship_location[it] == ship_location[0] || ship_location[it] == ship_location[1])) { User_interface->PrintText("Choose field next to"); isOK = false; }
+			else {
 
-	return toreturn;
+				if (it == THREE_FUNNEL_SHIP - 2 && !CrossCheck(ship_location[0], ship_location[1]))
+				{
+					User_interface->PrintText("Cross check failed");
+					isOK = false;
+				}
+				else if (it == THREE_FUNNEL_SHIP - 1 && !CrossCheck(ship_location[0], ship_location[1], ship_location[2]))
+				{
+					cout << ship_location[0].first <<" "<< ship_location[0].second << endl;
+					cout << ship_location[1].first << " " << ship_location[1].second << endl;
+					cout << ship_location[2].first << " " << ship_location[2].second << endl;
+					cout << (bool)CrossCheck(ship_location[0], ship_location[1], ship_location[2]) << endl;
 
+					User_interface->PrintText("Cross check failed");
+					isOK = false;
+				}
+			}
+		
+		} while (!isOK);
+
+		cout << "coord set" << endl;
+	}
+	Ships.push_back(new_ship);
+
+	new_ship->setCoords(ship_location[0], ship_location[2]);
+	for (int i = 0; i< THREE_FUNNEL_SHIP; ++i)
+		player_grid->setPlace(new_ship, ship_location[i]);
+
+
+	User_interface->PrintText("Three Funnel Ship has been set");
 }
+
+
+bool HumanPlayer::getGridFlag(int x, int y)
+{
+	return player_grid->wasShot(coords(x,y));
+}
+
+
