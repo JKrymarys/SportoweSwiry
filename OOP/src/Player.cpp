@@ -277,22 +277,23 @@ coords ComputerPlayer::SelectTarget(Ship* usedship) {
 void HumanPlayer::Move()
 {
 	Ship * usedship;
-	do{
-	 usedship = SelectShip();
-	} while (usedship == nullptr);
-	cout << "Debug: usedship = " << usedship->getType() << endl;
-	// select ship should return nullptr if user wanted to use ship that can't shot 
-	coords Target;
 	do
+	{
+		usedship = SelectShip();
+	} while (usedship == nullptr);
+	
+	// select ship should return nullptr if user wanted to use ship that can't shot 
+	coords Target = SelectTarget(usedship);
+	
+	while (!usedship->isTargetInRange(Target))
 	{
 		User_interface->PrintText("Given coordinates are not in range of choosen ship");
 		Target = SelectTarget(usedship);
-
-	} while (!usedship->isTargetInRange(Target));
-	cout << "Shoooooooooot" << endl;
+	} 
+	
 	try
 	{
-	usedship->Shot(Target);
+		usedship->Shot(Target);
 	}
 	catch (Ship::bad_coordinates err)
 	{
@@ -321,11 +322,9 @@ Ship* HumanPlayer::SelectShip()
 	
 	for (auto i : Ships)
 	{
-		cout << "humanPlayer->selectship type " << i->getType() << endl;
-
+		
 		if (i->getType() == type && i->CanShoot())
 		{
-			cout << "OK" << endl;
 			return i;
 		}
 	}
