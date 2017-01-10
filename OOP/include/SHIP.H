@@ -1,7 +1,9 @@
 #ifndef SHIP_H_
 #define SHIP_H_
 #include <utility>
+#include <stdexcept>
 #include "GRID.H"
+
 
 enum Ship_types
 {
@@ -13,10 +15,6 @@ enum Ship_types
 class Ship {
 public:
 	Ship(int _Lives, int _Length, int remaining_shots, Grid * p_grid); // http://stackoverflow.com/questions/18479295/member-initializer-does-not-name-a-non-static-data-member-or-base-class
-	bool CanShoot();
-	bool isTargetInRange(coords coordinates); // to check
-	virtual void Shot(coords coordinates);
-	Ship(int _Lives, int _Length, int remaining_shots, Grid * p_grid);
 	void getHit();
 	int getLives() { return Lives; }
 	int getRemainingShoots() { return RemainingShoots; }
@@ -32,7 +30,22 @@ public:
 	virtual void Reset() = 0;
 	int getLength() { return Lenght; }
 	int getType() { return type; }
-	bool isTargetInRange(coords coordinates);
+	bool isTargetInRange(coords coordinates); // to check
+	class bad_coordinates : public std::logic_error
+	{
+	private:
+		coords crd;
+	public:
+		explicit bad_coordinates(coords crd, const std::string & s = "Bad coordinates error\n");
+		coords crd_val() const { return crd; }
+		virtual ~bad_coordinates() {};
+	};
+	class ship_error : public std::logic_error
+	{
+	public:
+		explicit ship_error(const std::string & s = "Ship error error\n") : std::logic_error(s) {}
+		virtual ~ship_error() {};
+	};
 protected:
 	int Lives;
 	int RemainingShoots;
@@ -49,7 +62,6 @@ class SingleFunnelShip : public Ship
 {
 public:
 	SingleFunnelShip(Grid* p_grid);
-	
 	void Reset();
 
 };
