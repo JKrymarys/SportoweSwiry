@@ -3,6 +3,12 @@
 #include<algorithm>
 
 
+Ship::Ship(int _Lives, int _Length, int remaining_shots, Grid * p_grid) : 
+	Lives(_Lives), Lenght(_Length), RemainingShoots(remaining_shots), grid(p_grid)
+{
+
+}
+
 
 bool Ship::hasAvailableMove()
 {
@@ -99,12 +105,8 @@ int Ship::getLength()
 
 
 
-SingleFunnelShip::SingleFunnelShip( Grid* p_grid) {
-	
-	this->grid = p_grid;
-	this->Lives = 1;
-	this->Lenght = 1;
-	this->RemainingShoots = 1;
+SingleFunnelShip::SingleFunnelShip( Grid* p_grid) : 
+	Ship(1, 1, 1, p_grid) {
 }
 
 void SingleFunnelShip::Reset() {
@@ -115,12 +117,8 @@ void SingleFunnelShip::Reset() {
 
 
 
-MultiFunnelShip::MultiFunnelShip(Grid* p_grid,int  ship_type) {
-	this->grid = p_grid;
-	this->Lives = 1;
-	this->Lenght = 1;
-	this->RemainingShoots = ship_type - 1;
-	this->TakenShots = 0;
+MultiFunnelShip::MultiFunnelShip(Grid* p_grid, int  ship_type) : 
+	Ship(1, ship_type + 1, ship_type - 1, p_grid) , TakenShots(0) {
 }
 
 void MultiFunnelShip::Reset() {
