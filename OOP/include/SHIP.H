@@ -26,8 +26,8 @@ public:
 	bool CanShoot();
 	virtual void Shot(coords coordinates);
 	virtual void Reset() = 0;
-	int getLength() { return Lenght; }
-	int getType() { return type; }
+	int getLength() { return this->Lenght; }
+	int getType() { return this->type; }
 	bool isTargetInRange(coords coordinates);
 protected:
 	int Lives;

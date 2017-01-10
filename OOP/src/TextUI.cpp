@@ -26,13 +26,14 @@ void TextUI::PrintText(string string)
 
 int TextUI::SelectShip()
 {
-	int ship_id = 1;
-	cout << "Choose ship:" << endl;
-	
-	/*while (ship_id != 1 || ship_id != 2 || ship_id != 3)
+	int ship_id;
+	do
 	{
+		cout << "Choose ship:" << endl;
+		cin.clear();
 		cin >> ship_id;
-	}*/
+
+	} while (ship_id > 3 || ship_id < 0);
 
 	cout << "You have chosen ship: " << ship_id << endl;
 	return ship_id;
