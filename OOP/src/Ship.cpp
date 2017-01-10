@@ -5,6 +5,7 @@
 SHIP
 */
 
+
 Ship::Ship(int _Lives, int _Length, int remaining_shots, Grid * p_grid) :
 	Lives(_Lives), Lenght(_Length), RemainingShoots(remaining_shots), grid(p_grid)
 {
@@ -87,6 +88,7 @@ bool Ship::isTargetInRange(coords target) {
 SINGLE_FUNNEL_SHIP
 */
 
+
 SingleFunnelShip::SingleFunnelShip(Grid* p_grid) :
 	Ship(1, 1, 1, p_grid){
 }
@@ -110,7 +112,6 @@ void MultiFunnelShip::Shot(coords target)
 	TakenShots++;
 	RemainingShoots--;
 
-}
 
 void MultiFunnelShip::Reset() {
 	if (TakenShots == 2)

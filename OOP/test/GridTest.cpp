@@ -45,12 +45,5 @@ BOOST_AUTO_TEST_CASE(isAvaliableExcepctionTest)
 }
 
 
-BOOST_AUTO_TEST_CASE(setPlaceTest)
-{
-	Ship * testship;
-	coords teestcoords_1_1(1, 1);
-	testgrid.setPlace(testship, teestcoords_1_1);
-	BOOST_CHECK_EQUAL(testgrid.isAvaliable(teestcoords_1_1), false);
-}
 
 BOOST_AUTO_TEST_SUITE_END()
