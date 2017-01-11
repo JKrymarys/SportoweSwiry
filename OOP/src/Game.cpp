@@ -27,12 +27,13 @@ Game::Game(int max_rounds, string player1, string player2, bool UI_text) {
 	AddPlayer(player1,grid1,grid2, UI_text);
 	AddPlayer(player2,grid2,grid1, UI_text);
 	
-	for each (Player* pl in Players)
+	
+	for (auto i : Players)
 	{
-		pl->Set_Player_Ships();
+		i->Set_Player_Ships();	
 	}
 
-	//Players.at(1)->Set_Player_Ships();
+	
 	cout << "DEBUG:: game constructor done" << endl;
 	try {
 		cout << "Player Grid:" << endl;
