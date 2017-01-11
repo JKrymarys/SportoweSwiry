@@ -12,13 +12,12 @@ Game::Game(int max_rounds, string player1, string player2, bool UI_text) {
 	if (UI_text)
 	{
 		ptr = new TextUI;
-		cout << "done" << endl;
 	}
 	//else
 	//GUI _UI;
 	this->UI = ptr;
 	
-	this->RoundCount = 0;
+	this->RoundCount = 1;
 	this->RoundMAX = max_rounds;
 	Grid * grid1 = new Grid();
 	Grid * grid2 = new Grid();
@@ -27,14 +26,12 @@ Game::Game(int max_rounds, string player1, string player2, bool UI_text) {
 	AddPlayer(player1,grid1,grid2, UI_text);
 	AddPlayer(player2,grid2,grid1, UI_text);
 	
-	
-	for (auto i : Players)
+	for each (Player* pl in Players)
 	{
-		i->Set_Player_Ships();	
+		pl->Set_Player_Ships();
 	}
 
 	
-	cout << "DEBUG:: game constructor done" << endl;
 	try {
 		cout << "Player Grid:" << endl;
 		PrintGrid(true);
@@ -60,12 +57,11 @@ int Game::getMaxRound() {
 
 void Game::StartGame()
 {
-	cout << "DEBUG: start StartGame" << endl;
 	bool if_continue = true;
 
+	this->UI->PrintText("****************** \n Round no. : " + to_string(getCurrentRound()) + "\n");
+
 	while (if_continue)
-	{
-		cout << "round: " << RoundCount << endl;
 			PlayRound();
 		for (auto i : Players)
 		{
@@ -76,12 +72,10 @@ void Game::StartGame()
 		if (RoundCount >= RoundMAX)
 			if_continue = false;
 
-		cout << "check1" << endl;
 		//case 2: one of the players has lost its last ship
 		if(!Players[0]->hasShips() || !Players[1]->hasShips())
 			if_continue = false;
 
-		cout << "check2" << endl;
 		//case 3: no more avaliable shots
 		for (auto i : Players)
 		{
@@ -90,8 +84,6 @@ void Game::StartGame()
 		}
 
 		RoundCount++;
-	}
-	cout << "DEBUG: end StartGame" << endl;
 }
 
 
@@ -129,12 +121,12 @@ void Game::AddPlayer(string type, Grid* grid_player, Grid* grid_oponent, bool te
 
 void Game::PlayRound()
 {
-	cout << "DEBUG: start PlayRound no:" <<RoundCount<< endl;
+ 
 	while (Players.at(0)->CanMove() || Players.at(1)->CanMove())
 	{
-		cout << "Player grid" << endl;
+		cout << "Player grid \n ----------------" << endl;
 		PrintGrid(true);
-		cout << "Computer grid" << endl;
+		cout << "Computer grid \n ----------------" << endl;
 		PrintGrid(false);
 
 
@@ -143,7 +135,7 @@ void Game::PlayRound()
 		if (Players.at(1)->CanMove())
 			Players.at(1)->Move();
 
-		cout << "Can Move: P1 " << Players.at(0)->CanMove() << "P2: " << Players.at(0)->CanMove() << endl;
+		cout << "DEBUG:    Can Move: P1 " << Players.at(0)->CanMove() << "P2: " << Players.at(0)->CanMove() << endl;
 	}
 }
 

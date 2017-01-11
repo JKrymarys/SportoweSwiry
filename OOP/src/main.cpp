@@ -12,7 +12,7 @@ int main() {
 	
 	srand(time(NULL));
 	Game game(10,"human","greedy",true);
-//	game.StartGame();
+
 
 	return 0;
 }
