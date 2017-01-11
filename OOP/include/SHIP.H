@@ -18,6 +18,7 @@ public:
 	void getHit();
 	int getLives() { return Lives; }
 	int getRemainingShoots() { return RemainingShoots; }
+	void SetRemainingShoots(int n) { RemainingShoots = n; }
 	int getXbegin() { return x_begin; }
 	int getXend() { return x_end; }
 	int getYbegin() { return y_begin; }

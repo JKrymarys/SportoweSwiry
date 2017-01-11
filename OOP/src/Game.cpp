@@ -3,6 +3,7 @@
 #include <iostream>
 #include <memory>
 #include <vector>
+#include <fstream>
 
 
 
@@ -26,9 +27,9 @@ Game::Game(int max_rounds, string player1, string player2, bool UI_text) {
 	AddPlayer(player1,grid1,grid2, UI_text);
 	AddPlayer(player2,grid2,grid1, UI_text);
 	
-	for each (Player* pl in Players)
+	for (auto i : Players)
 	{
-		pl->Set_Player_Ships();
+		i->Set_Player_Ships();
 	}
 
 	
@@ -43,8 +44,71 @@ Game::Game(int max_rounds, string player1, string player2, bool UI_text) {
 		cout << br.what() << endl;
 		cout << br.bi_val().first << " " << br.bi_val().second;
 	}
-
+	SaveToFile();
 	this->StartGame();
+}
+
+Game::Game(bool UI_text)
+{
+	IUserInterface*  ptr = nullptr;
+	if (UI_text)
+	{
+		ptr = new TextUI;
+	}
+	//else
+	//GUI _UI;
+	this->UI = ptr;
+	ifstream GameStateFile("GameStateSave.txt");
+	char data_char;
+	int data_int;
+	string line;
+	int line_count;
+	Grid * grid1 = new Grid();
+	Grid * grid2 = new Grid();
+	grid_player1 = grid1;
+	grid_player2 = grid2;
+	if (GameStateFile.is_open())
+	{
+		GameStateFile >> RoundCount;
+		GameStateFile.get();
+		GameStateFile >> RoundMAX;
+		GameStateFile.get();
+		getline(GameStateFile, line);
+		if (line == "greedy")
+			AddPlayer("greedy", grid1, grid2, UI_text);
+		else if(line == "random")
+			AddPlayer("random", grid1, grid2, UI_text);
+		else if (line == "human")
+			AddPlayer("human", grid1, grid2, UI_text);
+		else
+			throw Game::Load_From_File_Error();
+		getline(GameStateFile, line);
+		if (line == "greedy")
+			AddPlayer("greedy", grid2, grid1, UI_text);
+		else if (line == "random")
+			AddPlayer("random", grid2, grid1, UI_text);
+		else if (line == "human")
+			AddPlayer("human", grid2, grid1, UI_text);
+		else
+			throw Game::Load_From_File_Error();
+
+	}
+	Players.at(0)->Set_Player_Ships_From_File("Player1Grid.txt");
+	Players.at(1)->Set_Player_Ships_From_File("Player2Grid.txt");
+	try {
+		cout << "Player Grid:" << endl;
+		PrintGrid(true);
+		cout << "Computer grid" << endl;
+		PrintGrid(false);
+	}
+	catch (Grid::bad_range br)
+	{
+		cout << br.what() << endl;
+		cout << br.bi_val().first << " " << br.bi_val().second;
+	}
+	SaveToFile();
+	this->StartGame();
+
 }
 
 int Game::getCurrentRound() {
@@ -142,4 +206,90 @@ void Game::PlayRound()
 void Game::PrintGrid(bool first_grid)
 {
 	first_grid ? UI->printGrid(grid_player1) : UI->printGrid(grid_player2);
+}
+
+
+void Game::SaveToFile()
+{
+	ofstream GameState("GameStateSave.txt");
+	ofstream Player1Grid("Player1Grid.txt");
+	ofstream Player2Grid("Player2Grid.txt");
+	GameState << RoundCount << endl;
+	GameState << RoundMAX << endl;
+	HumanPlayer * hpl;
+	ComputerPlayer * cpl;
+	Strategy * str;
+	for (int i = 0; i < Players.size(); i++)
+	{
+		hpl = dynamic_cast<HumanPlayer*>(Players.at(i));
+		if (hpl != nullptr)
+			GameState << "human" << endl;
+		else
+		{
+			cpl = dynamic_cast<ComputerPlayer*>(Players.at(i));
+			str = dynamic_cast<Greedy_strategy*>(cpl->getStrategy());
+			if (str != nullptr)
+				GameState << "greedy" << endl;
+			else
+				GameState << "random" << endl;
+		}
+	}
+	/*
+
+	for (int i = 0; i < 10; i++)
+	{
+		for (int j = 0; j < 10; j++)
+		{
+			if (grid_player1->isAvaliable(coords(j, i)))
+				Player1Grid << '0';
+			else
+				Player1Grid << grid_player1->getShip(coords(j, i))->getType();
+			Player1Grid << " ";
+		}
+		Player1Grid << endl;
+	}
+
+	for (int i = 0; i < 10; i++)
+	{
+		for (int j = 0; j < 10; j++)
+		{
+			if (grid_player1->wasShot(coords(j, i)))
+				Player1Grid << '*';
+			else
+				Player1Grid << '#';
+			Player1Grid << " ";
+		}
+		Player1Grid << endl;
+	}
+	
+	for (int i = 0; i < 10; i++)
+	{
+		for (int j = 0; j < 10; j++)
+		{
+			if (grid_player2->isAvaliable(coords(j, i)))
+				Player2Grid << '0';
+			else
+				Player2Grid << grid_player2->getShip(coords(j, i))->getType();
+			Player2Grid << " ";
+		}
+		Player2Grid << endl;
+	}
+	
+
+	for (int i = 0; i < 10; i++)
+	{
+		for (int j = 0; j < 10; j++)
+		{
+			if (grid_player2->wasShot(coords(j, i)))
+				Player2Grid << '*';
+			else
+				Player2Grid << '#';
+			Player2Grid << " ";
+		}
+		Player2Grid << endl;
+	}
+
+	*/
+	Players.at(0)->Save_Info_To_File(0);
+	Players.at(1)->Save_Info_To_File(1);
 }

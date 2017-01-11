@@ -42,6 +42,7 @@ public:
 	void setPlace(Ship* ship, coords);
 	void HitOrMiss(coords);
 	bool wasShot(coords);
+	Ship * getShip(coords crd) { return Places[crd.first][crd.second].ShipHere; }
 	
 };
 
