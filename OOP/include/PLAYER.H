@@ -18,10 +18,10 @@ public:
 	void Save_Info_To_File(int player_index);
 	coords virtual SelectTarget(Ship * usedship) = 0;
 	virtual Ship*  SelectShip() = 0; 
-	bool CanMove();
+	virtual bool CanMove() = 0;
 	bool  hasShips();
 	virtual void Move() = 0;
-	void Reset();
+	virtual void Reset() = 0;
 
 protected:
 	vector<Ship*> Ships;
@@ -37,13 +37,16 @@ private:
 
 class HumanPlayer :public Player {
 public:
-	HumanPlayer(Grid* grid_player, Grid* grid_oponent, IUserInterface* UI) : Player(grid_player, grid_oponent), User_interface(UI) {}
+	HumanPlayer(Grid* grid_player, Grid* grid_oponent, IUserInterface* UI) : Player(grid_player, grid_oponent), User_interface(UI), wantToMove(true) {}
 	Ship* SelectShip();
 	coords SelectTarget(Ship * usedship);
 	void Move();
 	bool getGridFlag(int x, int y);
+	bool CanMove();
+	void Reset();
 protected:
 	IUserInterface* User_interface;
+	bool wantToMove;
 	
 private:
 	void SetThreeFunnelShip();
@@ -60,7 +63,9 @@ public:
 	Ship* SelectShip();
 	coords SelectTarget(Ship * usedship);
 	void Move();
+	bool CanMove();
 	Strategy * getStrategy() { return strategy; }
+	void Reset();
 protected:
 	void SetThreeFunnelShip();
 	void SetTwoFunnelShip();

@@ -28,7 +28,7 @@ bool Player::hasShips()
 
 }
 
-bool Player::CanMove()
+bool ComputerPlayer::CanMove()
 {
 	for (auto i : Ships)
 	{
@@ -37,6 +37,21 @@ bool Player::CanMove()
 	}
 	//if not
 	return false;
+}
+
+bool HumanPlayer::CanMove()
+{
+	bool to_return = false;
+	for (auto i : Ships)
+	{
+		if (i->CanShoot())
+			to_return = true;
+	}
+
+	if (to_return && (wantToMove == false))
+		to_return = false;
+	//if not
+	return to_return;
 }
 
 bool Player::CrossCheck(const coords & c1, const coords & c2)
@@ -80,7 +95,7 @@ void Player::Set_Player_Ships()
 	cout << "One funnel ship done" << endl;
 }
 
-void Player::Reset()
+void ComputerPlayer::Reset()
 {
 	for (auto i : Ships)
 	{
@@ -429,6 +444,14 @@ coords ComputerPlayer::SelectTarget(Ship* usedship) {
 
 
 
+void HumanPlayer::Reset()
+{
+	for (auto i : Ships)
+	{
+		i->Reset();
+	}
+	this->wantToMove = true;
+}
 
 void HumanPlayer::Move()
 {
@@ -463,10 +486,12 @@ void HumanPlayer::Move()
 			if (!User_interface->getBool())
 			{
 				if_continue = false;
+				this->wantToMove = false;
 				break; //if user has shot from every ship and dont want to shot second time from multi funnel
 			}
 		}
-
+		
+		//choose ship
 		usedship = SelectShip();
 			
 		//if usedship is ready to lave loop, set flag
@@ -523,6 +548,7 @@ void HumanPlayer::Move()
 
 		cout << "End of shot" << endl;
 	}
+	cout << "					debug: End of MOVE" << endl;
 }
 
 coords HumanPlayer::SelectTarget(Ship * usedship)
