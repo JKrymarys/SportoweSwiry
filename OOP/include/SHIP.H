@@ -27,6 +27,7 @@ public:
 	bool isSunk();
 	bool hasAvailableMove();
 	bool CanShoot();
+	bool hasShot_thisRound() { return hasShot; }
 	virtual void Shot(coords coordinates);
 	virtual void Reset() = 0;
 	int getLength() { return Lenght; }
@@ -57,6 +58,7 @@ protected:
 	int Lenght;
 	int type;
 	Grid* grid;
+	bool hasShot;
 };
 
 class SingleFunnelShip : public Ship

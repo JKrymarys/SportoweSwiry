@@ -135,20 +135,28 @@ void Game::StartGame()
 
 		//case 1: last round played
 		if (RoundCount >= RoundMAX)
+		{
 			if_continue = false;
-
+			UI->PrintText("GAME END (Last round played)");
+		}
 		//case 2: one of the players has lost its last ship
 		if (!Players[0]->hasShips() || !Players[1]->hasShips())
+		{
 			if_continue = false;
+			UI->PrintText("GAME END (One of the players has run of the ships)");
+		}
 
 		//case 3: no more avaliable shots
 		for (auto i : Players)
 		{
 			if (!i->CanMove())
+			{
 				if_continue = false;
+				UI->PrintText("GAME END (None of the players has avaliable move)");
+			}
 		}
 
-		cout << "round count++" << endl;
+		//cout << "round count++" << endl;
 		this->RoundCount++;
 
 	}while (if_continue);
@@ -192,24 +200,23 @@ void Game::AddPlayer(string type, Grid* grid_player, Grid* grid_oponent, bool te
 void Game::PlayRound()
 {
 	bool if_continue = true;
+
 	while (((Players.at(0)->CanMove() || Players.at(1)->CanMove())) && if_continue)
 	{
 		this->UI->PrintText("****************** \n Round no. : " + to_string(getCurrentRound()) + "\n");
 
+		//debug
 		cout << "Player grid \n ----------------" << endl;
 		PrintGrid(true);
 		cout << "Computer grid \n ----------------" << endl;
 		PrintGrid(false);
+		//debug
 
-		Players.at(0);
-
-		//first move have to be done
+		//first move has to be done
 		if (Players.at(0)->CanMove())
 			Players.at(0)->Move();
 		if (Players.at(1)->CanMove())
 			Players.at(1)->Move();
-
-
 
 			//for next move ask user if he wants to continue
 		//check if any of players is human
@@ -233,8 +240,6 @@ void Game::PlayRound()
 
 	}
 
-
-	
 }
 
 void Game::PrintGrid(bool first_grid)
@@ -326,4 +331,17 @@ void Game::SaveToFile()
 	*/
 	Players.at(0)->Save_Info_To_File(0);
 	Players.at(1)->Save_Info_To_File(1);
+}
+
+//1 - max rounds; 2 - player lost; 3 - no more moves
+void Game::EndGame(int reason)
+{
+	UI->PrintText("*************** \n Summary of game: \n\n");
+	UI->PrintText("Grid of player 1:");
+	PrintGrid(true);
+	UI->PrintText("Grid of player 2:");
+	PrintGrid(false);
+
+
+	UI->PrintText("Thank you for playing! ");
 }

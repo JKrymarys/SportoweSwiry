@@ -433,23 +433,52 @@ coords ComputerPlayer::SelectTarget(Ship* usedship) {
 void HumanPlayer::Move()
 {
 	Ship * usedship;
-	do
-	{
-		usedship = SelectShip();
-
-	} while (usedship == nullptr);
-	
 	// select ship should return nullptr if user wanted to use ship that can't shot 
 	coords Target;
-	
-	//check if chosen ship have ability to shoot one more time
-	bool flag_can_continue;
+	//to check if chosen ship have ability to shoot one more time
+	bool flag_can_continue = false;
+	bool if_continue = true;
+	bool hasEvery_Ship_Shot = true;
 
-	(usedship->getRemainingShoots() != 0) ? flag_can_continue = true : flag_can_continue = false;
-
-	
-	do 
+	//choose ship
+	do
 	{
+		hasEvery_Ship_Shot = true;
+
+		//show user his possibilities
+		User_interface->PrintText("Avaliable ships:");
+		for (auto i : Ships)
+		{
+			if (i->CanShoot())
+			{
+				User_interface->PrintText("Ship: " + to_string(i->getType()) + " shoots: " + to_string(i->getRemainingShoots()) + "has been used already: " + to_string((i->hasShot_thisRound())? true : false));
+				if(!i->hasShot_thisRound())
+					hasEvery_Ship_Shot = false;
+			}
+		}
+
+		if (hasEvery_Ship_Shot)
+		{
+			User_interface->PrintText("Would you like to continue this move?");
+			if (!User_interface->getBool())
+			{
+				if_continue = false;
+				break; //if user has shot from every ship and dont want to shot second time from multi funnel
+			}
+		}
+
+		usedship = SelectShip();
+			
+		//if usedship is ready to lave loop, set flag
+		if (usedship != nullptr) 
+			(usedship->getRemainingShoots() != 0) ? flag_can_continue = true : flag_can_continue = false;
+		
+	} while (usedship == nullptr);
+		
+	//if flag is false, player has chosen not to continue round
+	while (flag_can_continue)
+	{
+			
 		User_interface->PrintText("\nYou have chosen ship of type: " + to_string(usedship->getType()) + "\n You can take " + to_string(usedship->getRemainingShoots()) + " more shoots in this round");
 
 		Target = SelectTarget(usedship);
@@ -479,7 +508,6 @@ void HumanPlayer::Move()
 			cout << err.bi_val().first << " " << err.bi_val().second << endl;
 		}
 
-		//(usedship->getRemainingShoots() != 0) ? flag_can_continue = true : flag_can_continue = false;
 		if (usedship->getRemainingShoots() == 1)
 		{
 			User_interface->PrintText("Would you like to do second shot?");
@@ -490,8 +518,8 @@ void HumanPlayer::Move()
 		else if(usedship->getRemainingShoots() == 0)
 			flag_can_continue = false;
 
-	} while (flag_can_continue);
-	cout << "DEBUG:: move out" << endl;
+		cout << "End of shot" << endl;
+	}
 }
 
 coords HumanPlayer::SelectTarget(Ship * usedship)

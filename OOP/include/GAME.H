@@ -13,7 +13,7 @@ public:
 	void StartGame();
 	void AddPlayer( string type, Grid* grid_player, Grid* grid_oponent, bool text_mode);
 	void PlayRound();
-	void EndGame();
+	void EndGame(int);
 	int getCurrentRound();
 	int getMaxRound();
 	void PrintGrid(bool first_grid);
