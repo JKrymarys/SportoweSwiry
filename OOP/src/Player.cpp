@@ -436,35 +436,62 @@ void HumanPlayer::Move()
 	do
 	{
 		usedship = SelectShip();
+
 	} while (usedship == nullptr);
 	
 	// select ship should return nullptr if user wanted to use ship that can't shot 
-	coords Target = SelectTarget(usedship);
+	coords Target;
 	
-	while (!usedship->isTargetInRange(Target))
+	//check if chosen ship have ability to shoot one more time
+	bool flag_can_continue;
+
+	(usedship->getRemainingShoots() != 0) ? flag_can_continue = true : flag_can_continue = false;
+
+	
+	do 
 	{
-		User_interface->PrintText("Given coordinates are not in range of choosen ship");
+		User_interface->PrintText("\nYou have chosen ship of type: " + to_string(usedship->getType()) + "\n You can take " + to_string(usedship->getRemainingShoots()) + " more shoots in this round");
+
 		Target = SelectTarget(usedship);
-	} 
-	
-	try
-	{
-		usedship->Shot(Target);
-	}
-	catch (Ship::bad_coordinates err)
-	{
-		cout << err.what() << endl;
-		cout << err.crd_val().first << " " << err.crd_val().second << endl;
-	}
-	catch (Ship::ship_error err)
-	{
-		cout << err.what() << endl;
-	}
-	catch (Grid::bad_range err)
-	{
-		cout << err.what() << endl;
-		cout << err.bi_val().first << " " << err.bi_val().second << endl;
-	}
+
+		while (!usedship->isTargetInRange(Target))
+		{
+			User_interface->PrintText("Given coordinates are not in range of choosen ship");
+			Target = SelectTarget(usedship);
+		}
+		try
+		{
+			usedship->Shot(Target);
+
+		}
+		catch (Ship::bad_coordinates err)
+		{
+			cout << err.what() << endl;
+			cout << err.crd_val().first << " " << err.crd_val().second << endl;
+		}
+		catch (Ship::ship_error err)
+		{
+			cout << err.what() << endl;
+		}
+		catch (Grid::bad_range err)
+		{
+			cout << err.what() << endl;
+			cout << err.bi_val().first << " " << err.bi_val().second << endl;
+		}
+
+		//(usedship->getRemainingShoots() != 0) ? flag_can_continue = true : flag_can_continue = false;
+		if (usedship->getRemainingShoots() == 1)
+		{
+			User_interface->PrintText("Would you like to do second shot?");
+			
+			if (!User_interface->getBool())
+				flag_can_continue = false;
+		}
+		else if(usedship->getRemainingShoots() == 0)
+			flag_can_continue = false;
+
+	} while (flag_can_continue);
+	cout << "DEBUG:: move out" << endl;
 }
 
 coords HumanPlayer::SelectTarget(Ship * usedship)

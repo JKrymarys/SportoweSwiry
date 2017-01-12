@@ -11,8 +11,8 @@ using namespace std;
 int main() {
 	
 	srand(time(NULL));
-	//Game game(10,"human","greedy",true);
-	Game game(true);
+	Game game(10,"human","greedy",true);
+	//Game game(true);
 
 	return 0;
 }

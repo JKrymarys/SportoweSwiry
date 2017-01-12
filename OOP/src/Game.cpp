@@ -123,21 +123,22 @@ void Game::StartGame()
 {
 	bool if_continue = true;
 
-	this->UI->PrintText("****************** \n Round no. : " + to_string(getCurrentRound()) + "\n");
+	
+	do
+	{
+		PlayRound();
 
-	while (if_continue)
-			PlayRound();
 		for (auto i : Players)
 		{
 			i->Reset();
 		}
-		
+
 		//case 1: last round played
 		if (RoundCount >= RoundMAX)
 			if_continue = false;
 
 		//case 2: one of the players has lost its last ship
-		if(!Players[0]->hasShips() || !Players[1]->hasShips())
+		if (!Players[0]->hasShips() || !Players[1]->hasShips())
 			if_continue = false;
 
 		//case 3: no more avaliable shots
@@ -147,7 +148,12 @@ void Game::StartGame()
 				if_continue = false;
 		}
 
-		RoundCount++;
+		cout << "round count++" << endl;
+		this->RoundCount++;
+
+	}while (if_continue);
+
+	cout << "End game" << endl;
 }
 
 
@@ -185,22 +191,50 @@ void Game::AddPlayer(string type, Grid* grid_player, Grid* grid_oponent, bool te
 
 void Game::PlayRound()
 {
- 
-	while (Players.at(0)->CanMove() || Players.at(1)->CanMove())
+	bool if_continue = true;
+	while (((Players.at(0)->CanMove() || Players.at(1)->CanMove())) && if_continue)
 	{
+		this->UI->PrintText("****************** \n Round no. : " + to_string(getCurrentRound()) + "\n");
+
 		cout << "Player grid \n ----------------" << endl;
 		PrintGrid(true);
 		cout << "Computer grid \n ----------------" << endl;
 		PrintGrid(false);
 
+		Players.at(0);
 
+		//first move have to be done
 		if (Players.at(0)->CanMove())
 			Players.at(0)->Move();
 		if (Players.at(1)->CanMove())
 			Players.at(1)->Move();
 
-		cout << "DEBUG:    Can Move: P1 " << Players.at(0)->CanMove() << "P2: " << Players.at(0)->CanMove() << endl;
+
+
+			//for next move ask user if he wants to continue
+		//check if any of players is human
+		HumanPlayer* hpl;
+		for (auto i : Players)
+		{ 
+			hpl = dynamic_cast<HumanPlayer*>(i); // check if player is humanplayer
+			if (hpl != nullptr)
+			{
+				UI->PrintText("Do you want to continue this round");
+				if_continue = UI->getBool();
+				if (if_continue)
+					i->Move();
+			}
+			else
+			{
+				if (i->CanMove())
+					i->Move();
+			}
+		}
+
 	}
+
+
+	
 }
 
 void Game::PrintGrid(bool first_grid)

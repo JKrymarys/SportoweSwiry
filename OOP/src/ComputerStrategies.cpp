@@ -2,7 +2,7 @@
 #include "PLAYER.H"
 #include "SHIP.H"
 #include <cmath>
-#include<algorithm>
+#include <algorithm>
 
 coords Strategy::getTargetLocation(Ship & ship, Grid & grid) {
 

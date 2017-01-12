@@ -13,6 +13,7 @@ public:
 	virtual int SelectShip() = 0; // returns type o ship
 	virtual coords getTargetLocation() = 0;
 	virtual coords getCoords() = 0; // used to place ships
+	virtual bool getBool() = 0;
 	virtual void printGrid(Grid *) = 0;
 	virtual void PrintText(string  string) = 0;
 };
@@ -29,6 +30,7 @@ public:
 	coords getCoords(); // used to place ships
 	void printGrid(Grid *);
 	void PrintText(string  string);
+	bool getBool();
 
 };
 

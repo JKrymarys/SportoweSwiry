@@ -107,3 +107,22 @@ coords TextUI::getCoords() {
 
 }
 
+bool TextUI::getBool()
+{
+	char input;
+	do	{
+		cout << "Please enter an anser (y/n)" << endl;
+		if (cin >> input)
+			break;
+		else
+		{
+			cout << "Please enter a proper answer (y/n)" << endl;
+			cin.clear();
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');
+		}
+
+	} while ((input == 'y' || input == 'n'));
+
+	//ej to jest piekne
+	return (input == 'y') ? true : false;
+}
