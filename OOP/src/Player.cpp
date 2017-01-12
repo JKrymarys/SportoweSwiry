@@ -483,6 +483,8 @@ void HumanPlayer::Move()
 
 		Target = SelectTarget(usedship);
 
+
+		//try to shoot
 		while (!usedship->isTargetInRange(Target))
 		{
 			User_interface->PrintText("Given coordinates are not in range of choosen ship");
@@ -508,6 +510,7 @@ void HumanPlayer::Move()
 			cout << err.bi_val().first << " " << err.bi_val().second << endl;
 		}
 
+		//ask user what to do if he has chosen multifunnel ship with 2 av shoots
 		if (usedship->getRemainingShoots() == 1)
 		{
 			User_interface->PrintText("Would you like to do second shot?");

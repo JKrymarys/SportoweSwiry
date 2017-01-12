@@ -12,7 +12,7 @@ int main(int argc, char* argv[])
 {
 	
 	srand(time(NULL));
-	int max_Rounds = argc;
+	/*int max_Rounds = argc;
 	string strategy;
 	bool isHuman;
 	if (argc != 3)
@@ -35,8 +35,8 @@ int main(int argc, char* argv[])
 		Game game(10, "human", strategy, true);
 	else
 		Game game(10, strategy, strategy, true);
-
-
+*/
+	Game game(10, "human", "greedy", true);
 
 	return 0;
 }

@@ -220,23 +220,23 @@ void Game::PlayRound()
 
 			//for next move ask user if he wants to continue
 		//check if any of players is human
-		HumanPlayer* hpl;
-		for (auto i : Players)
-		{ 
-			hpl = dynamic_cast<HumanPlayer*>(i); // check if player is humanplayer
-			if (hpl != nullptr)
-			{
-				UI->PrintText("Do you want to continue this round");
-				if_continue = UI->getBool();
-				if (if_continue)
-					i->Move();
-			}
-			else
-			{
-				if (i->CanMove())
-					i->Move();
-			}
-		}
+		//HumanPlayer* hpl;
+		//for (auto i : Players)
+		//{ 
+		//	hpl = dynamic_cast<HumanPlayer*>(i); // check if player is humanplayer
+		//	if (hpl != nullptr)
+		//	{
+		//		UI->PrintText("Do you want to continue this round");
+		//		if_continue = UI->getBool();
+		//		if (if_continue)
+		//			i->Move();
+		//	}
+		//	else
+		//	{
+		//		if (i->CanMove())
+		//			i->Move();
+		//	}
+		//}
 
 	}
 
