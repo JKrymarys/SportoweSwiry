@@ -19,12 +19,9 @@ public:
 };
 
 class TextUI : public IUserInterface {
-private:
-	Player* player;
 public:
 	TextUI();
-	~TextUI();
-	void getShipLocation(int size_of_ship);
+	~TextUI() {}
 	int SelectShip(); // returns type o ship
 	coords getTargetLocation();
 	coords getCoords(); // used to place ships

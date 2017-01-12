@@ -15,6 +15,7 @@ enum Ship_types
 class Ship {
 public:
 	Ship(int _Lives, int _Length, int remaining_shots, Grid * p_grid);
+	virtual ~Ship() {}
 	void getHit();
 	int getLives() { return Lives; }
 	int getRemainingShoots() { return RemainingShoots; }
@@ -27,7 +28,7 @@ public:
 	bool isSunk();
 	bool hasAvailableMove();
 	bool CanShoot();
-	bool hasShot_thisRound() { return hasShot; }
+	bool hasShot_thisRound() { return TakenShots > 0 ? true : false; }
 	virtual void Shot(coords coordinates);
 	virtual void Reset() = 0;
 	int getLength() { return Lenght; }
@@ -57,14 +58,15 @@ protected:
 	int y_end;
 	int Lenght;
 	int type;
+	int TakenShots;
 	Grid* grid;
-	bool hasShot;
 };
 
 class SingleFunnelShip : public Ship
 {
 public:
 	SingleFunnelShip(Grid* p_grid);
+	~SingleFunnelShip() {}
 	void Reset();
 
 };
@@ -73,10 +75,9 @@ class MultiFunnelShip : public Ship
 {
 public:
 	MultiFunnelShip(Grid* p_grid, int ship_type);
-	virtual void Shot(coords coordinates);
+	~MultiFunnelShip() {}
+	//virtual void Shot(coords coordinates);
 	void Reset();
-private:
-	int TakenShots;
 
 };
 

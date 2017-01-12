@@ -10,6 +10,7 @@ class Game
 public:
 	Game(int max_rounds, string player1, string player2, bool TextUI);
 	Game(bool TextUI);
+	~Game();
 	void StartGame();
 	void AddPlayer( string type, Grid* grid_player, Grid* grid_oponent, bool text_mode);
 	void PlayRound();

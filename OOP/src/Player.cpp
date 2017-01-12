@@ -14,7 +14,13 @@ using namespace std;
 
 */
 
-
+Player::~Player()
+{
+	for (auto it = Ships.begin(); it != Ships.end(); ++it)
+	{
+		delete (*it);
+	}
+}
 
 bool Player::hasShips()
 {
@@ -199,7 +205,6 @@ void Player::Set_Player_Ships_From_File(char * name)
 	
 }
 
-
 void Player::Save_Info_To_File(int player_index) {
 	
 	string name;
@@ -263,7 +268,10 @@ void Player::Save_Info_To_File(int player_index) {
 
 */
 
-
+ComputerPlayer::~ComputerPlayer()
+{
+	delete strategy;
+}
 
 void ComputerPlayer::Move()
 {
@@ -291,6 +299,7 @@ void ComputerPlayer::Move()
 		cout << err.bi_val().first << " " << err.bi_val().second << endl;
 	}
 }
+
 void ComputerPlayer::SetThreeFunnelShip()
 {
 	MultiFunnelShip * new_ship = new MultiFunnelShip(oponent_grid, THREE_FUNNEL_SHIP);
@@ -325,6 +334,7 @@ void ComputerPlayer::SetThreeFunnelShip()
 	}
 
 }
+
 void ComputerPlayer::SetTwoFunnelShip()
 {
 	MultiFunnelShip * new_ship = new MultiFunnelShip(oponent_grid, TWO_FUNNEL_SHIP);
@@ -396,6 +406,7 @@ void ComputerPlayer::SetTwoFunnelShip()
 		}
 	}
 }
+
 void ComputerPlayer::SetOneFunnelShip()
 {
 	SingleFunnelShip * new_ship = new SingleFunnelShip(oponent_grid);
@@ -426,12 +437,10 @@ void ComputerPlayer::SetOneFunnelShip()
 	
 }
 
-
 Ship* ComputerPlayer::SelectShip()
 {
 	return strategy->SelectShip(this->Ships);
 }
-
 
 coords ComputerPlayer::SelectTarget(Ship* usedship) {
 	return strategy->getTargetLocation((*usedship), *oponent_grid);
@@ -442,7 +451,10 @@ coords ComputerPlayer::SelectTarget(Ship* usedship) {
 
 */
 
-
+HumanPlayer::~HumanPlayer()
+{
+	delete User_interface;
+}
 
 void HumanPlayer::Reset()
 {
@@ -474,7 +486,7 @@ void HumanPlayer::Move()
 		{
 			if (i->CanShoot())
 			{
-				User_interface->PrintText("Ship: " + to_string(i->getType()) + " shoots: " + to_string(i->getRemainingShoots()) + "has been used already: " + to_string((i->hasShot_thisRound())? true : false));
+				User_interface->PrintText(to_string(i->getType()) + " Funnel Ship remaining shoots: " + to_string(i->getRemainingShoots()) + ". Has been used already: " + to_string((i->hasShot_thisRound())? true : false) + " times ");
 				if(!i->hasShot_thisRound())
 					hasEvery_Ship_Shot = false;
 			}
@@ -482,7 +494,7 @@ void HumanPlayer::Move()
 
 		if (hasEvery_Ship_Shot)
 		{
-			User_interface->PrintText("Would you like to continue this move?");
+			User_interface->PrintText("Would you like to continue this round?");
 			if (!User_interface->getBool())
 			{
 				if_continue = false;
@@ -504,15 +516,15 @@ void HumanPlayer::Move()
 	while (flag_can_continue)
 	{
 			
-		User_interface->PrintText("\nYou have chosen ship of type: " + to_string(usedship->getType()) + "\n You can take " + to_string(usedship->getRemainingShoots()) + " more shoots in this round");
+		User_interface->PrintText("\nYou have chosen ship of type: " + to_string(usedship->getType()) + "\nYou can take " + to_string(usedship->getRemainingShoots()) + " more shoots in this round");
 
 		Target = SelectTarget(usedship);
 
 
 		//try to shoot
-		while (!usedship->isTargetInRange(Target))
+		while (!usedship->isTargetInRange(Target) || oponent_grid->wasShot(Target))
 		{
-			User_interface->PrintText("Given coordinates are not in range of choosen ship");
+			oponent_grid->wasShot(Target) ? User_interface->PrintText("There was already shot at this coordinates") : User_interface->PrintText("Given coordinates are not in range of choosen ship");
 			Target = SelectTarget(usedship);
 		}
 		try
@@ -571,8 +583,6 @@ Ship* HumanPlayer::SelectShip()
 	User_interface->PrintText("Invalid ship");
 	return nullptr;
 }
-
-
 
 void HumanPlayer::SetOneFunnelShip()
 {
@@ -705,10 +715,5 @@ void HumanPlayer::SetThreeFunnelShip()
 	User_interface->PrintText("Three Funnel Ship has been set");
 }
 
-
-bool HumanPlayer::getGridFlag(int x, int y)
-{
-	return player_grid->wasShot(coords(x,y));
-}
 
 

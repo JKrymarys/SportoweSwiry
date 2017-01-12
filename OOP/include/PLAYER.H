@@ -6,6 +6,7 @@
 #include "SHIP.H"
 #include "ComputerStrategies.h"
 #include <string>
+
 class IUserInterface;
 
 
@@ -13,6 +14,7 @@ class Player
 {
 public:
 	Player(Grid* grid_player, Grid* grid_oponent) : player_grid(grid_player), oponent_grid(grid_oponent) {};
+	virtual ~Player();
 	void  Set_Player_Ships();
 	void Set_Player_Ships_From_File(char * name);
 	void Save_Info_To_File(int player_index);
@@ -38,10 +40,10 @@ private:
 class HumanPlayer :public Player {
 public:
 	HumanPlayer(Grid* grid_player, Grid* grid_oponent, IUserInterface* UI) : Player(grid_player, grid_oponent), User_interface(UI), wantToMove(true) {}
+	virtual ~HumanPlayer();
 	Ship* SelectShip();
 	coords SelectTarget(Ship * usedship);
 	void Move();
-	bool getGridFlag(int x, int y);
 	bool CanMove();
 	void Reset();
 protected:
@@ -60,6 +62,7 @@ class ComputerPlayer :public Player
 {
 public:
 	ComputerPlayer(Strategy * strategy_, Grid* grid_player, Grid* grid_oponent) : Player(grid_player, grid_oponent), strategy(strategy_) {}
+	virtual ~ComputerPlayer();
 	Ship* SelectShip();
 	coords SelectTarget(Ship * usedship);
 	void Move();

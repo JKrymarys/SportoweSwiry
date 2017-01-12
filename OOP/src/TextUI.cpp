@@ -53,7 +53,6 @@ int TextUI::SelectShip()
 
 	} while (ship_id > 3 || ship_id < 0);
 
-	cout << "You have chosen ship: " << ship_id << endl;
 	return ship_id;
 }
 

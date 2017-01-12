@@ -48,6 +48,17 @@ Game::Game(int max_rounds, string player1, string player2, bool UI_text) {
 	this->StartGame();
 }
 
+Game::~Game()
+{
+	delete grid_player1;
+	delete grid_player2;
+	for (auto it = Players.begin(); it != Players.end(); ++it)
+	{
+		delete (*it);
+	}
+	delete UI;
+}
+
 Game::Game(bool UI_text)
 {
 	IUserInterface*  ptr = nullptr;
@@ -114,10 +125,10 @@ Game::Game(bool UI_text)
 int Game::getCurrentRound() {
 	return RoundCount;
 } 
+
 int Game::getMaxRound() {
 	return RoundMAX;
 }
-
 
 void Game::StartGame()
 {
@@ -163,7 +174,6 @@ void Game::StartGame()
 
 	cout << "End game" << endl;
 }
-
 
 //as parameter give: human | random | greedy
 void Game::AddPlayer(string type, Grid* grid_player, Grid* grid_oponent, bool text_mode)
@@ -218,25 +228,6 @@ void Game::PlayRound()
 		if (Players.at(1)->CanMove())
 			Players.at(1)->Move();
 
-			//for next move ask user if he wants to continue
-		//check if any of players is human
-		//HumanPlayer* hpl;
-		//for (auto i : Players)
-		//{ 
-		//	hpl = dynamic_cast<HumanPlayer*>(i); // check if player is humanplayer
-		//	if (hpl != nullptr)
-		//	{
-		//		UI->PrintText("Do you want to continue this round");
-		//		if_continue = UI->getBool();
-		//		if (if_continue)
-		//			i->Move();
-		//	}
-		//	else
-		//	{
-		//		if (i->CanMove())
-		//			i->Move();
-		//	}
-		//}
 
 	}
 
@@ -246,7 +237,6 @@ void Game::PrintGrid(bool first_grid)
 {
 	first_grid ? UI->printGrid(grid_player1) : UI->printGrid(grid_player2);
 }
-
 
 void Game::SaveToFile()
 {

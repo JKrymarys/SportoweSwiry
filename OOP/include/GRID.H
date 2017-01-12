@@ -18,6 +18,7 @@ public:
 	char Flag;
 	Ship * ShipHere;
 	Place();
+	~Place() {}
 };
 
 
@@ -38,6 +39,7 @@ public:
 		virtual ~bad_range() {};
 	};
 	Grid();
+	~Grid() {}
 	bool isAvaliable(coords);
 	void setPlace(Ship* ship, coords);
 	void HitOrMiss(coords);
