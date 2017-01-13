@@ -32,20 +32,6 @@ Game::Game(int max_rounds, string player1, string player2, bool UI_text) {
 		i->Set_Player_Ships();
 	}
 
-	
-	try {
-		cout << "Player Grid:" << endl;
-		PrintGrid(true);
-		cout << "Computer grid" << endl;
-		PrintGrid(false);
-	}
-	catch (Grid::bad_range br)
-	{
-		cout << br.what() << endl;
-		cout << br.bi_val().first << " " << br.bi_val().second;
-	}
-	SaveToFile();
-	this->StartGame();
 }
 
 Game::~Game()
@@ -106,19 +92,6 @@ Game::Game(bool UI_text)
 	}
 	Players.at(0)->Set_Player_Ships_From_File("Player1Grid.txt");
 	Players.at(1)->Set_Player_Ships_From_File("Player2Grid.txt");
-	try {
-		cout << "Player Grid:" << endl;
-		PrintGrid(true);
-		cout << "Computer grid" << endl;
-		PrintGrid(false);
-	}
-	catch (Grid::bad_range br)
-	{
-		cout << br.what() << endl;
-		cout << br.bi_val().first << " " << br.bi_val().second;
-	}
-	SaveToFile();
-	this->StartGame();
 
 }
 
@@ -133,10 +106,17 @@ int Game::getMaxRound() {
 void Game::StartGame()
 {
 	bool if_continue = true;
-
+	int end_case = 0;
 	
 	do
 	{
+		UI->AskToSave();
+		if (UI->getBool())
+		{
+			SaveToFile();
+			break;
+		}
+
 		PlayRound();
 
 		for (auto i : Players)
@@ -144,26 +124,31 @@ void Game::StartGame()
 			i->Reset();
 		}
 
+	
+
 		//case 1: last round played
 		if (RoundCount >= RoundMAX)
 		{
 			if_continue = false;
 			UI->PrintText("GAME END (Last round played)");
+			end_case = 1;
 		}
 		//case 2: one of the players has lost its last ship
 		if (!Players[0]->hasShips() || !Players[1]->hasShips())
 		{
 			if_continue = false;
 			UI->PrintText("GAME END (One of the players has run of the ships)");
+			end_case = 2;
 		}
 
 		//case 3: no more avaliable shots
 		for (auto i : Players)
 		{
-			if (!i->CanMove())
+			if (!i->hasRemainingPossibilities())
 			{
 				if_continue = false;
-				UI->PrintText("GAME END (None of the players has avaliable move)");
+				UI->PrintText("GAME END (One of the players has avaliable move)");
+				end_case = 3;
 			}
 		}
 
@@ -173,6 +158,7 @@ void Game::StartGame()
 	}while (if_continue);
 
 	cout << "End game" << endl;
+	EndGame(end_case);
 }
 
 //as parameter give: human | random | greedy
@@ -326,11 +312,13 @@ void Game::SaveToFile()
 //1 - max rounds; 2 - player lost; 3 - no more moves
 void Game::EndGame(int reason)
 {
-	UI->PrintText("*************** \n Summary of game: \n\n");
-	UI->PrintText("Grid of player 1:");
-	PrintGrid(true);
-	UI->PrintText("Grid of player 2:");
-	PrintGrid(false);
+	if (reason != 0) {
+		UI->PrintText("*************** \n Summary of game: \n\n");
+		UI->PrintText("Grid of player 1:");
+		PrintGrid(true);
+		UI->PrintText("Grid of player 2:");
+		PrintGrid(false);
+	}
 
 
 	UI->PrintText("Thank you for playing! ");

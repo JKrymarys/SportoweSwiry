@@ -125,3 +125,8 @@ bool TextUI::getBool()
 	//ej to jest piekne
 	return (input == 'y') ? true : false;
 }
+
+void TextUI::AskToSave()
+{
+	cout << "Would you like to save the state of game and end it ? " << endl;
+}

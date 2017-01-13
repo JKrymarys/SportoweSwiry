@@ -9,13 +9,14 @@ typedef pair<int, int> coords;
 
 class IUserInterface {
 public:
-//	virtual void getShipLocation(int size_of_ship) = 0;
 	virtual int SelectShip() = 0; // returns type o ship
 	virtual coords getTargetLocation() = 0;
 	virtual coords getCoords() = 0; // used to place ships
 	virtual bool getBool() = 0;
 	virtual void printGrid(Grid *) = 0;
 	virtual void PrintText(string  string) = 0;
+	virtual void AskToSave() = 0;
+
 };
 
 class TextUI : public IUserInterface {
@@ -28,6 +29,7 @@ public:
 	void printGrid(Grid *);
 	void PrintText(string  string);
 	bool getBool();
+	virtual void AskToSave();
 
 };
 

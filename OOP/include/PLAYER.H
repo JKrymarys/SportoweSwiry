@@ -16,6 +16,7 @@ public:
 	Player(Grid* grid_player, Grid* grid_oponent) : player_grid(grid_player), oponent_grid(grid_oponent) {};
 	virtual ~Player();
 	void  Set_Player_Ships();
+	bool hasRemainingPossibilities();
 	void Set_Player_Ships_From_File(char * name);
 	void Save_Info_To_File(int player_index);
 	coords virtual SelectTarget(Ship * usedship) = 0;

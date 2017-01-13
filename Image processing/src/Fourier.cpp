@@ -351,7 +351,9 @@ CImg<float>* PrintMask(complex<double>**Arr, int N, int M)
 	{
 		for (int y = 0; y < toreturn->height(); y++)
 		{
-			(*toreturn)(x, y) = 10*log(1+abs(Arr[y][x]));
+			//(*toreturn)(x, y) = 10*log(1+abs(Arr[y][x]));
+			(*toreturn)(x, y) = log(1+abs(Arr[y][x]));
+
 		}
 	}
 	return toreturn;

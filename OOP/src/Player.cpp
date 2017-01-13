@@ -34,6 +34,16 @@ bool Player::hasShips()
 
 }
 
+bool Player::hasRemainingPossibilities()
+{
+	for (auto i : Ships)
+	{
+		if (i->hasAvailableMove() && !(i->isSunk()))
+			return true;
+	}
+	return false;
+}
+
 bool ComputerPlayer::CanMove()
 {
 	for (auto i : Ships)
@@ -559,6 +569,7 @@ void HumanPlayer::Move()
 			flag_can_continue = false;
 
 		cout << "End of shot" << endl;
+
 	}
 	cout << "					debug: End of MOVE" << endl;
 }
