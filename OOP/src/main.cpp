@@ -44,6 +44,10 @@ int main(int argc, char* argv[])
 		else
 			cout << "Number of rounds must be between 0 and 20";
 	}
+	else
+	{
+		cout << "Bad number of arguments";
+	}
 
 	/*int max_Rounds = argc;
 	string strategy;

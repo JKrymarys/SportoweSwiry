@@ -89,7 +89,6 @@ bool Player::CrossCheck(const coords & c1, const coords & c2, const coords & c3)
 void Player::Set_Player_Ships()
 {
 	SetThreeFunnelShip();
-	cout << "Three funnel ship done" << endl;
 	try {
 		SetTwoFunnelShip();
 	}
@@ -98,7 +97,6 @@ void Player::Set_Player_Ships()
 		cout << br.what();
 		cout << br.bi_val().first << " " << br.bi_val().second << endl;
 	}
-	cout << "Two funnel ship done" << endl;
 	try {
 		SetOneFunnelShip();
 
@@ -108,7 +106,6 @@ void Player::Set_Player_Ships()
 		cout << br.what();
 		cout << br.bi_val().first << " " << br.bi_val().second << endl;
 	}
-	cout << "One funnel ship done" << endl;
 }
 
 void ComputerPlayer::Reset()
@@ -285,7 +282,8 @@ ComputerPlayer::~ComputerPlayer()
 
 void ComputerPlayer::Move()
 {
-	
+	cout << endl << "DEBUG::  COMPUTER MOVE" << endl;
+
 	Ship * usedship = SelectShip(); // THESE FUNCTION THEMSELVES CHECK IF EVERYTHING IS CORRECT
 	
 	coords Target = SelectTarget(usedship);
@@ -568,10 +566,10 @@ void HumanPlayer::Move()
 		else if(usedship->getRemainingShoots() == 0)
 			flag_can_continue = false;
 
-		cout << "End of shot" << endl;
+	
 
 	}
-	cout << "					debug: End of MOVE" << endl;
+	
 }
 
 coords HumanPlayer::SelectTarget(Ship * usedship)

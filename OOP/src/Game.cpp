@@ -6,6 +6,12 @@
 #include <fstream>
 
 
+enum END_CASES {
+	LastRoundPlayed,
+	AllShipsSunk,
+	NoMoreOptions
+};
+
 
 Game::Game(int max_rounds, string player1, string player2, bool UI_text) {
 	
@@ -110,11 +116,14 @@ void Game::StartGame()
 	
 	do
 	{
-		UI->AskToSave();
-		if (UI->getBool())
+		if (dynamic_cast<HumanPlayer*>(Players.at(0)) != nullptr)
 		{
-			SaveToFile();
-			break;
+			UI->AskToSave();
+			if (UI->getBool())
+			{
+				SaveToFile();
+				break;
+			}
 		}
 
 		PlayRound();
@@ -131,14 +140,14 @@ void Game::StartGame()
 		{
 			if_continue = false;
 			UI->PrintText("GAME END (Last round played)");
-			end_case = 1;
+			end_case = LastRoundPlayed;
 		}
 		//case 2: one of the players has lost its last ship
 		if (!Players[0]->hasShips() || !Players[1]->hasShips())
 		{
 			if_continue = false;
 			UI->PrintText("GAME END (One of the players has run of the ships)");
-			end_case = 2;
+			end_case = AllShipsSunk;
 		}
 
 		//case 3: no more avaliable shots
@@ -148,7 +157,7 @@ void Game::StartGame()
 			{
 				if_continue = false;
 				UI->PrintText("GAME END (One of the players has avaliable move)");
-				end_case = 3;
+				end_case = NoMoreOptions;
 			}
 		}
 
@@ -197,7 +206,7 @@ void Game::PlayRound()
 {
 	bool if_continue = true;
 
-	while (((Players.at(0)->CanMove() || Players.at(1)->CanMove())) && if_continue)
+	while (((Players.at(0)->CanMove() || Players.at(1)->CanMove())) && if_continue && Players.at(0)->hasShips() && Players.at(1)->hasShips())
 	{
 		this->UI->PrintText("****************** \n Round no. : " + to_string(getCurrentRound()) + "\n");
 
