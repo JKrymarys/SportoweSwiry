@@ -16,6 +16,8 @@ public:
 	virtual void printGrid(Grid *) = 0;
 	virtual void PrintText(string  string) = 0;
 	virtual void AskToSave() = 0;
+	virtual void ShowStatisticAndWinner(Player * player1, Player * player2) = 0;
+	virtual void ShowEndReason(int reason) = 0;
 
 };
 
@@ -30,6 +32,9 @@ public:
 	void PrintText(string  string);
 	bool getBool();
 	virtual void AskToSave();
+	virtual void ShowStatisticAndWinner(Player * player1, Player * player2);
+	virtual void ShowEndReason(int reason);
+
 
 };
 

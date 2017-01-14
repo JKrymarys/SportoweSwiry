@@ -17,7 +17,6 @@ public:
 	void EndGame(int);
 	int getCurrentRound();
 	int getMaxRound();
-	void PrintGrid(bool first_grid);
 	void SaveToFile();
 	class Load_From_File_Error : public std::logic_error
 	{

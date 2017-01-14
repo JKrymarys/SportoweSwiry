@@ -4,12 +4,14 @@
 #include <memory>
 #include <vector>
 #include <fstream>
-
+#include "ComputerPlayer.h"
+#include "HumanPlayer.h"
 
 enum END_CASES {
 	LastRoundPlayed,
 	AllShipsSunk,
-	NoMoreOptions
+	NoMoreOptions,
+	SaveGame
 };
 
 
@@ -122,6 +124,7 @@ void Game::StartGame()
 			if (UI->getBool())
 			{
 				SaveToFile();
+				end_case = SaveGame;
 				break;
 			}
 		}
@@ -139,15 +142,14 @@ void Game::StartGame()
 		if (RoundCount >= RoundMAX)
 		{
 			if_continue = false;
-			UI->PrintText("GAME END (Last round played)");
 			end_case = LastRoundPlayed;
 		}
 		//case 2: one of the players has lost its last ship
 		if (!Players[0]->hasShips() || !Players[1]->hasShips())
 		{
 			if_continue = false;
-			UI->PrintText("GAME END (One of the players has run of the ships)");
 			end_case = AllShipsSunk;
+			break;
 		}
 
 		//case 3: no more avaliable shots
@@ -156,13 +158,11 @@ void Game::StartGame()
 			if (!i->hasRemainingPossibilities())
 			{
 				if_continue = false;
-				UI->PrintText("GAME END (One of the players has avaliable move)");
 				end_case = NoMoreOptions;
 			}
 		}
 
-		//cout << "round count++" << endl;
-		this->RoundCount++;
+		RoundCount++;
 
 	}while (if_continue);
 
@@ -212,9 +212,9 @@ void Game::PlayRound()
 
 		//debug
 		cout << "Player grid \n ----------------" << endl;
-		PrintGrid(true);
+		UI->printGrid(grid_player1);
 		cout << "Computer grid \n ----------------" << endl;
-		PrintGrid(false);
+		UI->printGrid(grid_player2);
 		//debug
 
 		//first move has to be done
@@ -228,10 +228,7 @@ void Game::PlayRound()
 
 }
 
-void Game::PrintGrid(bool first_grid)
-{
-	first_grid ? UI->printGrid(grid_player1) : UI->printGrid(grid_player2);
-}
+
 
 void Game::SaveToFile()
 {
@@ -321,14 +318,18 @@ void Game::SaveToFile()
 //1 - max rounds; 2 - player lost; 3 - no more moves
 void Game::EndGame(int reason)
 {
-	if (reason != 0) {
-		UI->PrintText("*************** \n Summary of game: \n\n");
-		UI->PrintText("Grid of player 1:");
-		PrintGrid(true);
-		UI->PrintText("Grid of player 2:");
-		PrintGrid(false);
+	if (reason == SaveGame) {
+		UI->PrintText("GAME HAS BENN SAVED");
+		return;
 	}
 
+	UI->PrintText("*************** \n Summary of game: \n\n");
+	UI->PrintText("Grid of player 1:");
+	UI->printGrid(grid_player1);
+	UI->PrintText("Grid of player 2:");
+	UI->printGrid(grid_player1);
+	UI->ShowEndReason(reason);
+	UI->ShowStatisticAndWinner(Players.at(0), Players.at(1));
 
 	UI->PrintText("Thank you for playing! ");
 }

@@ -25,6 +25,8 @@ public:
 	bool  hasShips();
 	virtual void Move() = 0;
 	virtual void Reset() = 0;
+	int NumberOfShots();
+	int NumberOfHits();
 
 protected:
 	vector<Ship*> Ships;
@@ -38,44 +40,7 @@ protected:
 private:
 };
 
-class HumanPlayer :public Player {
-public:
-	HumanPlayer(Grid* grid_player, Grid* grid_oponent, IUserInterface* UI) : Player(grid_player, grid_oponent), User_interface(UI), wantToMove(true) {}
-	virtual ~HumanPlayer();
-	Ship* SelectShip();
-	coords SelectTarget(Ship * usedship);
-	void Move();
-	bool CanMove();
-	void Reset();
-protected:
-	IUserInterface* User_interface;
-	bool wantToMove;
-	
-private:
-	void SetThreeFunnelShip();
-	void SetTwoFunnelShip();
-	void SetOneFunnelShip();
-};
 
 
-
-class ComputerPlayer :public Player
-{
-public:
-	ComputerPlayer(Strategy * strategy_, Grid* grid_player, Grid* grid_oponent) : Player(grid_player, grid_oponent), strategy(strategy_) {}
-	virtual ~ComputerPlayer();
-	Ship* SelectShip();
-	coords SelectTarget(Ship * usedship);
-	void Move();
-	bool CanMove();
-	Strategy * getStrategy() { return strategy; }
-	void Reset();
-protected:
-	void SetThreeFunnelShip();
-	void SetTwoFunnelShip();
-	void SetOneFunnelShip();
-private:
-	Strategy * strategy;
-};
 
 #endif

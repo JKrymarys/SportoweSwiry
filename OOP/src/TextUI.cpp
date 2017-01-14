@@ -130,3 +130,25 @@ void TextUI::AskToSave()
 {
 	cout << "Would you like to save the state of game and end it ? " << endl;
 }
+
+void TextUI::ShowStatisticAndWinner(Player * player1, Player * player2)
+{
+	cout << "Player 1: number of shots - " << player1->NumberOfShots() << " number of hits " << player1->NumberOfHits() << endl;
+	cout << "Player 2: number of shots - " << player2->NumberOfShots() << " number of hits " << player2->NumberOfHits() << endl;
+	if (player1->NumberOfHits() > player2->NumberOfHits())
+		cout << "Player 1 is a winner" << endl;
+	else if (player1->NumberOfHits() == player2->NumberOfHits())
+		cout << "DRAW" << endl;
+	else
+		cout << "Player 2 is a winner " << endl;
+}
+
+void TextUI::ShowEndReason(int reason)
+{
+	if (reason == 0)
+		cout << "Game ended because all rounds have been played" << endl;
+	if (reason == 1)
+		cout << "One of players have lost all of his ships" << endl;
+	if (reason == 2)
+		cout << "One of players doesn't have any more avaliable moves" << endl;
+}
