@@ -17,23 +17,23 @@ public:
 	Ship(int _Lives, int _Length, int remaining_shots, Grid * p_grid);
 	virtual ~Ship() {}
 	void getHit();
-	int getLives() { return Lives; }
-	int getRemainingShoots() { return RemainingShoots; }
+	int getLives() const { return Lives; }
+	int getRemainingShoots() const { return RemainingShoots; }
 	void SetRemainingShoots(int n) { RemainingShoots = n; }
-	int getXbegin() { return x_begin; }
-	int getXend() { return x_end; }
-	int getYbegin() { return y_begin; }
-	int getYend() { return y_end; }
-	void setCoords(coords start_coords, coords end_coords);
-	bool isSunk();
-	bool hasAvailableMove();
-	bool CanShoot();
-	bool hasShot_thisRound() { return TakenShots > 0 ? true : false; }
+	int getXbegin() const  { return x_begin; }
+	int getXend() const { return x_end; }
+	int getYbegin() const { return y_begin; }
+	int getYend() const { return y_end; }
+	void setCoords(const coords & start_coords,const coords & end_coords);
+	bool isSunk() const;
+	bool hasAvailableMove() const;
+	bool CanShoot() const;
+	bool hasShot_thisRound() const { return TakenShots > 0 ? true : false; }
 	virtual void Shot(coords coordinates);
 	virtual void Reset() = 0;
-	int getLength() { return Lenght; }
-	int getType() { return type; }
-	bool isTargetInRange(coords coordinates); // to check
+	int getLength() const { return Lenght; }
+	int getType() const { return type; }
+	bool isTargetInRange(coords coordinates) const;
 	class bad_coordinates : public std::logic_error
 	{
 	private:

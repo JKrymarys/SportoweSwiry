@@ -31,8 +31,8 @@ private:
 	int RoundMAX;
 	vector<Player*> Players;
 	IUserInterface * UI;
-	Grid* grid_player1;
-	Grid* grid_player2;
+	Grid grid_player1;
+	Grid grid_player2;
 };
 
 #endif

@@ -28,12 +28,12 @@ Game::Game(int max_rounds, string player1, string player2, bool UI_text) {
 	
 	this->RoundCount = 1;
 	this->RoundMAX = max_rounds;
-	Grid * grid1 = new Grid();
-	Grid * grid2 = new Grid();
-	grid_player1 = grid1;
-	grid_player2 = grid2;
-	AddPlayer(player1,grid1,grid2, UI_text);
-	AddPlayer(player2,grid2,grid1, UI_text);
+	//Grid * grid1 = new Grid();
+	//Grid * grid2 = new Grid();
+	//grid_player1 = grid1;
+	//grid_player2 = grid2;
+	AddPlayer(player1, &grid_player1, &grid_player2, UI_text);
+	AddPlayer(player2,&grid_player2, &grid_player1, UI_text);
 	
 	for (auto i : Players)
 	{
@@ -44,8 +44,8 @@ Game::Game(int max_rounds, string player1, string player2, bool UI_text) {
 
 Game::~Game()
 {
-	delete grid_player1;
-	delete grid_player2;
+//	delete grid_player1;
+//	delete grid_player2;
 	for (auto it = Players.begin(); it != Players.end(); ++it)
 	{
 		delete (*it);
@@ -68,10 +68,10 @@ Game::Game(bool UI_text)
 	int data_int;
 	string line;
 	int line_count;
-	Grid * grid1 = new Grid();
-	Grid * grid2 = new Grid();
-	grid_player1 = grid1;
-	grid_player2 = grid2;
+	//Grid * grid1 = new Grid();
+	//Grid * grid2 = new Grid();
+	//grid_player1 = grid1;
+	//grid_player2 = grid2;
 	if (GameStateFile.is_open())
 	{
 		GameStateFile >> RoundCount;
@@ -80,20 +80,20 @@ Game::Game(bool UI_text)
 		GameStateFile.get();
 		getline(GameStateFile, line);
 		if (line == "greedy")
-			AddPlayer("greedy", grid1, grid2, UI_text);
+			AddPlayer("greedy", &grid_player1, &grid_player2, UI_text);
 		else if(line == "random")
-			AddPlayer("random", grid1, grid2, UI_text);
+			AddPlayer("random", &grid_player1, &grid_player2, UI_text);
 		else if (line == "human")
-			AddPlayer("human", grid1, grid2, UI_text);
+			AddPlayer("human", &grid_player1, &grid_player2, UI_text);
 		else
 			throw Game::Load_From_File_Error();
 		getline(GameStateFile, line);
 		if (line == "greedy")
-			AddPlayer("greedy", grid2, grid1, UI_text);
+			AddPlayer("greedy", &grid_player2, &grid_player1, UI_text);
 		else if (line == "random")
-			AddPlayer("random", grid2, grid1, UI_text);
+			AddPlayer("random", &grid_player2, &grid_player1, UI_text);
 		else if (line == "human")
-			AddPlayer("human", grid2, grid1, UI_text);
+			AddPlayer("human", &grid_player2, &grid_player1, UI_text);
 		else
 			throw Game::Load_From_File_Error();
 
@@ -204,17 +204,16 @@ void Game::AddPlayer(string type, Grid* grid_player, Grid* grid_oponent, bool te
 
 void Game::PlayRound()
 {
-	bool if_continue = true;
 
-	while (((Players.at(0)->CanMove() || Players.at(1)->CanMove())) && if_continue && Players.at(0)->hasShips() && Players.at(1)->hasShips())
+	while (((Players.at(0)->CanMove() || Players.at(1)->CanMove()))  && Players.at(0)->hasShips() && Players.at(1)->hasShips())
 	{
 		this->UI->PrintText("****************** \n Round no. : " + to_string(getCurrentRound()) + "\n");
 
 		//debug
 		cout << "Player grid \n ----------------" << endl;
-		UI->printGrid(grid_player1);
+		UI->printGrid(&grid_player1);
 		cout << "Computer grid \n ----------------" << endl;
-		UI->printGrid(grid_player2);
+		UI->printGrid(&grid_player2);
 		//debug
 
 		//first move has to be done
@@ -325,9 +324,9 @@ void Game::EndGame(int reason)
 
 	UI->PrintText("*************** \n Summary of game: \n\n");
 	UI->PrintText("Grid of player 1:");
-	UI->printGrid(grid_player1);
+	UI->printGrid(&grid_player1);
 	UI->PrintText("Grid of player 2:");
-	UI->printGrid(grid_player1);
+	UI->printGrid(&grid_player2);
 	UI->ShowEndReason(reason);
 	UI->ShowStatisticAndWinner(Players.at(0), Players.at(1));
 

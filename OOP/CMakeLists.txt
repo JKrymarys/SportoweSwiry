@@ -7,6 +7,8 @@ set(battleships_sources
         include/SHIP.H src/Ship.cpp
         include/ComputerStrategies.h src/ComputerStrategies.cpp
         include/TextUI.h src/TextUI.cpp
+		include/ComputerPlayer.h src/ComputerPlayer.cpp
+		include/HumanPlayer.h src/HumanPlayer.cpp
         src/main.cpp)
 add_executable(battleships ${battleships_sources})
 target_include_directories(battleships PUBLIC include)

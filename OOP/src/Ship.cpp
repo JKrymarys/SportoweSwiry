@@ -15,7 +15,7 @@ void Ship::getHit() {
 	Lives--;
 }
 
-bool Ship::isSunk() {
+bool Ship::isSunk() const {
 
 	if (this->Lives <= 0)
 		return true;
@@ -25,7 +25,7 @@ bool Ship::isSunk() {
 
 
 
-void Ship::setCoords(coords start, coords end) {
+void Ship::setCoords(const coords & start,const coords & end) {
 	this->x_begin = std::min(start.first, end.first);
 	this->x_end = std::max(start.first, end.first);
 	this->y_begin = std::min(start.second, end.second);
@@ -34,7 +34,7 @@ void Ship::setCoords(coords start, coords end) {
 
 }
 
-bool Ship::hasAvailableMove()
+bool Ship::hasAvailableMove() const
 {
 	int LEFT_UPPER_CORNER_X = x_begin - Lenght - 1 > 0 ? x_begin - Lenght - 1 : 0;
 	int LEFT_UPPER_CORNER_Y = y_begin - Lenght - 1 > 0 ? y_begin - Lenght - 1 : 0;
@@ -54,7 +54,7 @@ bool Ship::hasAvailableMove()
 
 
 
-bool Ship::CanShoot()
+bool Ship::CanShoot() const
 {
 	if (!isSunk() && this->hasAvailableMove() && RemainingShoots > 0)
 		return true;
@@ -77,7 +77,7 @@ void Ship::Shot(coords target) {
 	TakenShots++;
 }
 
-bool Ship::isTargetInRange(coords target) {
+bool Ship::isTargetInRange(coords target) const {
 
 
 	int LEFT_UPPER_CORNER_X = x_begin - Lenght - 1 > 0 ? x_begin - Lenght - 1 : 0;
