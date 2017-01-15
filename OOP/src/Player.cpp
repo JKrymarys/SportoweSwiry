@@ -9,10 +9,6 @@
 using namespace std;
 
 
-/*
-	Player
-
-*/
 
 Player::~Player()
 {
@@ -44,24 +40,6 @@ bool Player::hasRemainingPossibilities()
 	return false;
 }
 
-
-
-bool Player::CrossCheck(const coords & c1, const coords & c2)
-{
-	if (((c1.first == c2.first) || (c1.second == c2.second)) && (abs(c1.first + c1.second - c2.first - c2.second) == 1))
-		return true;
-	else
-		return false;
-}
-
-bool Player::CrossCheck(const coords & c1, const coords & c2, const coords & c3)
-{
-	if (((c1.first == c2.first && c2.first == c3.first ) || (c1.second == c2.second && c2.second == c3.second)) && abs(c1.first + c1.second - c3.first - c3.second)==2)
-		return true;
-	else
-		return false;
-}
-
 void Player::Set_Player_Ships()
 {
 	SetThreeFunnelShip();
@@ -75,8 +53,6 @@ void Player::Set_Player_Ships()
 	}
 	try {
 		SetOneFunnelShip();
-
-	}
 	catch (Grid::bad_range br)
 	{
 		cout << br.what();
@@ -93,6 +69,7 @@ int Player::NumberOfShots()
 				count++;
 	return count;
 }
+
 int Player::NumberOfHits()
 {
 	int count = 0;
@@ -102,7 +79,6 @@ int Player::NumberOfHits()
 				count++;
 	return count;
 }
-
 
 void Player::Set_Player_Ships_From_File(char * name)
 {
@@ -255,17 +231,5 @@ void Player::Save_Info_To_File(int player_index) {
 	}
 }
 
-
-
-
-/*
-	ComputerPlayer
-
-*/
-
-/*
-	HumanPlayer
-
-*/
 
 

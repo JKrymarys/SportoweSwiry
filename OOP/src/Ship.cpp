@@ -119,24 +119,7 @@ MULTI_FUNNEL_SHIP
 MultiFunnelShip::MultiFunnelShip(Grid* p_grid, int  ship_type) :
 	Ship(ship_type, ship_type, 2, p_grid) { }
 
-/*
-void MultiFunnelShip::Shot(coords target)
-{
-	if (!isTargetInRange(target))
-		throw Ship::bad_coordinates(target);
-	if (isSunk())
-		throw Ship::ship_error("Ship is already sunk");
-	if (!hasAvailableMove())
-		throw Ship::ship_error("Ship has no available move");
-	if (RemainingShoots <= 0)
-		throw Ship::ship_error("Ship does not have any remainging shoots in this turn");
 
-	this->grid->HitOrMiss(target);
-	TakenShots++;
-	RemainingShoots--;
-	hasShot = true;
-}
-*/
 
 void MultiFunnelShip::Reset() {
 	if (TakenShots == 2)

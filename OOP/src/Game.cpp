@@ -210,10 +210,11 @@ void Game::PlayRound()
 		this->UI->PrintText("****************** \n Round no. : " + to_string(getCurrentRound()) + "\n");
 
 		//debug
-		cout << "Player grid \n ----------------" << endl;
-		UI->printGrid(&grid_player1);
+		this->UI->PrintText("Player 1  grid \n ----------------\n");
+		UI->printGrid(&grid_player1, true);
+		this->UI->PrintText("Player 2  grid \n ----------------\n");
 		cout << "Computer grid \n ----------------" << endl;
-		UI->printGrid(&grid_player2);
+		UI->printGrid(&grid_player2, dynamic_cast<HumanPlayer*>(Players.at(0)) == nullptr);
 		//debug
 
 		//first move has to be done
@@ -324,9 +325,9 @@ void Game::EndGame(int reason)
 
 	UI->PrintText("*************** \n Summary of game: \n\n");
 	UI->PrintText("Grid of player 1:");
-	UI->printGrid(&grid_player1);
+	UI->printGrid(&grid_player1, true);
 	UI->PrintText("Grid of player 2:");
-	UI->printGrid(&grid_player2);
+	UI->printGrid(&grid_player2, true);
 	UI->ShowEndReason(reason);
 	UI->ShowStatisticAndWinner(Players.at(0), Players.at(1));
 

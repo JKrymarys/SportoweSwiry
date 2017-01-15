@@ -5,7 +5,7 @@ using namespace std;
 
 TextUI::TextUI() {}
 
-void TextUI::printGrid(Grid * grid)
+void TextUI::printGrid(Grid * grid, bool whole)
 {
 	cout << "\n" << endl;
 	cout << "    1 2 3 4 5 6 7 8 9 10 " << endl;
@@ -17,7 +17,7 @@ void TextUI::printGrid(Grid * grid)
 		for (int x = 0; x < 10; ++x)
 		{
 
-			if (!grid->isAvaliable(coords(x, y)) && !grid->wasShot(coords(x, y)))
+			if (whole && !grid->isAvaliable(coords(x, y)) && !grid->wasShot(coords(x, y)))
 				cout << " i";
 			else if (!grid->isAvaliable(coords(x, y)) && grid->wasShot(coords(x, y)))
 				cout << " X";
