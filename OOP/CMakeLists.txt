@@ -70,11 +70,11 @@ if(MSVC)
     endif()
 
     find_package(Boost COMPONENTS unit_test_framework REQUIRED)
-
     include_directories(${Boost_INCLUDE_DIR})
     link_directories(${Boost_LIBRARY_DIR})
 
 else()
+    set(BOOST_ROOT "C:/local/boost_1_60_0")
     find_package(Boost COMPONENTS unit_test_framework REQUIRED)
 endif()
 
@@ -95,7 +95,7 @@ include_directories(
 
 add_executable (BattleshipTest ${SOURCE_TEST_FILES})
 
-
+a
 #link to Boost libraries and targets and dependencies
 target_link_libraries (
 	BattleshipTest
