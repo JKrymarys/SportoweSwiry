@@ -1,7 +1,6 @@
 #ifndef TEXTUI_H_
 #define TEXTUI_H_
 
-//#include "GAME.H"
 #include "PLAYER.H"
 #include <iostream>
 typedef pair<int, int> coords;

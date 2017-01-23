@@ -2,12 +2,11 @@
 #include <algorithm>
 
 /*
-SHIP
+	SHIP
 */
 
-
 Ship::Ship(int _Lives, int _Length, int remaining_shots, Grid * p_grid) :
-	Lives(_Lives), Lenght(_Length), RemainingShoots(remaining_shots), grid(p_grid), type(_Length), TakenShots(0)
+	Lives(_Lives), Lenght(_Length), RemainingShoots(remaining_shots), grid(p_grid), type(Lenght), TakenShots(0)
 {
 }
 
@@ -23,9 +22,7 @@ bool Ship::isSunk() const {
 		return false;
 }
 
-
-
-void Ship::setCoords(const coords & start,const coords & end) {
+void Ship::setCoords(const coords & start, const coords & end) {
 	this->x_begin = std::min(start.first, end.first);
 	this->x_end = std::max(start.first, end.first);
 	this->y_begin = std::min(start.second, end.second);
@@ -41,8 +38,7 @@ bool Ship::hasAvailableMove() const
 	int RIGHT_LOWER_CORNER_X = x_end + Lenght + 1 < 9 ? x_end + Lenght + 1 : 9;
 	int RIGHT_LOWER_CORNER_Y = y_end + Lenght + 1 < 9 ? y_end + Lenght + 1 : 9;
 
-
-	for (int i = LEFT_UPPER_CORNER_X; i <= RIGHT_LOWER_CORNER_X; i++)
+	for (int i = LEFT_UPPER_CORNER_X; i <= RIGHT_LOWER_CORNER_X; i++) 
 		for (int j = LEFT_UPPER_CORNER_Y; j <= RIGHT_LOWER_CORNER_Y; j++)
 			if (!(grid->wasShot(coords(i, j))))
 				return true;
@@ -52,7 +48,7 @@ bool Ship::hasAvailableMove() const
 }
 
 
-
+	
 
 bool Ship::CanShoot() const
 {
@@ -63,8 +59,9 @@ bool Ship::CanShoot() const
 }
 
 void Ship::Shot(coords target) {
+
 	if (!isTargetInRange(target))
-		throw Ship::bad_coordinates(target);
+	//	throw Ship::bad_coordinates(target);
 	if (isSunk())
 		throw Ship::ship_error("Ship is already sunk");
 	if (!hasAvailableMove())
@@ -93,17 +90,12 @@ bool Ship::isTargetInRange(coords target) const {
 }
 
 
-
-Ship::bad_coordinates::bad_coordinates(coords crd, const std::string & s) : std::logic_error(s), crd(crd) {}
-
-
 /*
-SINGLE_FUNNEL_SHIP
+	SINGLE_FUNNEL_SHIP
 */
 
-
 SingleFunnelShip::SingleFunnelShip(Grid* p_grid) :
-	Ship(1, 1, 1, p_grid){
+	Ship(1, 1, 1, p_grid) {
 }
 
 void SingleFunnelShip::Reset() {
@@ -113,12 +105,12 @@ void SingleFunnelShip::Reset() {
 
 
 /*
-MULTI_FUNNEL_SHIP
+	MULTI_FUNNEL_SHIP
 */
 
 MultiFunnelShip::MultiFunnelShip(Grid* p_grid, int  ship_type) :
-	Ship(ship_type, ship_type, 2, p_grid) { }
-
+	Ship(ship_type, ship_type, 2, p_grid)  {
+}
 
 
 void MultiFunnelShip::Reset() {
@@ -127,6 +119,5 @@ void MultiFunnelShip::Reset() {
 	else
 		RemainingShoots = 2;
 
-	//hasShot = false;
 	TakenShots = 0;
 }

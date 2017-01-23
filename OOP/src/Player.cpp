@@ -1,14 +1,18 @@
-#include "PLAYER.H"
 #include <iostream>
 #include <vector>
 #include "SHIP.H"
 #include "ComputerStrategies.h"
 #include "TEXTUI.H"
 #include <fstream>
+#include "GAME.H"
 
 using namespace std;
 
 
+/*
+Player
+
+*/
 
 Player::~Player()
 {
@@ -40,6 +44,9 @@ bool Player::hasRemainingPossibilities()
 	return false;
 }
 
+
+
+
 void Player::Set_Player_Ships()
 {
 	SetThreeFunnelShip();
@@ -53,6 +60,8 @@ void Player::Set_Player_Ships()
 	}
 	try {
 		SetOneFunnelShip();
+
+	}
 	catch (Grid::bad_range br)
 	{
 		cout << br.what();
@@ -69,16 +78,16 @@ int Player::NumberOfShots()
 				count++;
 	return count;
 }
-
 int Player::NumberOfHits()
 {
 	int count = 0;
 	for (int i = 0; i < 10; ++i)
 		for (int j = 0; j < 10; ++j)
-			if (oponent_grid->wasShot(coords(i, j)) && !(oponent_grid->isAvaliable(coords(i,j))))
+			if (oponent_grid->wasShot(coords(i, j)) && !(oponent_grid->isAvaliable(coords(i, j))))
 				count++;
 	return count;
 }
+
 
 void Player::Set_Player_Ships_From_File(char * name)
 {
@@ -106,13 +115,11 @@ void Player::Set_Player_Ships_From_File(char * name)
 				inFile >> data_int;
 				if (data_int == 1)
 				{
-					cout << "FOUND ONE FUNNEL SHIP" << endl;
 					Single_Funnel->setCoords(coords(j, i), coords(j, i));
 					player_grid->setPlace(Single_Funnel, coords(j, i));
 				}
 				if (data_int == 2)
 				{
-					cout << "FOUND TWO FUNNEL SHIP" << endl;
 					player_grid->setPlace(Two_Funnel, coords(j, i));
 					if (TwoFunnelCount == 0)
 						TwoFunnelBegin = coords(j, i);
@@ -122,7 +129,6 @@ void Player::Set_Player_Ships_From_File(char * name)
 				}
 				if (data_int == 3)
 				{
-					cout << "FOUND THREE FUNNEL SHIP" << endl;
 					player_grid->setPlace(Three_Funnel, coords(j, i));
 					if (ThreeFunnelCount == 0)
 						ThreeFunnelBegin = coords(j, i);
@@ -146,7 +152,7 @@ void Player::Set_Player_Ships_From_File(char * name)
 		}
 	}
 	else
-		throw;
+		throw BattleshipGame::Game::Load_From_File_Error("File Corrupted");
 	for (auto i : Ships)
 	{
 		if (i->getType() == 3)
@@ -154,9 +160,9 @@ void Player::Set_Player_Ships_From_File(char * name)
 			inFile >> data_int;
 			i->SetRemainingShoots(data_int);
 		}
-			
+
 	}
-	
+
 	for (auto i : Ships)
 	{
 		if (i->getType() == 2)
@@ -173,11 +179,11 @@ void Player::Set_Player_Ships_From_File(char * name)
 			i->SetRemainingShoots(data_int);
 		}
 	}
-	
+
 }
 
 void Player::Save_Info_To_File(int player_index) {
-	
+
 	string name;
 	if (player_index == 0)
 	{
@@ -188,7 +194,7 @@ void Player::Save_Info_To_File(int player_index) {
 
 
 	ofstream PlayerGrid(name.c_str());
-	
+
 	for (int i = 0; i < 10; i++)
 	{
 		for (int j = 0; j < 10; j++)
@@ -230,6 +236,3 @@ void Player::Save_Info_To_File(int player_index) {
 			PlayerGrid << i->getRemainingShoots() << endl;
 	}
 }
-
-
-

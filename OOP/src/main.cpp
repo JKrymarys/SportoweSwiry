@@ -7,6 +7,7 @@
 #include <string>
 #include <cstring>
 using namespace std;
+using namespace BattleshipGame;
 
 
 int main(int argc, char* argv[]) 
@@ -25,14 +26,22 @@ int main(int argc, char* argv[])
 		string arg1 = argv[1];
 		if (arg1 == "load")
 		{
+			try {
 			Game game(true);
 			game.StartGame();
+			}
+			catch (BattleshipGame::Game::Load_From_File_Error err)
+			{
+				cout << err.what();
+				return 0;
+			}
+			
 		}
 		else
 			cout << "If you want to load game state the argument should be \"Load\" ";
 	}
 
-
+	
 	if (argc == 3)
 	{
 		string roundcount = argv[1];

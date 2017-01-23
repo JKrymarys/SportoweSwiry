@@ -181,7 +181,10 @@ void ComputerPlayer::SetOneFunnelShip()
 
 Ship* ComputerPlayer::SelectShip()
 {
-	return strategy->SelectShip(this->Ships);
+	Ship * toreturn = strategy->SelectShip(Ships);
+	if (toreturn == nullptr)
+		throw Ship::ship_error("None of the ships is avaliable");
+	return toreturn;
 }
 
 coords ComputerPlayer::SelectTarget(Ship* usedship) {

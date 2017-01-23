@@ -1,9 +1,7 @@
 #ifndef SHIP_H_
 #define SHIP_H_
 #include <utility>
-#include <stdexcept>
 #include "GRID.H"
-
 
 enum Ship_types
 {
@@ -17,10 +15,10 @@ public:
 	Ship(int _Lives, int _Length, int remaining_shots, Grid * p_grid);
 	virtual ~Ship() {}
 	void getHit();
-	int getLives() const { return Lives; }
+	int getLives() const {return Lives;}
 	int getRemainingShoots() const { return RemainingShoots; }
 	void SetRemainingShoots(int n) { RemainingShoots = n; }
-	int getXbegin() const  { return x_begin; }
+	int getXbegin() const { return x_begin; }
 	int getXend() const { return x_end; }
 	int getYbegin() const { return y_begin; }
 	int getYend() const { return y_end; }
@@ -64,7 +62,7 @@ protected:
 
 class SingleFunnelShip : public Ship
 {
-public:
+public: 
 	SingleFunnelShip(Grid* p_grid);
 	~SingleFunnelShip() {}
 	void Reset();
@@ -75,11 +73,8 @@ class MultiFunnelShip : public Ship
 {
 public:
 	MultiFunnelShip(Grid* p_grid, int ship_type);
-	~MultiFunnelShip() {}
-	//virtual void Shot(coords coordinates);
 	void Reset();
 
 };
 
 #endif // !SHIP_H_
-

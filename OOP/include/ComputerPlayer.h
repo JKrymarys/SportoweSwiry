@@ -1,7 +1,7 @@
 #ifndef ComputerPlayer_H_
 #define ComputerPlayer_H_
 
-#include "Player.H"
+#include "PLAYER.H"
 
 class ComputerPlayer :public Player
 {
@@ -14,11 +14,10 @@ public:
 	bool CanMove();
 	Strategy * getStrategy() { return strategy; }
 	void Reset();
-protected:
+private:
 	void SetThreeFunnelShip();
 	void SetTwoFunnelShip();
 	void SetOneFunnelShip();
-private:
 	Strategy * strategy;
 };
 

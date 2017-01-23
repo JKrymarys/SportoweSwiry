@@ -1,5 +1,5 @@
 #include "HumanPlayer.h"
-#include "TextUI.h"
+#include "TEXTUI.H"
 
 bool HumanPlayer::CanMove()
 {
@@ -71,7 +71,7 @@ void HumanPlayer::Move()
 		//choose ship
 		usedship = SelectShip();
 
-		//if usedship is ready to lave loop, set flag
+		//if usedship is ready to leave loop, set flag
 		if (usedship != nullptr)
 			(usedship->getRemainingShoots() != 0) ? flag_can_continue = true : flag_can_continue = false;
 
@@ -279,4 +279,20 @@ void HumanPlayer::SetThreeFunnelShip()
 
 
 	User_interface->PrintText("Three Funnel Ship has been set");
+}
+
+bool HumanPlayer::CrossCheck(const coords & c1, const coords & c2)
+{
+	if (((c1.first == c2.first) || (c1.second == c2.second)) && (abs(c1.first + c1.second - c2.first - c2.second) == 1))
+		return true;
+	else
+		return false;
+}
+
+bool HumanPlayer::CrossCheck(const coords & c1, const coords & c2, const coords & c3)
+{
+	if (((c1.first == c2.first && c2.first == c3.first) || (c1.second == c2.second && c2.second == c3.second)) && abs(c1.first + c1.second - c3.first - c3.second) == 2)
+		return true;
+	else
+		return false;
 }

@@ -1,7 +1,9 @@
 #ifndef HumanPlayer_H_
 #define HumanPlayer_H_
 
-#include "Player.H"
+#include "PLAYER.H"
+
+class IUserInterface;
 
 class HumanPlayer :public Player {
 public:
@@ -12,14 +14,14 @@ public:
 	void Move();
 	bool CanMove();
 	void Reset();
-protected:
-	IUserInterface* User_interface;
-	bool wantToMove;
-
 private:
 	void SetThreeFunnelShip();
 	void SetTwoFunnelShip();
 	void SetOneFunnelShip();
+	bool CrossCheck(const coords & c1, const coords & c2);
+	bool CrossCheck(const coords & c1, const coords & c2, const coords & c3);
+	IUserInterface* User_interface;
+	bool wantToMove;
 };
 
 #endif // !HumanPlayer_H_

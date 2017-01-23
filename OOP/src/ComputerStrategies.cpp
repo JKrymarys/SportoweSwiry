@@ -30,7 +30,7 @@ Ship* Greedy_strategy::SelectShip(vector<Ship*> & Ships) {
 
 	Ship * toreturn = nullptr;
 	auto it = Ships.begin();
-	while (it != Ships.end() || toreturn == nullptr)
+	while (it != Ships.end() && toreturn == nullptr)
 	{
 		if ((*it)->CanShoot())
 			toreturn = (*it);
@@ -43,12 +43,23 @@ Ship* Greedy_strategy::SelectShip(vector<Ship*> & Ships) {
 				toreturn = (*it);
 		++it;
 	}
-
+	
 	return toreturn;
 }
 
 
 Ship* Random_strategy::SelectShip(vector<Ship*> & Ships) {
+	bool isAnyAvaliable = false;
+	for (auto i : Ships)
+	{
+		if (i->CanShoot())
+		{
+			isAnyAvaliable = true;
+			break;
+		}
+	}
+	if (!isAnyAvaliable)
+		return nullptr;
 	int random = rand() % Ships.size();
 	while (!Ships.at(random)->CanShoot())
 	{

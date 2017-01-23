@@ -7,6 +7,8 @@
 #include "ComputerPlayer.h"
 #include "HumanPlayer.h"
 
+using namespace BattleshipGame;
+
 enum END_CASES {
 	LastRoundPlayed,
 	AllShipsSunk,
@@ -16,7 +18,7 @@ enum END_CASES {
 
 
 Game::Game(int max_rounds, string player1, string player2, bool UI_text) {
-	
+
 	IUserInterface*  ptr = nullptr;
 	if (UI_text)
 	{
@@ -25,16 +27,12 @@ Game::Game(int max_rounds, string player1, string player2, bool UI_text) {
 	//else
 	//GUI _UI;
 	this->UI = ptr;
-	
+
 	this->RoundCount = 1;
 	this->RoundMAX = max_rounds;
-	//Grid * grid1 = new Grid();
-	//Grid * grid2 = new Grid();
-	//grid_player1 = grid1;
-	//grid_player2 = grid2;
 	AddPlayer(player1, &grid_player1, &grid_player2, UI_text);
-	AddPlayer(player2,&grid_player2, &grid_player1, UI_text);
-	
+	AddPlayer(player2, &grid_player2, &grid_player1, UI_text);
+
 	for (auto i : Players)
 	{
 		i->Set_Player_Ships();
@@ -44,8 +42,6 @@ Game::Game(int max_rounds, string player1, string player2, bool UI_text) {
 
 Game::~Game()
 {
-//	delete grid_player1;
-//	delete grid_player2;
 	for (auto it = Players.begin(); it != Players.end(); ++it)
 	{
 		delete (*it);
@@ -68,10 +64,6 @@ Game::Game(bool UI_text)
 	int data_int;
 	string line;
 	int line_count;
-	//Grid * grid1 = new Grid();
-	//Grid * grid2 = new Grid();
-	//grid_player1 = grid1;
-	//grid_player2 = grid2;
 	if (GameStateFile.is_open())
 	{
 		GameStateFile >> RoundCount;
@@ -81,7 +73,7 @@ Game::Game(bool UI_text)
 		getline(GameStateFile, line);
 		if (line == "greedy")
 			AddPlayer("greedy", &grid_player1, &grid_player2, UI_text);
-		else if(line == "random")
+		else if (line == "random")
 			AddPlayer("random", &grid_player1, &grid_player2, UI_text);
 		else if (line == "human")
 			AddPlayer("human", &grid_player1, &grid_player2, UI_text);
@@ -105,7 +97,7 @@ Game::Game(bool UI_text)
 
 int Game::getCurrentRound() {
 	return RoundCount;
-} 
+}
 
 int Game::getMaxRound() {
 	return RoundMAX;
@@ -115,7 +107,7 @@ void Game::StartGame()
 {
 	bool if_continue = true;
 	int end_case = 0;
-	
+
 	do
 	{
 		if (dynamic_cast<HumanPlayer*>(Players.at(0)) != nullptr)
@@ -136,7 +128,7 @@ void Game::StartGame()
 			i->Reset();
 		}
 
-	
+
 
 		//case 1: last round played
 		if (RoundCount >= RoundMAX)
@@ -164,7 +156,7 @@ void Game::StartGame()
 
 		RoundCount++;
 
-	}while (if_continue);
+	} while (if_continue);
 
 	cout << "End game" << endl;
 	EndGame(end_case);
@@ -177,7 +169,7 @@ void Game::AddPlayer(string type, Grid* grid_player, Grid* grid_oponent, bool te
 	{
 		IUserInterface* UI = (text_mode) ? new TextUI : new TextUI; // just 4 debiling
 		HumanPlayer* player = new HumanPlayer(grid_player, grid_oponent, UI);
-		
+
 		Players.push_back(player);
 
 	}
@@ -198,24 +190,24 @@ void Game::AddPlayer(string type, Grid* grid_player, Grid* grid_oponent, bool te
 		std::cout << "AddPlayer error: wrong parameter" << std::endl;
 	}
 
-	
-	
+
+
 }
 
 void Game::PlayRound()
 {
 
-	while (((Players.at(0)->CanMove() || Players.at(1)->CanMove()))  && Players.at(0)->hasShips() && Players.at(1)->hasShips())
+	while (((Players.at(0)->CanMove() || Players.at(1)->CanMove())) && Players.at(0)->hasShips() && Players.at(1)->hasShips())
 	{
+
+
 		this->UI->PrintText("****************** \n Round no. : " + to_string(getCurrentRound()) + "\n");
 
-		//debug
 		this->UI->PrintText("Player 1  grid \n ----------------\n");
 		UI->printGrid(&grid_player1, true);
 		this->UI->PrintText("Player 2  grid \n ----------------\n");
 		cout << "Computer grid \n ----------------" << endl;
 		UI->printGrid(&grid_player2, dynamic_cast<HumanPlayer*>(Players.at(0)) == nullptr);
-		//debug
 
 		//first move has to be done
 		if (Players.at(0)->CanMove())
@@ -255,62 +247,7 @@ void Game::SaveToFile()
 				GameState << "random" << endl;
 		}
 	}
-	/*
-
-	for (int i = 0; i < 10; i++)
-	{
-		for (int j = 0; j < 10; j++)
-		{
-			if (grid_player1->isAvaliable(coords(j, i)))
-				Player1Grid << '0';
-			else
-				Player1Grid << grid_player1->getShip(coords(j, i))->getType();
-			Player1Grid << " ";
-		}
-		Player1Grid << endl;
-	}
-
-	for (int i = 0; i < 10; i++)
-	{
-		for (int j = 0; j < 10; j++)
-		{
-			if (grid_player1->wasShot(coords(j, i)))
-				Player1Grid << '*';
-			else
-				Player1Grid << '#';
-			Player1Grid << " ";
-		}
-		Player1Grid << endl;
-	}
 	
-	for (int i = 0; i < 10; i++)
-	{
-		for (int j = 0; j < 10; j++)
-		{
-			if (grid_player2->isAvaliable(coords(j, i)))
-				Player2Grid << '0';
-			else
-				Player2Grid << grid_player2->getShip(coords(j, i))->getType();
-			Player2Grid << " ";
-		}
-		Player2Grid << endl;
-	}
-	
-
-	for (int i = 0; i < 10; i++)
-	{
-		for (int j = 0; j < 10; j++)
-		{
-			if (grid_player2->wasShot(coords(j, i)))
-				Player2Grid << '*';
-			else
-				Player2Grid << '#';
-			Player2Grid << " ";
-		}
-		Player2Grid << endl;
-	}
-
-	*/
 	Players.at(0)->Save_Info_To_File(0);
 	Players.at(1)->Save_Info_To_File(1);
 }

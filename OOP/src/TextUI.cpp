@@ -1,5 +1,5 @@
 #include "TEXTUI.H"
-
+#include <limits>
 using namespace std;
 
 
@@ -12,7 +12,7 @@ void TextUI::printGrid(Grid * grid, bool whole)
 	cout << "________________________" << endl;
 	for (int y = 0; y < 10; ++y)
 	{
-		cout << (((y+1)!=10)? (y+1) : 0)<<"| ";
+		cout << (((y + 1) != 10) ? (y + 1) : 0) << "| ";
 
 		for (int x = 0; x < 10; ++x)
 		{
@@ -26,7 +26,7 @@ void TextUI::printGrid(Grid * grid, bool whole)
 			else
 				cout << " O";
 		}
-		cout <<endl;
+		cout << endl;
 	}
 	cout << "\n" << endl;
 }
@@ -41,7 +41,7 @@ int TextUI::SelectShip()
 	do
 	{
 		cout << "Choose ship:" << endl;
-		
+
 		if (cin >> ship_id)
 			break;
 		else
@@ -66,7 +66,7 @@ coords TextUI::getTargetLocation() {
 	while (x > 10 || y > 10 || x < 1 || y < 1) // should be grid->height, grid ->length
 	{
 		cout << "Coordinates out of range, retype" << endl;
-		
+
 		if (cin >> x >> y)
 			break;
 		else
@@ -88,10 +88,10 @@ coords TextUI::getCoords() {
 
 	cout << "Type coordinates x, y " << endl;
 	cin >> toreturn.first >> toreturn.second;
-	while (toreturn.first >  10 || toreturn.second > 10 || toreturn.first < 1 || toreturn.second< 1 ) // should be grid->height, grid ->length
+	while (toreturn.first >  10 || toreturn.second > 10 || toreturn.first < 1 || toreturn.second< 1) // should be grid->height, grid ->length
 	{
 		cout << "Coordinates out of range, retype" << endl;
-		
+
 		if (cin >> toreturn.first >> toreturn.second)
 			break;
 		else
@@ -102,15 +102,15 @@ coords TextUI::getCoords() {
 		}
 
 	}
-	return coords(toreturn.first-1, toreturn.second-1);
+	return coords(toreturn.first - 1, toreturn.second - 1);
 
 }
 
 bool TextUI::getBool()
 {
 	char input = NULL;
-	do	{
-		cout << "Please enter an anser (y/n)" << endl;
+	do {
+		cout << "Please enter an answer (y/n)" << endl;
 		if (cin >> input && (input == 'y' || input == 'n'))
 			break;
 		else

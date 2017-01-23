@@ -2,8 +2,6 @@
 #include "GRID.H"
 #include "SHIP.H"
 #include <string>
-#include <cmath>
-#include <algorithm>
 
 //using namespace std;
 
@@ -16,7 +14,6 @@ Place::Place()
 
 
 
-
 Grid::bad_range::bad_range(coords range, const std::string & s) : std::logic_error(s), br(range) {
 
 }
@@ -25,33 +22,35 @@ Grid::bad_range::bad_range(coords range, const std::string & s) : std::logic_err
 
 void Grid::Hit(Ship * ship, coords crd)
 {
+	if (crd.first < 0 || crd.second < 0 || crd.first > 9 || crd.second > 9)
+		throw bad_range(crd);
 	ship->getHit();
 	Places[crd.first][crd.second].Flag = 1;
 }
 
 void Grid::Miss(coords crd)
 {
+	if (crd.first < 0 || crd.second < 0 || crd.first > 9 || crd.second > 9)
+		throw bad_range(crd);
 	Places[crd.first][crd.second].Flag = 1;
 }
 
 Grid::Grid()
 {
-	// Kazdy elaement array bedzie automatycznie zainicjalizowany uzywajac domyslnego constructora takze nic nie trza
+	// Every element of 2D Array will be initialized with default constructor
 }
 
 bool Grid::isAvaliable(coords crd)
 {
 	if (crd.first < 0 || crd.second < 0 || crd.first > 9 || crd.second > 9)
-		throw bad_range(crd, "Coordinates are out of range of grid in is avaliable function \n" );
+		throw bad_range(crd);
 	return Places[crd.first][crd.second].ShipHere == nullptr ? true : false;
 }
 
-
-
 void Grid::setPlace(Ship* ship, coords crd)
 {
-	if (crd.first < 0 || crd.second < 0 || crd.first > 10 || crd.second > 10)
-		throw bad_range(crd, "Coordinates are out of range of grid in in setPlace function \n");
+	if (crd.first < 0 || crd.second < 0 || crd.first > 9 || crd.second > 9)
+		throw bad_range(crd);
 	Places[crd.first][crd.second].ShipHere = ship;
 }
 
@@ -59,8 +58,6 @@ void Grid::HitOrMiss(coords crd)
 {
 	if (crd.first < 0 || crd.second < 0 || crd.first > 9 || crd.second > 9)
 		throw bad_range(crd);
-	if (Places[crd.first][crd.second].Flag == 1)
-		throw bad_range(crd, "Place was already shot");
 	Places[crd.first][crd.second].ShipHere == nullptr ? Miss(crd) : Hit(Places[crd.first][crd.second].ShipHere, crd);
 };
 

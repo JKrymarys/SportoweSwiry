@@ -1,49 +1,69 @@
+#include <boost/test/unit_test.hpp>
 #include "ComputerStrategies.h"
 #include "PLAYER.H"
 #include "SHIP.H"
-#include <cmath>
-#include<algorithm>
+#include<cstdlib>
+#include<ctime>
 
-coords Strategy::getTargetLocation(Ship & ship, Grid & grid) {
-	int x_random_range = 2 * (ship.getLength() + 1) + (ship.getSecondCoords().first - ship.getFirstCoords().first);
-	int y_random_range = 2 * (ship.getLength() + 1) + (ship.getSecondCoords().second - ship.getFirstCoords().second);
-	x_random_range > 10 ? x_random_range = 10 : 0 ;
-	y_random_range > 10 ? y_random_range = 10 : 0 ;
-	int x_generated;
-	int y_generated;
-	do
+
+
+
+BOOST_AUTO_TEST_SUITE(ComputerStrategiesTest)
+
+BOOST_AUTO_TEST_CASE(getTargetLocationTest)
+{	
+	srand(time(NULL));
+	Greedy_strategy teststrategy;
+	Grid testgrid;
+	SingleFunnelShip testship(&testgrid);
+	MultiFunnelShip testship2(&testgrid, TWO_FUNNEL_SHIP);
+	testship2.setCoords(coords(4, 4), coords(5, 4));
+	testship.setCoords(coords(3, 3), coords(3,3));
+	for (int i = 0; i < 100; i++)
 	{
-		x_generated = rand() % x_random_range + 1;
-		y_generated = rand() % y_random_range + 1;
-	} while (!grid.wasShot(coords(x_generated, y_generated)));
-	return coords(x_generated, y_generated);
-}
+		BOOST_CHECK_EQUAL(testship.isTargetInRange(teststrategy.getTargetLocation(testship, testgrid)), true);
+		BOOST_CHECK_EQUAL(testgrid.wasShot(teststrategy.getTargetLocation(testship2, testgrid)), false);
 
-
-
-Ship* Greedy_strategy::SelectShip(vector<Ship*> & Ships) {
-
-	std::vector<Ship *>::iterator it = Ships.begin();
-	Ship * toreturn;
-	do
-	{
-		toreturn = (*it);
-		++it;
-	} while (it != Ships.end() && toreturn->CanShoot());
-	for (++it; it != Ships.end(); ++it)
-	{
-		if ((*it)->getLength() > toreturn->getLength() && (*it)->CanShoot())
-			toreturn = (*it);
 	}
-	return toreturn;
+	
+
+	testgrid.HitOrMiss(coords(2, 2));
+	testgrid.HitOrMiss(coords(4, 4));
+
+	for (int i = 0; i < 100; i++)
+	{
+		BOOST_CHECK_EQUAL(testgrid.wasShot(teststrategy.getTargetLocation(testship, testgrid)), false);
+		BOOST_CHECK_EQUAL(testgrid.wasShot(teststrategy.getTargetLocation(testship2, testgrid)), false);
+		
+	}
 }
 
 
- Ship* Random_strategy::SelectShip(vector<Ship*> & Ships) {
-	 int random = rand() % Ships.size() + 1;
-	 while (!Ships.at(random)->CanShoot)
-	 {
-		 random = rand() % Ships.size() + 1;
-	 }
-	 return Ships.at(random);
- }
+BOOST_AUTO_TEST_CASE(GreedySelectShipTest)
+{
+	Greedy_strategy teststrategy;
+	Grid testgrid;
+	Grid testgrid2;
+	SingleFunnelShip testship(&testgrid);
+	MultiFunnelShip testship2(&testgrid, TWO_FUNNEL_SHIP);
+	MultiFunnelShip testship3(&testgrid, THREE_FUNNEL_SHIP);
+	testship.setCoords(coords(1, 1), coords(1, 1));
+	testship2.setCoords(coords(3, 3), coords(3, 4));
+	testship3.setCoords(coords(7, 9), coords(9, 9));
+	vector<Ship*> Ships;
+	Ships.push_back(&testship);
+	Ships.push_back(&testship2);
+	Ships.push_back(&testship3);
+	BOOST_CHECK_EQUAL(teststrategy.SelectShip(Ships), &testship3);
+	testship3.Shot(coords(7, 7));
+	testship3.Shot(coords(7, 8));
+	BOOST_CHECK_EQUAL(teststrategy.SelectShip(Ships), &testship2);
+	testship3.Reset();
+	BOOST_CHECK_EQUAL(teststrategy.SelectShip(Ships), &testship2);
+	testship3.Reset();
+	BOOST_CHECK_EQUAL(teststrategy.SelectShip(Ships), &testship3);
+
+}
+
+
+BOOST_AUTO_TEST_SUITE_END()
